@@ -1,3 +1,11 @@
+## how to run example
+
+iOS
+1. copy binary files   
+
+Android
+1. copy binary
+
 # monero_app
 
 A new Flutter FFI plugin project.
