@@ -23,7 +23,7 @@ A new Flutter FFI plugin project.
   s.source           = { :path => '.' }
   s.source_files = 'Classes/**/*'
   s.dependency 'Flutter'
-  s.platform = :ios, '10.0'
+  s.platform = :ios, '11.0'
   
   s.subspec 'Iconv' do |iconv|
     iconv.library = "iconv"
