@@ -6,7 +6,6 @@ PODS:
     - monero_api/Iconv (= 0.0.1)
     - monero_api/Monero (= 0.0.1)
     - monero_api/OpenSSL (= 0.0.1)
-    - monero_api/Sodium (= 0.0.1)
     - monero_api/Unbound (= 0.0.1)
     - monero_api/Zmq (= 0.0.1)
   - monero_api/Boost (0.0.1):
@@ -16,8 +15,6 @@ PODS:
   - monero_api/Monero (0.0.1):
     - Flutter
   - monero_api/OpenSSL (0.0.1):
-    - Flutter
-  - monero_api/Sodium (0.0.1):
     - Flutter
   - monero_api/Unbound (0.0.1):
     - Flutter
@@ -42,7 +39,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
-  monero_api: e0de33af34aa779bac800cc20de4700b7647f254
+  monero_api: d803a063ce2ee673616a9fb7e6de7fcbf4b2ca0c
   path_provider_foundation: eaf5b3e458fc0e5fbb9940fb09980e853fe058b8
 
 PODFILE CHECKSUM: ef19549a9bc3046e7bb7d2fab4d021637c0c58a3
