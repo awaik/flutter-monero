@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-import 'package:monero_app/account_api.dart' as api;
+import 'package:monero_api/account_api.dart' as api;
 
 class WalletAccountsWidget extends StatelessWidget {
   final TextEditingController _resultController = TextEditingController();
 
-  void _getAddress(){
+  void _getAddress() {
     try {
       _resultController.text = api.getAddress().toString();
     } catch (e) {
@@ -13,7 +13,7 @@ class WalletAccountsWidget extends StatelessWidget {
     }
   }
 
-  void _getBalance(){
+  void _getBalance() {
     try {
       _resultController.text = api.getFullBalance().toString();
     } catch (e) {
@@ -39,7 +39,6 @@ class WalletAccountsWidget extends StatelessWidget {
             child: SingleChildScrollView(
               child: Column(
                 children: <Widget>[
-
                   Padding(
                     padding: const EdgeInsets.all(10),
                     child: ElevatedButton(
@@ -52,12 +51,10 @@ class WalletAccountsWidget extends StatelessWidget {
                       ),
                     ),
                   ),
-
                   Padding(
                     padding: const EdgeInsets.all(10),
                     child: ElevatedButton(
-                      child: Text("Баланс",
-                          style: TextStyle(fontSize: 22)),
+                      child: Text("Баланс", style: TextStyle(fontSize: 22)),
                       onPressed: _getBalance,
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.all(10),
@@ -65,7 +62,6 @@ class WalletAccountsWidget extends StatelessWidget {
                       ),
                     ),
                   ),
-
                 ],
               ),
             ),

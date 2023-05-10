@@ -1,10 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.monero_app_example">
-
-    <uses-permission android:name="android.permission.INTERNET"/>
-
+    package="com.example.monero_api_example">
    <application
-        android:label="monero_app_example"
+        android:label="monero_api_example"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

@@ -2,7 +2,7 @@ import 'dart:ffi';
 
 import 'package:ffi/ffi.dart';
 import 'package:flutter/foundation.dart';
-import 'package:monero_app/sync_listener.dart';
+import 'package:monero_api/sync_listener.dart';
 
 import 'exceptions/setup_wallet_exception.dart';
 

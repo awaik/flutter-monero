@@ -3,7 +3,7 @@ import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 import 'dart:async';
 
-import 'package:monero_app/wallet_manager_api.dart' as api;
+import 'package:monero_api/wallet_manager_api.dart' as api;
 
 class WalletWidget extends StatelessWidget {
   final TextEditingController _resultController = TextEditingController();

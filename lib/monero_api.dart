@@ -23,7 +23,7 @@ final DynamicLibrary _dylib = () {
 }();
 
 /// The bindings to the native functions in [_dylib].
-final MoneroAppBindings bindings = MoneroAppBindings(_dylib);
+final MoneroApiBindings bindings = MoneroApiBindings(_dylib);
 
 Pointer<ErrorBox> buildErrorBoxPointer()
 {

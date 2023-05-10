@@ -1,4 +1,4 @@
-name: monero_app
+name: monero_api
 description: A new Flutter FFI plugin project.
 version: 0.0.1
 homepage:
@@ -8,14 +8,14 @@ environment:
   flutter: ">=2.11.0"
 
 dependencies:
-  ffi: ^2.0.1
   flutter:
     sdk: flutter
   plugin_platform_interface: ^2.0.2
+  path_provider: ^2.0.14
 
 dev_dependencies:
   ffi: ^2.0.1
-  ffigen: ^7.2.11
+  ffigen: ^6.1.2
   flutter_test:
     sdk: flutter
   flutter_lints: ^2.0.0
@@ -42,6 +42,8 @@ flutter:
       android:
         ffiPlugin: true
       ios:
+        ffiPlugin: true
+      macos:
         ffiPlugin: true
 
   # To add assets to your plugin package, add an assets section, like this:
