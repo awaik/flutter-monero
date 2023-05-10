@@ -1,43 +1,38 @@
 import 'package:flutter/material.dart';
-import 'package:monero_api_example/sync_wallet.dart';
-import 'package:monero_api_example/wallet.dart';
-import 'package:monero_api_example/wallet_accounts.dart';
+import 'package:monero_api_example/sync_wallet_paga.dart';
+import 'package:monero_api_example/wallet_accounts_page.dart';
+import 'package:monero_api_example/wallet_management_page.dart';
 
 import 'multisig.dart';
 
 class MainScreen extends StatelessWidget {
   void _toWallet(BuildContext context) {
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => WalletWidget()));
+    Navigator.push(context, MaterialPageRoute(builder: (context) => WalletManagementPage()));
   }
 
   void _toSync(BuildContext context) {
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => SyncWalletWidget()));
+    Navigator.push(context, MaterialPageRoute(builder: (context) => SyncWalletPage()));
   }
 
   void _toAccount(BuildContext context) {
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => WalletAccountsWidget()));
+    Navigator.push(context, MaterialPageRoute(builder: (context) => WalletAccountsPage()));
   }
 
   void _toMultisig(BuildContext context) {
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => MultisigWidget()));
+    Navigator.push(context, MaterialPageRoute(builder: (context) => MultisigWidget()));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Monero test v0.1')),
+      appBar: AppBar(title: Text('Monero sample app')),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-
           Padding(
             padding: const EdgeInsets.all(10),
             child: ElevatedButton(
-              child: Text("Менеджер кошелька", style: TextStyle(fontSize: 22)),
+              child: Text('Wallet management', style: TextStyle(fontSize: 22)),
               onPressed: () {
                 _toWallet(context);
               },
@@ -47,11 +42,10 @@ class MainScreen extends StatelessWidget {
               ),
             ),
           ),
-
           Padding(
             padding: const EdgeInsets.all(10),
             child: ElevatedButton(
-              child: Text("Синхронизация", style: TextStyle(fontSize: 22)),
+              child: Text('Synchronize', style: TextStyle(fontSize: 22)),
               onPressed: () {
                 _toSync(context);
               },
@@ -61,11 +55,9 @@ class MainScreen extends StatelessWidget {
               ),
             ),
           ),
-
           Padding(
             padding: const EdgeInsets.all(10),
             child: ElevatedButton(
-              child: Text("Счета", style: TextStyle(fontSize: 22)),
               onPressed: () {
                 _toAccount(context);
               },
@@ -73,9 +65,9 @@ class MainScreen extends StatelessWidget {
                 padding: const EdgeInsets.all(10),
                 minimumSize: Size(360, 60),
               ),
+              child: const Text('Addresses & Balance', style: TextStyle(fontSize: 22)),
             ),
           ),
-
           Padding(
             padding: const EdgeInsets.all(10),
             child: ElevatedButton(
@@ -86,10 +78,9 @@ class MainScreen extends StatelessWidget {
                 padding: const EdgeInsets.all(10),
                 minimumSize: const Size(360, 60),
               ),
-              child: const Text("Мультиподпись", style: TextStyle(fontSize: 22)),
+              child: const Text('Multisig', style: TextStyle(fontSize: 22)),
             ),
           ),
-
         ],
       ),
     );

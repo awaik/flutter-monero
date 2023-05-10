@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-
 import 'package:monero_api/account_api.dart' as api;
 
-class WalletAccountsWidget extends StatelessWidget {
+class WalletAccountsPage extends StatelessWidget {
   final TextEditingController _resultController = TextEditingController();
+
+  WalletAccountsPage({super.key});
 
   void _getAddress() {
     try {
@@ -24,7 +25,7 @@ class WalletAccountsWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Monero :: Счета')),
+      appBar: AppBar(title: Text('Monero :: Addresses')),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
@@ -42,8 +43,7 @@ class WalletAccountsWidget extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.all(10),
                     child: ElevatedButton(
-                      child: Text("Основной адрес",
-                          style: TextStyle(fontSize: 22)),
+                      child: Text("Main address", style: TextStyle(fontSize: 22)),
                       onPressed: _getAddress,
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.all(10),
@@ -54,7 +54,7 @@ class WalletAccountsWidget extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.all(10),
                     child: ElevatedButton(
-                      child: Text("Баланс", style: TextStyle(fontSize: 22)),
+                      child: Text("Balance", style: TextStyle(fontSize: 22)),
                       onPressed: _getBalance,
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.all(10),
