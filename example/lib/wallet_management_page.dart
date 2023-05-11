@@ -8,6 +8,8 @@ import 'package:path_provider/path_provider.dart';
 class WalletManagementPage extends StatelessWidget {
   final TextEditingController _resultController = TextEditingController();
 
+  WalletManagementPage({super.key});
+
   Future<String> _getWalletPath() async {
     final root = await getApplicationDocumentsDirectory();
 
