@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_monero_example/sync_wallet_paga.dart';
+import 'package:flutter_monero_example/multisig_page.dart';
+import 'package:flutter_monero_example/sync_wallet_page.dart';
 import 'package:flutter_monero_example/wallet_accounts_page.dart';
 import 'package:flutter_monero_example/wallet_management_page.dart';
 
-import 'multisig.dart';
-
 class MainScreen extends StatelessWidget {
+  const MainScreen({super.key});
+
   void _toWallet(BuildContext context) {
     Navigator.push(context, MaterialPageRoute(builder: (context) => WalletManagementPage()));
   }
@@ -19,7 +20,7 @@ class MainScreen extends StatelessWidget {
   }
 
   void _toMultisig(BuildContext context) {
-    Navigator.push(context, MaterialPageRoute(builder: (context) => MultisigWidget()));
+    Navigator.push(context, MaterialPageRoute(builder: (context) => MultisigPage()));
   }
 
   @override
