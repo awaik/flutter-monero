@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:monero_api/wallet_sync_api.dart' as wallet_sync_api;
+import 'package:flutter_monero/wallet_sync_api.dart' as wallet_sync_api;
 
 class SyncListener {
   SyncListener(this.onNewBlock, this.onNewTransaction)

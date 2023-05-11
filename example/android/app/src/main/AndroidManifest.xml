@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.monero_api_example">
+    package="com.example.flutter_monero_example">
    <application
-        android:label="monero_api_example"
+        android:label="flutter_monero_example"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

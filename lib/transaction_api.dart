@@ -7,13 +7,13 @@ import 'entities/monero_output.dart';
 import 'entities/pending_transaction.dart';
 import 'entities/transaction_info_row.dart';
 import 'exceptions/creation_transaction_exception.dart';
-import 'monero_api.dart' as monero_api;
-import 'monero_api_bindings_generated.dart';
+import 'flutter_monero.dart' as flutter_monero;
+import 'flutter_monero_bindings_generated.dart';
 
 void transactionsRefresh() {
-  final errorBoxPointer = monero_api.buildErrorBoxPointer();
-  monero_api.bindings.transactions_refresh(errorBoxPointer);
-  final errorInfo = monero_api.extractErrorInfo(errorBoxPointer);
+  final errorBoxPointer = flutter_monero.buildErrorBoxPointer();
+  flutter_monero.bindings.transactions_refresh(errorBoxPointer);
+  final errorInfo = flutter_monero.extractErrorInfo(errorBoxPointer);
 
   if (0 != errorInfo.code) {
     throw Exception(errorInfo.getErrorMessage());
@@ -21,9 +21,9 @@ void transactionsRefresh() {
 }
 
 int transactionsCount() {
-  final errorBoxPointer = monero_api.buildErrorBoxPointer();
-  var result = monero_api.bindings.transactions_count(errorBoxPointer);
-  final errorInfo = monero_api.extractErrorInfo(errorBoxPointer);
+  final errorBoxPointer = flutter_monero.buildErrorBoxPointer();
+  var result = flutter_monero.bindings.transactions_count(errorBoxPointer);
+  final errorInfo = flutter_monero.extractErrorInfo(errorBoxPointer);
 
   if (0 != errorInfo.code) {
     throw Exception(errorInfo.getErrorMessage());
@@ -33,18 +33,18 @@ int transactionsCount() {
 }
 
 List<TransactionInfoRow> getAllTransations() {
-  final errorBoxPointer1 = monero_api.buildErrorBoxPointer();
-  final size = monero_api.bindings.transactions_count(errorBoxPointer1);
-  final errorInfo1 = monero_api.extractErrorInfo(errorBoxPointer1);
+  final errorBoxPointer1 = flutter_monero.buildErrorBoxPointer();
+  final size = flutter_monero.bindings.transactions_count(errorBoxPointer1);
+  final errorInfo1 = flutter_monero.extractErrorInfo(errorBoxPointer1);
 
   if (0 != errorInfo1.code) {
     throw Exception(errorInfo1.getErrorMessage());
   }
 
-  final errorBoxPointer2 = monero_api.buildErrorBoxPointer();
-  final transactionsPointer = monero_api.bindings.transactions_get_all(errorBoxPointer2);
+  final errorBoxPointer2 = flutter_monero.buildErrorBoxPointer();
+  final transactionsPointer = flutter_monero.bindings.transactions_get_all(errorBoxPointer2);
   final transactionsAddresses = transactionsPointer.asTypedList(size);
-  final errorInfo2 = monero_api.extractErrorInfo(errorBoxPointer2);
+  final errorInfo2 = flutter_monero.extractErrorInfo(errorBoxPointer2);
 
   if (0 != errorInfo2.code) {
     throw Exception(errorInfo2.getErrorMessage());
@@ -54,7 +54,7 @@ List<TransactionInfoRow> getAllTransations() {
       .map((addr) => Pointer<TransactionInfoRow>.fromAddress(addr).ref)
       .toList();
 
-  monero_api.bindings.free_block_of_transactions(transactionsPointer, size);
+  flutter_monero.bindings.free_block_of_transactions(transactionsPointer, size);
 
   return result;
 }
@@ -100,9 +100,9 @@ PendingTransactionDescription createTransactionSync(
       : Pointer<Char>.fromAddress(nullptr.address);
   final paymentIdPointer = paymentId.toNativeUtf8().cast<Char>();
   final pendingTransactionPointer = calloc<ExternPendingTransactionRaw>();
-  final errorBoxPointer = monero_api.buildErrorBoxPointer();
+  final errorBoxPointer = flutter_monero.buildErrorBoxPointer();
 
-  monero_api.bindings.transaction_create(
+  flutter_monero.bindings.transaction_create(
       addressPointer,
       paymentIdPointer,
       amountPointer,
@@ -111,7 +111,7 @@ PendingTransactionDescription createTransactionSync(
       pendingTransactionPointer,
       errorBoxPointer);
 
-  final errorInfo = monero_api.extractErrorInfo(errorBoxPointer);
+  final errorInfo = flutter_monero.extractErrorInfo(errorBoxPointer);
   calloc.free(addressPointer);
   calloc.free(paymentIdPointer);
 
@@ -183,9 +183,9 @@ PendingTransactionDescription createTransactionMultDestSync(
 
   final paymentIdPointer = paymentId.toNativeUtf8().cast<Char>();
   final pendingTransactionPointer = calloc<ExternPendingTransactionRaw>();
-  final errorBoxPointer = monero_api.buildErrorBoxPointer();
+  final errorBoxPointer = flutter_monero.buildErrorBoxPointer();
 
-  monero_api.bindings.transaction_create_mult_dest(
+  flutter_monero.bindings.transaction_create_mult_dest(
       addressesPointerPointer,
       paymentIdPointer,
       amountsPointerPointer,
@@ -195,7 +195,7 @@ PendingTransactionDescription createTransactionMultDestSync(
       pendingTransactionPointer,
       errorBoxPointer);
 
-  final errorInfo = monero_api.extractErrorInfo(errorBoxPointer);
+  final errorInfo = flutter_monero.extractErrorInfo(errorBoxPointer);
 
   for (var element in addressesPointers) {
     calloc.free(element);
@@ -231,10 +231,10 @@ void transactionCommit(PendingTransactionDescription transactionDescription) {
   final pendingTransactionPointer =
       Pointer<ExternPendingTransactionRaw>.fromAddress(
           transactionDescription.pointerAddress);
-  final errorBoxPointer = monero_api.buildErrorBoxPointer();
+  final errorBoxPointer = flutter_monero.buildErrorBoxPointer();
 
-  monero_api.bindings.transaction_commit(pendingTransactionPointer, errorBoxPointer);
-  final errorInfo = monero_api.extractErrorInfo(errorBoxPointer);
+  flutter_monero.bindings.transaction_commit(pendingTransactionPointer, errorBoxPointer);
+  final errorInfo = flutter_monero.extractErrorInfo(errorBoxPointer);
 
   if (0 != errorInfo.code) {
     throw CreationTransactionException(message: errorInfo.getErrorMessage());

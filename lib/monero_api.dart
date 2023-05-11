@@ -4,9 +4,9 @@ import 'dart:io';
 import 'package:ffi/ffi.dart';
 
 import 'entities/error_info.dart';
-import 'monero_api_bindings_generated.dart';
+import 'flutter_monero_bindings_generated.dart';
 
-const String _libName = 'monero_api';
+const String _libName = 'flutter_monero';
 
 /// The dynamic library in which the symbols for [MoneroAppBindings] can be found.
 final DynamicLibrary _dylib = () {

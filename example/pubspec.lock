@@ -131,7 +131,7 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.8.0"
-  monero_api:
+  flutter_monero:
     dependency: "direct main"
     description:
       path: ".."

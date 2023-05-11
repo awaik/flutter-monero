@@ -5,7 +5,7 @@
 #include <unistd.h>
 #endif
 #include <mutex>
-#include "monero_api.h"
+#include "flutter_monero.h"
 #if __APPLE__
 // Fix for randomx on ios
 void __clear_cache(void* start, void* end) { }

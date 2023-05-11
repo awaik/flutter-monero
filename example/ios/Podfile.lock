@@ -1,24 +1,24 @@
 PODS:
   - Flutter (1.0.0)
-  - monero_api (0.0.1):
+  - flutter_monero (0.0.1):
     - Flutter
-    - monero_api/Boost (= 0.0.1)
-    - monero_api/Iconv (= 0.0.1)
-    - monero_api/Monero (= 0.0.1)
-    - monero_api/OpenSSL (= 0.0.1)
-    - monero_api/Unbound (= 0.0.1)
-    - monero_api/Zmq (= 0.0.1)
-  - monero_api/Boost (0.0.1):
+    - flutter_monero/Boost (= 0.0.1)
+    - flutter_monero/Iconv (= 0.0.1)
+    - flutter_monero/Monero (= 0.0.1)
+    - flutter_monero/OpenSSL (= 0.0.1)
+    - flutter_monero/Unbound (= 0.0.1)
+    - flutter_monero/Zmq (= 0.0.1)
+  - flutter_monero/Boost (0.0.1):
     - Flutter
-  - monero_api/Iconv (0.0.1):
+  - flutter_monero/Iconv (0.0.1):
     - Flutter
-  - monero_api/Monero (0.0.1):
+  - flutter_monero/Monero (0.0.1):
     - Flutter
-  - monero_api/OpenSSL (0.0.1):
+  - flutter_monero/OpenSSL (0.0.1):
     - Flutter
-  - monero_api/Unbound (0.0.1):
+  - flutter_monero/Unbound (0.0.1):
     - Flutter
-  - monero_api/Zmq (0.0.1):
+  - flutter_monero/Zmq (0.0.1):
     - Flutter
   - path_provider_foundation (0.0.1):
     - Flutter
@@ -26,20 +26,20 @@ PODS:
 
 DEPENDENCIES:
   - Flutter (from `Flutter`)
-  - monero_api (from `.symlinks/plugins/monero_api/ios`)
+  - flutter_monero (from `.symlinks/plugins/flutter_monero/ios`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/ios`)
 
 EXTERNAL SOURCES:
   Flutter:
     :path: Flutter
-  monero_api:
-    :path: ".symlinks/plugins/monero_api/ios"
+  flutter_monero:
+    :path: ".symlinks/plugins/flutter_monero/ios"
   path_provider_foundation:
     :path: ".symlinks/plugins/path_provider_foundation/ios"
 
 SPEC CHECKSUMS:
   Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
-  monero_api: d803a063ce2ee673616a9fb7e6de7fcbf4b2ca0c
+  flutter_monero: d803a063ce2ee673616a9fb7e6de7fcbf4b2ca0c
   path_provider_foundation: eaf5b3e458fc0e5fbb9940fb09980e853fe058b8
 
 PODFILE CHECKSUM: ef19549a9bc3046e7bb7d2fab4d021637c0c58a3

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:monero_api_example/sync_wallet_paga.dart';
-import 'package:monero_api_example/wallet_accounts_page.dart';
-import 'package:monero_api_example/wallet_management_page.dart';
+import 'package:flutter_monero_example/sync_wallet_paga.dart';
+import 'package:flutter_monero_example/wallet_accounts_page.dart';
+import 'package:flutter_monero_example/wallet_management_page.dart';
 
 import 'multisig.dart';
 

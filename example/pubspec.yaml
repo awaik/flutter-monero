@@ -1,5 +1,5 @@
-name: monero_api_example
-description: Demonstrates how to use the monero_api plugin.
+name: flutter_monero_example
+description: Demonstrates how to use the flutter_monero plugin.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
 version: 1.0.0+1
@@ -17,7 +17,7 @@ dependencies:
   flutter:
     sdk: flutter
 
-  monero_api:
+  flutter_monero:
     path: ../
 
   cupertino_icons: ^1.0.2

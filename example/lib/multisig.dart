@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'package:monero_api/multisig_api.dart' as api;
-import 'package:monero_api/transaction_api.dart' as transaction_api;
+import 'package:flutter_monero/multisig_api.dart' as api;
+import 'package:flutter_monero/transaction_api.dart' as transaction_api;
 
 class MultisigWidget extends StatelessWidget {
   final TextEditingController _resultController = TextEditingController();
