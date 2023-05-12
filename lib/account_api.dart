@@ -59,6 +59,20 @@ void refreshSubaddresses({required int accountIndex}) {
   }
 }
 
+int getAccountCount() {
+
+  final errorBoxPointer = flutter_monero.buildErrorBoxPointer();
+  final result = flutter_monero.bindings.account_size(errorBoxPointer);
+
+  final errorInfo = flutter_monero.extractErrorInfo(errorBoxPointer);
+
+  if (0 != errorInfo.code) {
+    throw Exception(errorInfo.getErrorMessage());
+  }
+
+  return result;
+}
+
 List<AccountRow> getAllAccount() {
 
   final errorBoxPointer1 = flutter_monero.buildErrorBoxPointer();
@@ -87,6 +101,20 @@ List<AccountRow> getAllAccount() {
       .toList();
 
   flutter_monero.bindings.free_block_of_accounts(accountAddressesPointer, size);
+
+  return result;
+}
+
+int getSubaddressesCount() {
+
+  final errorBoxPointer = flutter_monero.buildErrorBoxPointer();
+  final result = flutter_monero.bindings.subaddress_size(errorBoxPointer);
+
+  final errorInfo = flutter_monero.extractErrorInfo(errorBoxPointer);
+
+  if (0 != errorInfo.code) {
+    throw Exception(errorInfo.getErrorMessage());
+  }
 
   return result;
 }

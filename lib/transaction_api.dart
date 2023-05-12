@@ -32,7 +32,7 @@ int transactionsCount() {
   return result;
 }
 
-List<TransactionInfoRow> getAllTransations() {
+List<TransactionInfoRow> getAllTransactions() {
   final errorBoxPointer1 = flutter_monero.buildErrorBoxPointer();
   final size = flutter_monero.bindings.transactions_count(errorBoxPointer1);
   final errorInfo1 = flutter_monero.extractErrorInfo(errorBoxPointer1);
@@ -239,4 +239,23 @@ void transactionCommit(PendingTransactionDescription transactionDescription) {
   if (0 != errorInfo.code) {
     throw CreationTransactionException(message: errorInfo.getErrorMessage());
   }
+}
+
+String getTransactionKey(String transactionId)
+{
+  Pointer<Char> transactionIdPointer = transactionId.toNativeUtf8().cast<Char>();
+  final errorBoxPointer = flutter_monero.buildErrorBoxPointer();
+
+  final resultPointer = flutter_monero.bindings.get_tx_key(transactionIdPointer, errorBoxPointer);
+
+  final result = resultPointer.cast<Utf8>().toDartString();
+  calloc.free(resultPointer);
+
+  final errorInfo = flutter_monero.extractErrorInfo(errorBoxPointer);
+
+  if (0 != errorInfo.code) {
+    throw Exception(errorInfo.getErrorMessage());
+  }
+
+  return result;
 }
