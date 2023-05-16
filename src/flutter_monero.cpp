@@ -1599,6 +1599,30 @@ extern "C"
         return result;
     }
 
+    const char *get_transfers(ErrorBox* error)
+    {
+        if (!is_wallet_created(error))
+            return nullptr;
+
+        std::string text;
+
+        try
+        {
+            text = m_wallet->get_transfers();
+        }
+        catch (std::exception& e)
+        {
+            error->code = -2;
+            error->message = strdup(e.what());
+
+            return nullptr;
+        }
+
+        const char * result = strdup(text.c_str());
+
+        return result;
+    }
+
     // **********************************************************************************************************************************
     // Multisig
     // **********************************************************************************************************************************

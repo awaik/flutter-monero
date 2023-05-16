@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_monero_example/multisig_page.dart';
 import 'package:flutter_monero_example/sync_wallet_page.dart';
+import 'package:flutter_monero_example/transfer_page.dart';
 import 'package:flutter_monero_example/wallet_accounts_page.dart';
 import 'package:flutter_monero_example/wallet_management_page.dart';
 
@@ -21,6 +22,10 @@ class MainScreen extends StatelessWidget {
 
   void _toMultisig(BuildContext context) {
     Navigator.push(context, MaterialPageRoute(builder: (context) => MultisigPage()));
+  }
+
+  void _toTransfer(BuildContext context) {
+    Navigator.push(context, MaterialPageRoute(builder: (context) => TransferPage()));
   }
 
   @override
@@ -80,6 +85,19 @@ class MainScreen extends StatelessWidget {
                 minimumSize: const Size(360, 60),
               ),
               child: const Text('Multisig', style: TextStyle(fontSize: 22)),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(10),
+            child: ElevatedButton(
+              onPressed: () {
+                _toTransfer(context);
+              },
+              style: ElevatedButton.styleFrom(
+                padding: const EdgeInsets.all(10),
+                minimumSize: const Size(360, 60),
+              ),
+              child: const Text('Transfers', style: TextStyle(fontSize: 22)),
             ),
           ),
         ],

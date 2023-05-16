@@ -32,9 +32,9 @@ A new Flutter FFI plugin project.
     iconv.library = "iconv"
   end
 
-#   s.subspec 'Sodium' do |sodium|
-#     sodium.library = "sodium"
-#   end
+  s.subspec 'Sodium' do |sodium|
+    sodium.library = "sodium"
+  end
 
   s.subspec 'Crypto' do |crypto|
     crypto.library = "crypto"

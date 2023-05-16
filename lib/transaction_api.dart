@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:ffi';
 
 import 'package:ffi/ffi.dart';
@@ -42,7 +43,8 @@ List<TransactionInfoRow> getAllTransactions() {
   }
 
   final errorBoxPointer2 = flutter_monero.buildErrorBoxPointer();
-  final transactionsPointer = flutter_monero.bindings.transactions_get_all(errorBoxPointer2);
+  final transactionsPointer =
+      flutter_monero.bindings.transactions_get_all(errorBoxPointer2);
   final transactionsAddresses = transactionsPointer.asTypedList(size);
   final errorInfo2 = flutter_monero.extractErrorInfo(errorBoxPointer2);
 
@@ -130,7 +132,9 @@ PendingTransactionDescription createTransactionSync(
       hash: pendingTransactionPointer.ref.hash.cast<Utf8>().toDartString(),
       hex: pendingTransactionPointer.ref.hex.cast<Utf8>().toDartString(),
       txKey: pendingTransactionPointer.ref.tx_key.cast<Utf8>().toDartString(),
-      multisigSignData: pendingTransactionPointer.ref.multisig_sign_data.cast<Utf8>().toDartString(),
+      multisigSignData: pendingTransactionPointer.ref.multisig_sign_data
+          .cast<Utf8>()
+          .toDartString(),
       pointerAddress: pendingTransactionPointer.address);
 
   return pendingTransactionDescription;
@@ -221,7 +225,9 @@ PendingTransactionDescription createTransactionMultDestSync(
       hash: pendingTransactionPointer.ref.hash.cast<Utf8>().toDartString(),
       hex: pendingTransactionPointer.ref.hex.cast<Utf8>().toDartString(),
       txKey: pendingTransactionPointer.ref.tx_key.cast<Utf8>().toDartString(),
-      multisigSignData: pendingTransactionPointer.ref.multisig_sign_data.cast<Utf8>().toDartString(),
+      multisigSignData: pendingTransactionPointer.ref.multisig_sign_data
+          .cast<Utf8>()
+          .toDartString(),
       pointerAddress: pendingTransactionPointer.address);
 
   return pendingTransactionDescription;
@@ -233,7 +239,8 @@ void transactionCommit(PendingTransactionDescription transactionDescription) {
           transactionDescription.pointerAddress);
   final errorBoxPointer = flutter_monero.buildErrorBoxPointer();
 
-  flutter_monero.bindings.transaction_commit(pendingTransactionPointer, errorBoxPointer);
+  flutter_monero.bindings
+      .transaction_commit(pendingTransactionPointer, errorBoxPointer);
   final errorInfo = flutter_monero.extractErrorInfo(errorBoxPointer);
 
   if (0 != errorInfo.code) {
@@ -241,12 +248,13 @@ void transactionCommit(PendingTransactionDescription transactionDescription) {
   }
 }
 
-String getTransactionKey(String transactionId)
-{
-  Pointer<Char> transactionIdPointer = transactionId.toNativeUtf8().cast<Char>();
+String getTransactionKey(String transactionId) {
+  Pointer<Char> transactionIdPointer =
+      transactionId.toNativeUtf8().cast<Char>();
   final errorBoxPointer = flutter_monero.buildErrorBoxPointer();
 
-  final resultPointer = flutter_monero.bindings.get_tx_key(transactionIdPointer, errorBoxPointer);
+  final resultPointer =
+      flutter_monero.bindings.get_tx_key(transactionIdPointer, errorBoxPointer);
 
   final result = resultPointer.cast<Utf8>().toDartString();
   calloc.free(resultPointer);
@@ -258,4 +266,40 @@ String getTransactionKey(String transactionId)
   }
 
   return result;
+}
+
+String getTransferTest() {
+
+  final errorBoxPointer = flutter_monero.buildErrorBoxPointer();
+
+  final resultPointer = flutter_monero.bindings.get_transfers(errorBoxPointer);
+
+  final result = resultPointer.cast<Uint8>();
+
+  int count = 0;
+
+  List<int> list = [];
+
+  String resString = "";
+
+  for (int i = 0; i < 1000; i++) {
+
+    int byte = result.elementAt(i).value;
+    list.add(byte);
+    //resString += byte.toString() + ",";
+
+    //count++;
+  }
+
+  calloc.free(resultPointer);
+
+  final errorInfo = flutter_monero.extractErrorInfo(errorBoxPointer);
+
+  if (0 != errorInfo.code) {
+    throw Exception(errorInfo.getErrorMessage());
+  }
+
+  String base64String = base64.encode(list);
+
+  return base64String;
 }

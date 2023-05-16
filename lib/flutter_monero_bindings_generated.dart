@@ -1089,6 +1089,21 @@ class MoneroApiBindings {
   late final _frozen = _frozenPtr.asFunction<
       bool Function(ffi.Pointer<ffi.Char>, ffi.Pointer<ErrorBox>)>();
 
+  ffi.Pointer<ffi.Char> get_transfers(
+    ffi.Pointer<ErrorBox> error,
+  ) {
+    return _get_transfers(
+      error,
+    );
+  }
+
+  late final _get_transfersPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Pointer<ffi.Char> Function(
+              ffi.Pointer<ErrorBox>)>>('get_transfers');
+  late final _get_transfers = _get_transfersPtr
+      .asFunction<ffi.Pointer<ffi.Char> Function(ffi.Pointer<ErrorBox>)>();
+
   /// **********************************************************************************************************************************
   /// Multisig
   /// **********************************************************************************************************************************

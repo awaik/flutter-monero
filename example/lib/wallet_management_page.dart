@@ -20,7 +20,7 @@ class WalletManagementPage extends StatelessWidget {
       walletDir.createSync(recursive: true);
     }
 
-    final walletPath = '${walletDir.path}/test1';
+    final walletPath = '${walletDir.path}/test2';
 
     return walletPath;
   }

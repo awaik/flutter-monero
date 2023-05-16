@@ -4,6 +4,7 @@ PODS:
     - flutter_monero/Crypto (= 0.0.1)
     - flutter_monero/Iconv (= 0.0.1)
     - flutter_monero/Monero (= 0.0.1)
+    - flutter_monero/Sodium (= 0.0.1)
     - flutter_monero/Ssl (= 0.0.1)
     - flutter_monero/Unbound (= 0.0.1)
     - flutter_monero/Zmq (= 0.0.1)
@@ -15,6 +16,8 @@ PODS:
   - flutter_monero/Iconv (0.0.1):
     - FlutterMacOS
   - flutter_monero/Monero (0.0.1):
+    - FlutterMacOS
+  - flutter_monero/Sodium (0.0.1):
     - FlutterMacOS
   - flutter_monero/Ssl (0.0.1):
     - FlutterMacOS
@@ -41,7 +44,7 @@ EXTERNAL SOURCES:
     :path: Flutter/ephemeral/.symlinks/plugins/path_provider_foundation/darwin
 
 SPEC CHECKSUMS:
-  flutter_monero: d28b55635486301310b2bb4c302f4e572f669a39
+  flutter_monero: f8de6bf13a7a85db81a9c6f9918f42ff25fe865a
   FlutterMacOS: 8f6f14fa908a6fb3fba0cd85dbd81ec4b251fb24
   path_provider_foundation: eaf5b3e458fc0e5fbb9940fb09980e853fe058b8
 
