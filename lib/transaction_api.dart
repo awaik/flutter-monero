@@ -271,25 +271,8 @@ String getTransactionKey(String transactionId) {
 String getTransferTest() {
 
   final errorBoxPointer = flutter_monero.buildErrorBoxPointer();
-
   final resultPointer = flutter_monero.bindings.get_transfers(errorBoxPointer);
-
-  final result = resultPointer.cast<Uint8>();
-
-  int count = 0;
-
-  List<int> list = [];
-
-  String resString = "";
-
-  for (int i = 0; i < 1000; i++) {
-
-    int byte = result.elementAt(i).value;
-    list.add(byte);
-    //resString += byte.toString() + ",";
-
-    //count++;
-  }
+  final result = resultPointer.cast<Utf8>().toDartString();
 
   calloc.free(resultPointer);
 
@@ -299,7 +282,38 @@ String getTransferTest() {
     throw Exception(errorInfo.getErrorMessage());
   }
 
-  String base64String = base64.encode(list);
+  return result;
 
-  return base64String;
+  // final errorBoxPointer = flutter_monero.buildErrorBoxPointer();
+  //
+  // final resultPointer = flutter_monero.bindings.get_transfers(errorBoxPointer);
+  //
+  // final result = resultPointer.cast<Uint8>();
+  //
+  // int count = 0;
+  //
+  // List<int> list = [];
+  //
+  // String resString = "";
+  //
+  // for (int i = 0; i < 1000; i++) {
+  //
+  //   int byte = result.elementAt(i).value;
+  //   list.add(byte);
+  //   //resString += byte.toString() + ",";
+  //
+  //   //count++;
+  // }
+  //
+  // calloc.free(resultPointer);
+  //
+  // final errorInfo = flutter_monero.extractErrorInfo(errorBoxPointer);
+  //
+  // if (0 != errorInfo.code) {
+  //   throw Exception(errorInfo.getErrorMessage());
+  // }
+  //
+  // String base64String = base64.encode(list);
+  //
+  // return base64String;
 }

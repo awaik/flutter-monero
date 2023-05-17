@@ -23,6 +23,8 @@ class TransferPage extends StatelessWidget {
         children: <Widget>[
           TextField(
             controller: _resultController,
+            keyboardType: TextInputType.multiline,
+            maxLines: 8,
             decoration: InputDecoration(
               border: OutlineInputBorder(),
             ),
