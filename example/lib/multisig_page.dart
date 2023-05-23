@@ -124,7 +124,7 @@ class MultisigPage extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.all(10),
                     child: ElevatedButton(
-                      child: Text("Проверка мультиподписи", style: TextStyle(fontSize: 22)),
+                      child: Text("Check multisig", style: TextStyle(fontSize: 22)),
                       onPressed: _isMultisig,
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.all(10),
@@ -135,7 +135,7 @@ class MultisigPage extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.all(10),
                     child: ElevatedButton(
-                      child: Text("prepare_multisig", style: TextStyle(fontSize: 22)),
+                      child: Text("1. Prepare_multisig", style: TextStyle(fontSize: 22)),
                       onPressed: _prepareMultisig,
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.all(10),
@@ -146,7 +146,7 @@ class MultisigPage extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.all(10),
                     child: ElevatedButton(
-                      child: Text("get_multisig_info", style: TextStyle(fontSize: 22)),
+                      child: Text("2. Get_multisig_info", style: TextStyle(fontSize: 22)),
                       onPressed: _getMultisigInfo,
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.all(10),
@@ -157,8 +157,8 @@ class MultisigPage extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.all(10),
                     child: ElevatedButton(
-                      child: Text("exchange_multisig_keys", style: TextStyle(fontSize: 22)),
-                      onPressed: _exchangeMultisigKeys,
+                      child: Text("3. Make_multisig", style: TextStyle(fontSize: 22)),
+                      onPressed: _makeMultisig,
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.all(10),
                         minimumSize: Size(360, 60),
@@ -168,8 +168,8 @@ class MultisigPage extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.all(10),
                     child: ElevatedButton(
-                      child: Text("make_multisig", style: TextStyle(fontSize: 22)),
-                      onPressed: _makeMultisig,
+                      child: Text("4. Exchange_multisig_keys", style: TextStyle(fontSize: 22)),
+                      onPressed: _exchangeMultisigKeys,
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.all(10),
                         minimumSize: Size(360, 60),
@@ -234,7 +234,7 @@ class MultisigPage extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.all(10),
                     child: ElevatedButton(
-                      child: Text("Транзакцию создать", style: TextStyle(fontSize: 22)),
+                      child: Text("Create transaction", style: TextStyle(fontSize: 22)),
                       onPressed: _createTransaction,
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.all(10),

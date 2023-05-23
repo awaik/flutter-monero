@@ -75,7 +75,10 @@ class WalletManagementPage extends StatelessWidget {
         final password = "1234";
 
         await api.createWallet(
-            path: walletPath, password: password, language: "Eng");
+          path: walletPath,
+          password: password,
+          language: "Eng",
+        );
         testResult = "Wallet have successfully created!";
       } catch (e) {
         testResult = e.toString();
@@ -114,7 +117,10 @@ class WalletManagementPage extends StatelessWidget {
             "tycoon odds launching anchor academy ought inflamed vivid payment large musical enhanced loincloth having wallets earth ditch thirsty somewhere himself pact village awoken basin tycoon";
 
         api.restoreWalletFromSeedSync(
-            path: walletPath, password: password, seed: seed);
+          path: walletPath,
+          password: password,
+          seed: seed,
+        );
         testResult = "Wallet have recovered!";
       } catch (e) {
         testResult = e.toString();
@@ -191,10 +197,7 @@ class WalletManagementPage extends StatelessWidget {
     String testResult;
 
     try {
-      testResult = "SecretViewKey=" +
-          api.getSecretViewKey() +
-          " | SecretSpendKey=" +
-          api.getSecretSpendKey();
+      testResult = "SecretViewKey=" + api.getSecretViewKey() + " | SecretSpendKey=" + api.getSecretSpendKey();
     } catch (e) {
       testResult = e.toString();
     }
@@ -349,8 +352,7 @@ class WalletManagementPage extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.all(10),
                     child: ElevatedButton(
-                      child: Text("Recover (from seed)",
-                          style: TextStyle(fontSize: 22)),
+                      child: Text("Recover (from seed)", style: TextStyle(fontSize: 22)),
                       onPressed: _restoreWallet,
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.all(10),
@@ -383,8 +385,7 @@ class WalletManagementPage extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.all(10),
                     child: ElevatedButton(
-                      child:
-                          Text("Secret keys", style: TextStyle(fontSize: 22)),
+                      child: Text("Secret keys", style: TextStyle(fontSize: 22)),
                       onPressed: _showSecret,
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.all(10),
@@ -395,8 +396,7 @@ class WalletManagementPage extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.all(10),
                     child: ElevatedButton(
-                      child: Text("Открытые ключи",
-                          style: TextStyle(fontSize: 22)),
+                      child: Text("Public keys", style: TextStyle(fontSize: 22)),
                       onPressed: _showInfo,
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.all(10),
@@ -429,8 +429,7 @@ class WalletManagementPage extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.all(10),
                     child: ElevatedButton(
-                      child: Text("Set a password",
-                          style: TextStyle(fontSize: 22)),
+                      child: Text("Set a password", style: TextStyle(fontSize: 22)),
                       onPressed: _setPassword,
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.all(10),
@@ -452,8 +451,7 @@ class WalletManagementPage extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.all(10),
                     child: ElevatedButton(
-                      child: Text("is_recovery=true",
-                          style: TextStyle(fontSize: 22)),
+                      child: Text("is_recovery=true", style: TextStyle(fontSize: 22)),
                       onPressed: _setIsRecovery,
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.all(10),
@@ -464,8 +462,7 @@ class WalletManagementPage extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.all(10),
                     child: ElevatedButton(
-                      child: Text("is_recovery=false",
-                          style: TextStyle(fontSize: 22)),
+                      child: Text("is_recovery=false", style: TextStyle(fontSize: 22)),
                       onPressed: _resetIsRecovery,
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.all(10),
