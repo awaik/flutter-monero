@@ -5,10 +5,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_monero/sync_listener.dart';
 
 import 'exceptions/setup_wallet_exception.dart';
-
 import 'flutter_monero.dart' as flutter_monero;
 
-void onStartup(){
+void onStartup() {
   final errorBoxPointer = flutter_monero.buildErrorBoxPointer();
   flutter_monero.bindings.on_startup(errorBoxPointer);
   final errorInfo = flutter_monero.extractErrorInfo(errorBoxPointer);
@@ -19,18 +18,9 @@ void onStartup(){
 }
 
 Future setupNode(
-        {required String address,
-        String? login,
-        String? password,
-        bool useSSL = false,
-        bool isLightWallet = false}) =>
-    compute<Map<String, Object?>, void>(_setupNodeSync, {
-      'address': address,
-      'login': login,
-      'password': password,
-      'useSSL': useSSL,
-      'isLightWallet': isLightWallet
-    });
+        {required String address, String? login, String? password, bool useSSL = false, bool isLightWallet = false}) =>
+    compute<Map<String, Object?>, void>(_setupNodeSync,
+        {'address': address, 'login': login, 'password': password, 'useSSL': useSSL, 'isLightWallet': isLightWallet});
 
 bool _setupNodeSync(Map<String, Object?> args) {
   final address = args['address'] as String;
@@ -40,35 +30,20 @@ bool _setupNodeSync(Map<String, Object?> args) {
   final isLightWallet = args['isLightWallet'] as bool;
 
   return setupNodeSync(
-      address: address,
-      login: login,
-      password: password,
-      useSSL: useSSL,
-      isLightWallet: isLightWallet);
+      address: address, login: login, password: password, useSSL: useSSL, isLightWallet: isLightWallet);
 }
 
 bool setupNodeSync(
-    {required String address,
-    String? login,
-    String? password,
-    bool useSSL = false,
-    bool isLightWallet = false}) {
+    {required String address, String? login, String? password, bool useSSL = false, bool isLightWallet = false}) {
   final addressPointer = address.toNativeUtf8().cast<Char>();
-  Pointer<Char> loginPointer = (login != null)
-      ? login.toNativeUtf8().cast<Char>()
-      : Pointer<Char>.fromAddress(nullptr.address);
-  Pointer<Char> passwordPointer = (password != null)
-      ? password.toNativeUtf8().cast<Char>()
-      : Pointer<Char>.fromAddress(nullptr.address);
+  Pointer<Char> loginPointer =
+      (login != null) ? login.toNativeUtf8().cast<Char>() : Pointer<Char>.fromAddress(nullptr.address);
+  Pointer<Char> passwordPointer =
+      (password != null) ? password.toNativeUtf8().cast<Char>() : Pointer<Char>.fromAddress(nullptr.address);
   final errorBoxPointer = flutter_monero.buildErrorBoxPointer();
 
-  flutter_monero.bindings.setup_node(
-      addressPointer,
-      loginPointer,
-      passwordPointer,
-      useSSL,
-      isLightWallet,
-      errorBoxPointer);
+  flutter_monero.bindings
+      .setup_node(addressPointer, loginPointer, passwordPointer, useSSL, isLightWallet, errorBoxPointer);
   final errorInfo = flutter_monero.extractErrorInfo(errorBoxPointer);
 
   calloc.free(addressPointer);
@@ -105,8 +80,11 @@ int getNodeHeightSync() {
   return result;
 }
 
-SyncListener setListeners(void Function(int, int, double) onNewBlock,
-    void Function() onNewTransaction) {
+///
+/// Call methods https://github.com/awaik/monero_flutter/blob/sample/lib/sync_listener.dart
+/// onNewBlock.call(syncHeight, left, ptc);
+///
+SyncListener setListeners(void Function(int, int, double) onNewBlock, void Function() onNewTransaction) {
   final listener = SyncListener(onNewBlock, onNewTransaction);
   final errorBoxPointer = flutter_monero.buildErrorBoxPointer();
   flutter_monero.bindings.set_listener(errorBoxPointer);
@@ -134,7 +112,7 @@ Future<bool> isConnected() => compute(_isConnected, 0);
 
 bool _isConnected(Object _) => isConnectedSync();
 
-bool isConnectedSync(){
+bool isConnectedSync() {
   final errorBoxPointer = flutter_monero.buildErrorBoxPointer();
   final result = flutter_monero.bindings.is_connected(errorBoxPointer);
 
@@ -147,7 +125,7 @@ bool isConnectedSync(){
   return result;
 }
 
-bool isNeededToRefresh(){
+bool isNeededToRefresh() {
   final errorBoxPointer = flutter_monero.buildErrorBoxPointer();
   var result = flutter_monero.bindings.is_needed_to_refresh(errorBoxPointer);
   final errorInfo = flutter_monero.extractErrorInfo(errorBoxPointer);
@@ -159,7 +137,7 @@ bool isNeededToRefresh(){
   return result;
 }
 
-void startRefresh(){
+void startRefresh() {
   final errorBoxPointer = flutter_monero.buildErrorBoxPointer();
   flutter_monero.bindings.start_refresh(errorBoxPointer);
 
@@ -170,7 +148,7 @@ void startRefresh(){
   }
 }
 
-void setRefreshFromBlockHeight({required int height}){
+void setRefreshFromBlockHeight({required int height}) {
   final errorBoxPointer = flutter_monero.buildErrorBoxPointer();
   flutter_monero.bindings.set_refresh_from_block_height(height, errorBoxPointer);
   final errorInfo = flutter_monero.extractErrorInfo(errorBoxPointer);
@@ -191,7 +169,7 @@ void rescanBlockchain() {
   }
 }
 
-void setTrustedDaemon(bool arg){
+void setTrustedDaemon(bool arg) {
   final errorBoxPointer = flutter_monero.buildErrorBoxPointer();
   flutter_monero.bindings.set_trusted_daemon(arg, errorBoxPointer);
 
@@ -202,7 +180,7 @@ void setTrustedDaemon(bool arg){
   }
 }
 
-bool trustedDaemon(){
+bool trustedDaemon() {
   final errorBoxPointer = flutter_monero.buildErrorBoxPointer();
   final result = flutter_monero.bindings.trusted_daemon(errorBoxPointer);
 
@@ -241,7 +219,7 @@ int getSyncingHeight() {
   return result;
 }
 
-int getCurrentHeight(){
+int getCurrentHeight() {
   final errorBoxPointer = flutter_monero.buildErrorBoxPointer();
   final result = flutter_monero.bindings.get_current_height(errorBoxPointer);
 
