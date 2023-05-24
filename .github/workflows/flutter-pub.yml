@@ -135,10 +135,19 @@ jobs:
         run: |
           mkdir android/external
           mkdir ios/external
-          unzip dist-android.zip -d android/external
-          unzip dist-ios.zip -d ios/external
+          unzip dist-android.zip "dist/*" -d android/external
+          unzip dist-ios.zip "dist/*" -d ios/external
           rm -f dist-android.zip
           rm -f dist-ios.zip
+
+      - name: fix gitignore
+        run: |
+          sed -i .bak '\!mac/external/!d' .gitignore
+          rm -f .gitignore.bak
+          sed -i .bak '\!android/external/!d' .gitignore
+          rm -f .gitignore.bak
+          sed -i .bak '\!ios/external/!d' .gitignore
+          rm -f .gitignore.bak
 
       - name: 'monero_flutter'
         uses: k-paxian/dart-package-publisher@master
