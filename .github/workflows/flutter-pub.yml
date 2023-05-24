@@ -5,13 +5,140 @@ on:
     tags:
       - 'v[0-9]+.[0-9]+.[0-9]+*'
 
+# The below variables reduce repetitions across similar targets
+env:
+  REMOVE_BUNDLED_BOOST : rm -rf /usr/local/share/boost
+  APT_INSTALL_LINUX: 'sudo apt install -y curl unzip automake build-essential file pkg-config git python3 python-is-python3 libtool libtinfo5 cmake clang'
+  APT_SET_CONF: |
+        echo "Acquire::Retries \"3\";"         | sudo tee -a /etc/apt/apt.conf.d/80-custom
+        echo "Acquire::http::Timeout \"120\";" | sudo tee -a /etc/apt/apt.conf.d/80-custom
+        echo "Acquire::ftp::Timeout \"120\";"  | sudo tee -a /etc/apt/apt.conf.d/80-custom
+
 jobs:
+  build-android:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        submodules: recursive
+    - name: Remove bundled Boost.
+      run: ${{env.REMOVE_BUNDLED_BOOST}}
+    - name: Set apt.conf
+      run: ${{env.APT_SET_CONF}}
+    - name: Update apt.
+      run: sudo apt update -y
+    - name: Install dependencies.
+      run: ${{env.APT_INSTALL_LINUX}}
+    - name: Build.
+      run: |
+        cd build_scripts/android
+        ./build_all.sh
+
+    - name: Create zip-arcive.
+      run: |
+        cd build_scripts/android
+        zip -r dist-android.zip dist
+
+    - uses: actions/upload-artifact@v3
+      with:
+        name: dist-android.zip
+        path: build_scripts/android/dist-android.zip 
+        retention-days: 1
+
+  build-ios:
+    runs-on: macos-13
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        submodules: recursive
+  
+    - name: Install dependencies.
+      run: HOMEBREW_NO_AUTO_UPDATE=1 brew install cmake pkg-config unbound autoconf automake libtool ccache
+
+    - name: Make dirs.
+      run: |
+        cd build_scripts/ios
+        . ./config.sh
+        mkdir -p $SOURCE_DIR
+        mkdir -p $BUILD_LIB_DIR
+        mkdir -p $BUILD_INCLUDE_DIR
+        mkdir -p $DIST_LIB_DIR
+        mkdir -p $DIST_INCLUDE_DIR
+  
+    - name: Install missing headers.
+      run: |
+        cd build_scripts/ios
+        ./install_missing_headers.sh
+  
+    - name: Build OpenSSL.
+      run: |
+        cd build_scripts/ios
+        ./build_openssl.sh
+    - name: Build Boost.
+      run: |
+        cd build_scripts/ios
+        ./build_boost.sh        
+    - name: Build Sodium.
+      run: |
+        cd build_scripts/ios
+        ./build_sodium.sh
+    - name: Build ZMQ.
+      run: |
+        cd build_scripts/ios
+        ./build_zmq.sh
+    - name: Build Unbound.
+      run: |
+        cd build_scripts/ios
+        ./build_unbound.sh
+    - name: Build Monero.
+      run: |
+        cd build_scripts/ios
+        ./build_monero.sh
+
+    - name: Setup.
+      run: |
+        cd build_scripts/ios
+        ./setup.sh
+
+    - name: Create zip-arcive.
+      run: |
+        cd build_scripts/ios
+        zip -r dist-ios.zip dist
+
+    - uses: actions/upload-artifact@v3
+      with:
+        name: dist-ios.zip
+        path: build_scripts/ios/dist-ios.zip
+        retention-days: 1
+
   publishing:
     runs-on: ubuntu-latest
     steps:
       - name: 'Checkout'
         uses: actions/checkout@main # required!
-        
+    
+      # Android zip
+      - name: Download Android artifact.
+        uses: actions/download-artifact@v3
+        with:
+          name: dist-android.zip
+
+      # iOS zip
+      - name: Download iOS artifact.
+        uses: actions/download-artifact@v3
+        with:
+          name: dist-ios.zip
+
+      # unzip
+      - name: Unzip.
+        run: |
+          mkdir android/external
+          mkdir ios/external
+          unzip dist-android.zip -d android/external
+          unzip dist-ios.zip -d ios/external
+          rm -f dist-android.zip
+          rm -f dist-ios.zip
+
       - name: 'monero_flutter'
         uses: k-paxian/dart-package-publisher@master
         with:
