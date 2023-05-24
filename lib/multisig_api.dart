@@ -2,13 +2,13 @@ import 'dart:ffi';
 
 import 'package:ffi/ffi.dart';
 
-import 'monero_flutter.dart' as flutter_monero;
+import 'monero_flutter.dart' as monero_flutter;
 
 bool isMultisig(){
-  final errorBoxPointer = flutter_monero.buildErrorBoxPointer();
-  var result = flutter_monero.bindings.is_multisig(errorBoxPointer);
+  final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
+  var result = monero_flutter.bindings.is_multisig(errorBoxPointer);
 
-  final errorInfo = flutter_monero.extractErrorInfo(errorBoxPointer);
+  final errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
 
   if (0 != errorInfo.code) {
     throw Exception(errorInfo.getErrorMessage());
@@ -18,14 +18,14 @@ bool isMultisig(){
 }
 
 String prepareMultisig() {
-  final errorBoxPointer = flutter_monero.buildErrorBoxPointer();
+  final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
 
-  final resultPointer = flutter_monero.bindings.prepare_multisig(errorBoxPointer);
+  final resultPointer = monero_flutter.bindings.prepare_multisig(errorBoxPointer);
 
   final result = resultPointer.cast<Utf8>().toDartString();
   calloc.free(resultPointer);
 
-  final errorInfo = flutter_monero.extractErrorInfo(errorBoxPointer);
+  final errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
 
   if (0 != errorInfo.code) {
     throw Exception(errorInfo.getErrorMessage());
@@ -35,13 +35,13 @@ String prepareMultisig() {
 }
 
 String getMultisigInfo() {
-  final errorBoxPointer = flutter_monero.buildErrorBoxPointer();
-  final resultPointer = flutter_monero.bindings.get_multisig_info(errorBoxPointer);
+  final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
+  final resultPointer = monero_flutter.bindings.get_multisig_info(errorBoxPointer);
 
   final result = resultPointer.cast<Utf8>().toDartString();
   calloc.free(resultPointer);
 
-  final errorInfo = flutter_monero.extractErrorInfo(errorBoxPointer);
+  final errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
 
   if (0 != errorInfo.code) {
     throw Exception(errorInfo.getErrorMessage());
@@ -60,9 +60,9 @@ String exchangeMultisigKeys(
     infoPointerPointer[i] = infoPointers[i];
   }
 
-  final errorBoxPointer = flutter_monero.buildErrorBoxPointer();
+  final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
   final resultPointer =
-      flutter_monero.bindings.exchange_multisig_keys(infoPointerPointer, size, errorBoxPointer);
+      monero_flutter.bindings.exchange_multisig_keys(infoPointerPointer, size, errorBoxPointer);
 
   final result = resultPointer.cast<Utf8>().toDartString();
 
@@ -72,7 +72,7 @@ String exchangeMultisigKeys(
   calloc.free(infoPointerPointer);
   calloc.free(resultPointer);
 
-  final errorInfo = flutter_monero.extractErrorInfo(errorBoxPointer);
+  final errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
 
   if (0 != errorInfo.code) {
     throw Exception(errorInfo.getErrorMessage());
@@ -82,11 +82,11 @@ String exchangeMultisigKeys(
 }
 
 bool isMultisigImportNeeded(){
-  final errorBoxPointer = flutter_monero.buildErrorBoxPointer();
+  final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
 
-  final result = flutter_monero.bindings.is_multisig_import_needed(errorBoxPointer);
+  final result = monero_flutter.bindings.is_multisig_import_needed(errorBoxPointer);
 
-  final errorInfo = flutter_monero.extractErrorInfo(errorBoxPointer);
+  final errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
 
   if (0 != errorInfo.code) {
     throw Exception(errorInfo.getErrorMessage());
@@ -105,16 +105,16 @@ int importMultisigImages({required List<String> infoList, required int size}) {
     infoPointerPointer[i] = infoPointers[i];
   }
 
-  final errorBoxPointer = flutter_monero.buildErrorBoxPointer();
+  final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
   int result =
-      flutter_monero.bindings.import_multisig_images(infoPointerPointer, size, errorBoxPointer);
+      monero_flutter.bindings.import_multisig_images(infoPointerPointer, size, errorBoxPointer);
 
   for (var element in infoPointers) {
     calloc.free(element);
   }
   calloc.free(infoPointerPointer);
 
-  final errorInfo = flutter_monero.extractErrorInfo(errorBoxPointer);
+  final errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
 
   if (0 != errorInfo.code) {
     throw Exception(errorInfo.getErrorMessage());
@@ -127,10 +127,10 @@ String exportMultisigImages() {
   final infoPointer = ''.toNativeUtf8().cast<Char>();
   Pointer<Pointer<Char>> pointerToInfoPointer = calloc.call();
   pointerToInfoPointer.value = infoPointer;
-  final errorBoxPointer = flutter_monero.buildErrorBoxPointer();
+  final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
 
-  flutter_monero.bindings.export_multisig_images(pointerToInfoPointer, errorBoxPointer);
-  final errorInfo = flutter_monero.extractErrorInfo(errorBoxPointer);
+  monero_flutter.bindings.export_multisig_images(pointerToInfoPointer, errorBoxPointer);
+  final errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
 
   String? info;
 
@@ -160,14 +160,14 @@ String makeMultisig(
   final List<Pointer<Char>> infoPointers =
       infoList.map((info) => info.toNativeUtf8().cast<Char>()).toList();
   final Pointer<Pointer<Char>> infoPointerPointer = calloc(size);
-  final errorBoxPointer = flutter_monero.buildErrorBoxPointer();
+  final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
 
   for (int i = 0; i < size; i++) {
     infoPointerPointer[i] = infoPointers[i];
   }
 
   Pointer<Char> resultPointer =
-      flutter_monero.bindings.make_multisig(infoPointerPointer, size, threshold, errorBoxPointer);
+      monero_flutter.bindings.make_multisig(infoPointerPointer, size, threshold, errorBoxPointer);
 
   final result = resultPointer.cast<Utf8>().toDartString();
 
@@ -178,7 +178,7 @@ String makeMultisig(
   calloc.free(infoPointerPointer);
   calloc.free(resultPointer);
 
-  final errorInfo = flutter_monero.extractErrorInfo(errorBoxPointer);
+  final errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
 
   if (0 != errorInfo.code) {
     throw Exception(errorInfo.getErrorMessage());
@@ -190,16 +190,16 @@ String makeMultisig(
 String signMultisigTxHex(String multisigTxHex)
 {
   Pointer<Char> multisigTxHexPointer = multisigTxHex.toNativeUtf8().cast<Char>();
-  final errorBoxPointer = flutter_monero.buildErrorBoxPointer();
+  final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
 
-  Pointer<Char> resultPointer = flutter_monero.bindings.sign_multisig_tx_hex(multisigTxHexPointer, errorBoxPointer);
+  Pointer<Char> resultPointer = monero_flutter.bindings.sign_multisig_tx_hex(multisigTxHexPointer, errorBoxPointer);
 
   String hex = resultPointer.cast<Utf8>().toDartString();
 
   calloc.free(multisigTxHexPointer);
   calloc.free(resultPointer);
 
-  final errorInfo = flutter_monero.extractErrorInfo(errorBoxPointer);
+  final errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
 
   if (0 != errorInfo.code) {
     throw Exception(errorInfo.getErrorMessage());
@@ -212,14 +212,14 @@ List<String> submitMultisigTxHex(String signedMultisigTxHex)
 {
   Pointer<Char> signedMultisigTxHexPointer = signedMultisigTxHex.toNativeUtf8().cast<Char>();
 
-  final errorBoxPointer = flutter_monero.buildErrorBoxPointer();
-  final pointers = flutter_monero.bindings.submit_multisig_tx_hex(signedMultisigTxHexPointer, errorBoxPointer);
+  final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
+  final pointers = monero_flutter.bindings.submit_multisig_tx_hex(signedMultisigTxHexPointer, errorBoxPointer);
   final result = convertToList(pointers);
 
   calloc.free(signedMultisigTxHexPointer);
   calloc.free(pointers);
 
-  final errorInfo = flutter_monero.extractErrorInfo(errorBoxPointer);
+  final errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
 
   if (0 != errorInfo.code) {
     throw Exception(errorInfo.getErrorMessage());

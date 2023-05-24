@@ -7,7 +7,7 @@ import 'exceptions/wallet_creation_exception.dart';
 import 'exceptions/wallet_restore_from_keys_exception.dart';
 import 'exceptions/wallet_restore_from_seed_exception.dart';
 
-import 'monero_flutter.dart' as flutter_monero;
+import 'monero_flutter.dart' as monero_flutter;
 
 Future<void> createWallet(
         {required String path,
@@ -33,11 +33,11 @@ void createWalletSync(
   final pathPointer = path.toNativeUtf8().cast<Char>();
   final passwordPointer = password.toNativeUtf8().cast<Char>();
   final languagePointer = language.toNativeUtf8().cast<Char>();
-  final errorBoxPointer = flutter_monero.buildErrorBoxPointer();
+  final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
 
-  flutter_monero.bindings.create_wallet(
+  monero_flutter.bindings.create_wallet(
       pathPointer, passwordPointer, languagePointer, nettype, errorBoxPointer);
-  final errorInfo = flutter_monero.extractErrorInfo(errorBoxPointer);
+  final errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
 
   calloc.free(pathPointer);
   calloc.free(passwordPointer);
@@ -82,9 +82,9 @@ void restoreWalletFromSeedSync({
   final pathPointer = path.toNativeUtf8().cast<Char>();
   final passwordPointer = password.toNativeUtf8().cast<Char>();
   final seedPointer = seed.toNativeUtf8().cast<Char>();
-  final errorBoxPointer = flutter_monero.buildErrorBoxPointer();
+  final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
 
-  flutter_monero.bindings.restore_wallet_from_seed(
+  monero_flutter.bindings.restore_wallet_from_seed(
     pathPointer,
     passwordPointer,
     seedPointer,
@@ -92,7 +92,7 @@ void restoreWalletFromSeedSync({
     restoreHeight,
     errorBoxPointer,
   );
-  final errorInfo = flutter_monero.extractErrorInfo(errorBoxPointer);
+  final errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
 
   calloc.free(pathPointer);
   calloc.free(passwordPointer);
@@ -158,9 +158,9 @@ void restoreWalletFromKeysSync({
   final addressPointer = address.toNativeUtf8().cast<Char>();
   final viewKeyPointer = viewKey.toNativeUtf8().cast<Char>();
   final spendKeyPointer = spendKey.toNativeUtf8().cast<Char>();
-  final errorBoxPointer = flutter_monero.buildErrorBoxPointer();
+  final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
 
-  flutter_monero.bindings.restore_wallet_from_keys(
+  monero_flutter.bindings.restore_wallet_from_keys(
     pathPointer,
     passwordPointer,
     languagePointer,
@@ -171,7 +171,7 @@ void restoreWalletFromKeysSync({
     restoreHeight,
     errorBoxPointer,
   );
-  final errorInfo = flutter_monero.extractErrorInfo(errorBoxPointer);
+  final errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
 
   calloc.free(pathPointer);
   calloc.free(passwordPointer);
@@ -187,7 +187,7 @@ void restoreWalletFromKeysSync({
 
 bool isWalletExist({required String path}) {
   final pathPointer = path.toNativeUtf8().cast<Char>();
-  final isExist = flutter_monero.bindings.is_wallet_exist(pathPointer);
+  final isExist = monero_flutter.bindings.is_wallet_exist(pathPointer);
 
   calloc.free(pathPointer);
 
@@ -211,11 +211,11 @@ void loadWalletSync(
     {required String path, required String password, int nettype = 0}) {
   final pathPointer = path.toNativeUtf8().cast<Char>();
   final passwordPointer = password.toNativeUtf8().cast<Char>();
-  final errorBoxPointer = flutter_monero.buildErrorBoxPointer();
+  final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
 
-  flutter_monero.bindings
+  monero_flutter.bindings
       .load_wallet(pathPointer, passwordPointer, nettype, errorBoxPointer);
-  final errorInfo = flutter_monero.extractErrorInfo(errorBoxPointer);
+  final errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
 
   calloc.free(pathPointer);
   calloc.free(passwordPointer);
@@ -226,9 +226,9 @@ void loadWalletSync(
 }
 
 void closeCurrentWallet() {
-  final errorBoxPointer = flutter_monero.buildErrorBoxPointer();
-  flutter_monero.bindings.close_current_wallet(errorBoxPointer);
-  final errorInfo = flutter_monero.extractErrorInfo(errorBoxPointer);
+  final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
+  monero_flutter.bindings.close_current_wallet(errorBoxPointer);
+  final errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
 
   if (0 != errorInfo.code) {
     throw Exception(errorInfo.getErrorMessage());
@@ -236,13 +236,13 @@ void closeCurrentWallet() {
 }
 
 String getSecretViewKey() {
-  final errorBoxPointer = flutter_monero.buildErrorBoxPointer();
+  final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
   final secretViewKeyPointer =
-      flutter_monero.bindings.secret_view_key(errorBoxPointer);
+      monero_flutter.bindings.secret_view_key(errorBoxPointer);
   final secretViewKey = secretViewKeyPointer.cast<Utf8>().toDartString();
   calloc.free(secretViewKeyPointer);
 
-  final errorInfo = flutter_monero.extractErrorInfo(errorBoxPointer);
+  final errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
 
   if (0 != errorInfo.code) {
     throw Exception(errorInfo.getErrorMessage());
@@ -252,13 +252,13 @@ String getSecretViewKey() {
 }
 
 String getPublicViewKey() {
-  final errorBoxPointer = flutter_monero.buildErrorBoxPointer();
+  final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
   final viewKeyPointer =
-      flutter_monero.bindings.public_view_key(errorBoxPointer);
+      monero_flutter.bindings.public_view_key(errorBoxPointer);
   final viewKey = viewKeyPointer.cast<Utf8>().toDartString();
   calloc.free(viewKeyPointer);
 
-  final errorInfo = flutter_monero.extractErrorInfo(errorBoxPointer);
+  final errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
 
   if (0 != errorInfo.code) {
     throw Exception(errorInfo.getErrorMessage());
@@ -268,13 +268,13 @@ String getPublicViewKey() {
 }
 
 String getSecretSpendKey() {
-  final errorBoxPointer = flutter_monero.buildErrorBoxPointer();
+  final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
   final secretSpendKeyPointer =
-      flutter_monero.bindings.secret_spend_key(errorBoxPointer);
+      monero_flutter.bindings.secret_spend_key(errorBoxPointer);
   final secretSpendKey = secretSpendKeyPointer.cast<Utf8>().toDartString();
   calloc.free(secretSpendKeyPointer);
 
-  final errorInfo = flutter_monero.extractErrorInfo(errorBoxPointer);
+  final errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
 
   if (0 != errorInfo.code) {
     throw Exception(errorInfo.getErrorMessage());
@@ -284,13 +284,13 @@ String getSecretSpendKey() {
 }
 
 String getPublicSpendKey() {
-  final errorBoxPointer = flutter_monero.buildErrorBoxPointer();
+  final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
   final spendKeyPointer =
-      flutter_monero.bindings.public_spend_key(errorBoxPointer);
+      monero_flutter.bindings.public_spend_key(errorBoxPointer);
   final spendKey = spendKeyPointer.cast<Utf8>().toDartString();
   calloc.free(spendKeyPointer);
 
-  final errorInfo = flutter_monero.extractErrorInfo(errorBoxPointer);
+  final errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
 
   if (0 != errorInfo.code) {
     throw Exception(errorInfo.getErrorMessage());
@@ -300,12 +300,12 @@ String getPublicSpendKey() {
 }
 
 String getSeed() {
-  final errorBoxPointer = flutter_monero.buildErrorBoxPointer();
-  final seedPointer = flutter_monero.bindings.seed(errorBoxPointer);
+  final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
+  final seedPointer = monero_flutter.bindings.seed(errorBoxPointer);
   final seed = seedPointer.cast<Utf8>().toDartString();
   calloc.free(seedPointer);
 
-  final errorInfo = flutter_monero.extractErrorInfo(errorBoxPointer);
+  final errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
 
   if (0 != errorInfo.code) {
     throw Exception(errorInfo.getErrorMessage());
@@ -315,12 +315,12 @@ String getSeed() {
 }
 
 String getFilename() {
-  final errorBoxPointer = flutter_monero.buildErrorBoxPointer();
-  final filenamePointer = flutter_monero.bindings.get_filename(errorBoxPointer);
+  final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
+  final filenamePointer = monero_flutter.bindings.get_filename(errorBoxPointer);
   final filename = filenamePointer.cast<Utf8>().toDartString();
   calloc.free(filenamePointer);
 
-  final errorInfo = flutter_monero.extractErrorInfo(errorBoxPointer);
+  final errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
 
   if (0 != errorInfo.code) {
     throw Exception(errorInfo.getErrorMessage());
@@ -331,10 +331,10 @@ String getFilename() {
 
 void setPassword({required String password}) {
   final passwordPointer = password.toNativeUtf8().cast<Char>();
-  final errorBoxPointer = flutter_monero.buildErrorBoxPointer();
+  final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
 
-  flutter_monero.bindings.set_password(passwordPointer, errorBoxPointer);
-  final errorInfo = flutter_monero.extractErrorInfo(errorBoxPointer);
+  monero_flutter.bindings.set_password(passwordPointer, errorBoxPointer);
+  final errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
 
   calloc.free(passwordPointer);
 
@@ -345,12 +345,12 @@ void setPassword({required String password}) {
 
 void store({required String path}) {
   final pathPointer = path.toNativeUtf8().cast<Char>();
-  final errorBoxPointer = flutter_monero.buildErrorBoxPointer();
-  flutter_monero.bindings.store(pathPointer, errorBoxPointer);
+  final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
+  monero_flutter.bindings.store(pathPointer, errorBoxPointer);
 
   calloc.free(pathPointer);
 
-  final errorInfo = flutter_monero.extractErrorInfo(errorBoxPointer);
+  final errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
 
   if (0 != errorInfo.code) {
     throw Exception(errorInfo.getErrorMessage());
@@ -358,9 +358,9 @@ void store({required String path}) {
 }
 
 void setRecoveringFromSeed({required bool isRecovery}) {
-  final errorBoxPointer = flutter_monero.buildErrorBoxPointer();
-  flutter_monero.bindings.set_recovering_from_seed(isRecovery, errorBoxPointer);
-  final errorInfo = flutter_monero.extractErrorInfo(errorBoxPointer);
+  final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
+  monero_flutter.bindings.set_recovering_from_seed(isRecovery, errorBoxPointer);
+  final errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
 
   if (0 != errorInfo.code) {
     throw Exception(errorInfo.getErrorMessage());

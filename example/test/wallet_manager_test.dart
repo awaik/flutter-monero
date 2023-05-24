@@ -2,10 +2,10 @@
 //
 // import 'package:flutter/cupertino.dart';
 // import 'package:flutter_test/flutter_test.dart';
-// import 'package:flutter_monero_example/wallet.dart';
+// import 'package:monero_flutter_example/wallet.dart';
 // import 'package:path_provider/path_provider.dart';
 //
-// import 'package:flutter_monero/wallet_manager_api.dart' as api;
+// import 'package:monero_flutter/wallet_manager_api.dart' as api;
 //
 // Future<String> _getWalletPath() async {
 //   // final root = await getApplicationDocumentsDirectory();

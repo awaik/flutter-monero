@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_monero/transaction_api.dart' as api;
+import 'package:monero_flutter/transaction_api.dart' as api;
 
 class TransferPage extends StatelessWidget {
   final TextEditingController _resultController = TextEditingController();

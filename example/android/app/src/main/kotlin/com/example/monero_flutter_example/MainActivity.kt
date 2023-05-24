@@ -1,4 +1,4 @@
-package com.example.flutter_monero_example
+package com.example.monero_flutter_example
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_monero/wallet_manager_api.dart' as api;
+import 'package:monero_flutter/wallet_manager_api.dart' as api;
 import 'package:path_provider/path_provider.dart';
 
 class WalletManagementPage extends StatelessWidget {

@@ -2,15 +2,15 @@ import 'dart:ffi';
 
 import 'package:ffi/ffi.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_monero/sync_listener.dart';
+import 'package:monero_flutter/sync_listener.dart';
 
 import 'exceptions/setup_wallet_exception.dart';
-import 'monero_flutter.dart' as flutter_monero;
+import 'monero_flutter.dart' as monero_flutter;
 
 void onStartup() {
-  final errorBoxPointer = flutter_monero.buildErrorBoxPointer();
-  flutter_monero.bindings.on_startup(errorBoxPointer);
-  final errorInfo = flutter_monero.extractErrorInfo(errorBoxPointer);
+  final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
+  monero_flutter.bindings.on_startup(errorBoxPointer);
+  final errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
 
   if (0 != errorInfo.code) {
     throw Exception(errorInfo.getErrorMessage());
@@ -40,11 +40,11 @@ bool setupNodeSync(
       (login != null) ? login.toNativeUtf8().cast<Char>() : Pointer<Char>.fromAddress(nullptr.address);
   Pointer<Char> passwordPointer =
       (password != null) ? password.toNativeUtf8().cast<Char>() : Pointer<Char>.fromAddress(nullptr.address);
-  final errorBoxPointer = flutter_monero.buildErrorBoxPointer();
+  final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
 
-  flutter_monero.bindings
+  monero_flutter.bindings
       .setup_node(addressPointer, loginPointer, passwordPointer, useSSL, isLightWallet, errorBoxPointer);
-  final errorInfo = flutter_monero.extractErrorInfo(errorBoxPointer);
+  final errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
 
   calloc.free(addressPointer);
 
@@ -68,10 +68,10 @@ Future<int> getNodeHeight() => compute(_getNodeHeight, 0);
 int _getNodeHeight(Object _) => getNodeHeightSync();
 
 int getNodeHeightSync() {
-  final errorBoxPointer = flutter_monero.buildErrorBoxPointer();
-  int result = flutter_monero.bindings.get_node_height(errorBoxPointer);
+  final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
+  int result = monero_flutter.bindings.get_node_height(errorBoxPointer);
 
-  final errorInfo = flutter_monero.extractErrorInfo(errorBoxPointer);
+  final errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
 
   if (0 != errorInfo.code) {
     throw Exception(errorInfo.getErrorMessage());
@@ -86,9 +86,9 @@ int getNodeHeightSync() {
 ///
 SyncListener setListeners(void Function(int, int, double) onNewBlock, void Function() onNewTransaction) {
   final listener = SyncListener(onNewBlock, onNewTransaction);
-  final errorBoxPointer = flutter_monero.buildErrorBoxPointer();
-  flutter_monero.bindings.set_listener(errorBoxPointer);
-  final errorInfo = flutter_monero.extractErrorInfo(errorBoxPointer);
+  final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
+  monero_flutter.bindings.set_listener(errorBoxPointer);
+  final errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
 
   if (0 != errorInfo.code) {
     throw Exception(errorInfo.getErrorMessage());
@@ -98,10 +98,10 @@ SyncListener setListeners(void Function(int, int, double) onNewBlock, void Funct
 }
 
 void connectToNode() {
-  final errorBoxPointer = flutter_monero.buildErrorBoxPointer();
+  final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
 
-  flutter_monero.bindings.connect_to_node(errorBoxPointer);
-  final errorInfo = flutter_monero.extractErrorInfo(errorBoxPointer);
+  monero_flutter.bindings.connect_to_node(errorBoxPointer);
+  final errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
 
   if (0 != errorInfo.code) {
     throw Exception(errorInfo.getErrorMessage());
@@ -113,10 +113,10 @@ Future<bool> isConnected() => compute(_isConnected, 0);
 bool _isConnected(Object _) => isConnectedSync();
 
 bool isConnectedSync() {
-  final errorBoxPointer = flutter_monero.buildErrorBoxPointer();
-  final result = flutter_monero.bindings.is_connected(errorBoxPointer);
+  final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
+  final result = monero_flutter.bindings.is_connected(errorBoxPointer);
 
-  final errorInfo = flutter_monero.extractErrorInfo(errorBoxPointer);
+  final errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
 
   if (0 != errorInfo.code) {
     throw Exception(errorInfo.getErrorMessage());
@@ -126,9 +126,9 @@ bool isConnectedSync() {
 }
 
 bool isNeededToRefresh() {
-  final errorBoxPointer = flutter_monero.buildErrorBoxPointer();
-  var result = flutter_monero.bindings.is_needed_to_refresh(errorBoxPointer);
-  final errorInfo = flutter_monero.extractErrorInfo(errorBoxPointer);
+  final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
+  var result = monero_flutter.bindings.is_needed_to_refresh(errorBoxPointer);
+  final errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
 
   if (0 != errorInfo.code) {
     throw Exception(errorInfo.getErrorMessage());
@@ -138,10 +138,10 @@ bool isNeededToRefresh() {
 }
 
 void startRefresh() {
-  final errorBoxPointer = flutter_monero.buildErrorBoxPointer();
-  flutter_monero.bindings.start_refresh(errorBoxPointer);
+  final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
+  monero_flutter.bindings.start_refresh(errorBoxPointer);
 
-  final errorInfo = flutter_monero.extractErrorInfo(errorBoxPointer);
+  final errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
 
   if (0 != errorInfo.code) {
     throw Exception(errorInfo.getErrorMessage());
@@ -149,9 +149,9 @@ void startRefresh() {
 }
 
 void setRefreshFromBlockHeight({required int height}) {
-  final errorBoxPointer = flutter_monero.buildErrorBoxPointer();
-  flutter_monero.bindings.set_refresh_from_block_height(height, errorBoxPointer);
-  final errorInfo = flutter_monero.extractErrorInfo(errorBoxPointer);
+  final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
+  monero_flutter.bindings.set_refresh_from_block_height(height, errorBoxPointer);
+  final errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
 
   if (0 != errorInfo.code) {
     throw Exception(errorInfo.getErrorMessage());
@@ -159,10 +159,10 @@ void setRefreshFromBlockHeight({required int height}) {
 }
 
 void rescanBlockchain() {
-  final errorBoxPointer = flutter_monero.buildErrorBoxPointer();
-  flutter_monero.bindings.rescan_blockchain(errorBoxPointer);
+  final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
+  monero_flutter.bindings.rescan_blockchain(errorBoxPointer);
 
-  final errorInfo = flutter_monero.extractErrorInfo(errorBoxPointer);
+  final errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
 
   if (0 != errorInfo.code) {
     throw Exception(errorInfo.getErrorMessage());
@@ -170,10 +170,10 @@ void rescanBlockchain() {
 }
 
 void setTrustedDaemon(bool arg) {
-  final errorBoxPointer = flutter_monero.buildErrorBoxPointer();
-  flutter_monero.bindings.set_trusted_daemon(arg, errorBoxPointer);
+  final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
+  monero_flutter.bindings.set_trusted_daemon(arg, errorBoxPointer);
 
-  final errorInfo = flutter_monero.extractErrorInfo(errorBoxPointer);
+  final errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
 
   if (0 != errorInfo.code) {
     throw Exception(errorInfo.getErrorMessage());
@@ -181,10 +181,10 @@ void setTrustedDaemon(bool arg) {
 }
 
 bool trustedDaemon() {
-  final errorBoxPointer = flutter_monero.buildErrorBoxPointer();
-  final result = flutter_monero.bindings.trusted_daemon(errorBoxPointer);
+  final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
+  final result = monero_flutter.bindings.trusted_daemon(errorBoxPointer);
 
-  final errorInfo = flutter_monero.extractErrorInfo(errorBoxPointer);
+  final errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
 
   if (0 != errorInfo.code) {
     throw Exception(errorInfo.getErrorMessage());
@@ -194,10 +194,10 @@ bool trustedDaemon() {
 }
 
 bool isNewTransactionExist() {
-  final errorBoxPointer = flutter_monero.buildErrorBoxPointer();
-  final result = flutter_monero.bindings.is_new_transaction_exist(errorBoxPointer);
+  final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
+  final result = monero_flutter.bindings.is_new_transaction_exist(errorBoxPointer);
 
-  final errorInfo = flutter_monero.extractErrorInfo(errorBoxPointer);
+  final errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
 
   if (0 != errorInfo.code) {
     throw Exception(errorInfo.getErrorMessage());
@@ -207,10 +207,10 @@ bool isNewTransactionExist() {
 }
 
 int getSyncingHeight() {
-  final errorBoxPointer = flutter_monero.buildErrorBoxPointer();
-  final result = flutter_monero.bindings.get_syncing_height(errorBoxPointer);
+  final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
+  final result = monero_flutter.bindings.get_syncing_height(errorBoxPointer);
 
-  final errorInfo = flutter_monero.extractErrorInfo(errorBoxPointer);
+  final errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
 
   if (0 != errorInfo.code) {
     throw Exception(errorInfo.getErrorMessage());
@@ -220,10 +220,10 @@ int getSyncingHeight() {
 }
 
 int getCurrentHeight() {
-  final errorBoxPointer = flutter_monero.buildErrorBoxPointer();
-  final result = flutter_monero.bindings.get_current_height(errorBoxPointer);
+  final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
+  final result = monero_flutter.bindings.get_current_height(errorBoxPointer);
 
-  final errorInfo = flutter_monero.extractErrorInfo(errorBoxPointer);
+  final errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
 
   if (0 != errorInfo.code) {
     throw Exception(errorInfo.getErrorMessage());

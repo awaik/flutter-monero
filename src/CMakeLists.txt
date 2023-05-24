@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.4.1)
 
-add_library( flutter_monero
+add_library( monero_flutter
              SHARED
-             flutter_monero.cpp)
+             monero_flutter.cpp)
 
 find_library( log-lib log )
 
@@ -184,7 +184,7 @@ endif()
 
 include_directories( ${EXTERNAL_DIR}/${ANDROID_ABI}/include )
 
-target_link_libraries(  flutter_monero
+target_link_libraries(  monero_flutter
 
                         wallet_api
                         wallet

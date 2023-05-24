@@ -5,7 +5,7 @@ import 'package:flutter/foundation.dart';
 
 import 'entities/account_row.dart';
 import 'entities/subaddress_row.dart';
-import 'monero_flutter.dart' as flutter_monero;
+import 'monero_flutter.dart' as monero_flutter;
 
 bool isUpdating = false;
 
@@ -18,9 +18,9 @@ void refreshAccounts() {
   try {
     isUpdating = true;
 
-    final errorBoxPointer = flutter_monero.buildErrorBoxPointer();
-    flutter_monero.bindings.account_refresh(errorBoxPointer);
-    final errorInfo = flutter_monero.extractErrorInfo(errorBoxPointer);
+    final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
+    monero_flutter.bindings.account_refresh(errorBoxPointer);
+    final errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
 
     if (0 != errorInfo.code) {
       throw Exception(errorInfo.getErrorMessage());
@@ -43,10 +43,10 @@ void refreshSubaddresses({required int accountIndex}) {
   try {
     isSubaddressesUpdating = true;
 
-    final errorBoxPointer = flutter_monero.buildErrorBoxPointer();
-    flutter_monero.bindings.subaddress_refresh(accountIndex, errorBoxPointer);
+    final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
+    monero_flutter.bindings.subaddress_refresh(accountIndex, errorBoxPointer);
 
-    final errorInfo = flutter_monero.extractErrorInfo(errorBoxPointer);
+    final errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
 
     if (0 != errorInfo.code) {
       throw Exception(errorInfo.getErrorMessage());
@@ -61,10 +61,10 @@ void refreshSubaddresses({required int accountIndex}) {
 
 int getAccountCount() {
 
-  final errorBoxPointer = flutter_monero.buildErrorBoxPointer();
-  final result = flutter_monero.bindings.account_size(errorBoxPointer);
+  final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
+  final result = monero_flutter.bindings.account_size(errorBoxPointer);
 
-  final errorInfo = flutter_monero.extractErrorInfo(errorBoxPointer);
+  final errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
 
   if (0 != errorInfo.code) {
     throw Exception(errorInfo.getErrorMessage());
@@ -75,24 +75,24 @@ int getAccountCount() {
 
 List<AccountRow> getAllAccount() {
 
-  final errorBoxPointer1 = flutter_monero.buildErrorBoxPointer();
-  final size = flutter_monero.bindings.account_size(errorBoxPointer1);
+  final errorBoxPointer1 = monero_flutter.buildErrorBoxPointer();
+  final size = monero_flutter.bindings.account_size(errorBoxPointer1);
 
-  final errorInfo1 = flutter_monero.extractErrorInfo(errorBoxPointer1);
+  final errorInfo1 = monero_flutter.extractErrorInfo(errorBoxPointer1);
 
   if (0 != errorInfo1.code) {
     throw Exception(errorInfo1.getErrorMessage());
   }
 
-  final errorBoxPointer2 = flutter_monero.buildErrorBoxPointer();
+  final errorBoxPointer2 = monero_flutter.buildErrorBoxPointer();
 
-  final errorInfo2 = flutter_monero.extractErrorInfo(errorBoxPointer2);
+  final errorInfo2 = monero_flutter.extractErrorInfo(errorBoxPointer2);
 
   if (0 != errorInfo2.code) {
     throw Exception(errorInfo2.getErrorMessage());
   }
 
-  final accountAddressesPointer = flutter_monero.bindings.account_get_all(errorBoxPointer2);
+  final accountAddressesPointer = monero_flutter.bindings.account_get_all(errorBoxPointer2);
 
   final accountAddresses = accountAddressesPointer.asTypedList(size);
 
@@ -100,17 +100,17 @@ List<AccountRow> getAllAccount() {
       .map((addr) => Pointer<AccountRow>.fromAddress(addr).ref)
       .toList();
 
-  flutter_monero.bindings.free_block_of_accounts(accountAddressesPointer, size);
+  monero_flutter.bindings.free_block_of_accounts(accountAddressesPointer, size);
 
   return result;
 }
 
 int getSubaddressesCount() {
 
-  final errorBoxPointer = flutter_monero.buildErrorBoxPointer();
-  final result = flutter_monero.bindings.subaddress_size(errorBoxPointer);
+  final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
+  final result = monero_flutter.bindings.subaddress_size(errorBoxPointer);
 
-  final errorInfo = flutter_monero.extractErrorInfo(errorBoxPointer);
+  final errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
 
   if (0 != errorInfo.code) {
     throw Exception(errorInfo.getErrorMessage());
@@ -120,22 +120,22 @@ int getSubaddressesCount() {
 }
 
 List<SubaddressRow> getAllSubaddresses() {
-  final errorBoxPointer1 = flutter_monero.buildErrorBoxPointer();
+  final errorBoxPointer1 = monero_flutter.buildErrorBoxPointer();
 
-  final size = flutter_monero.bindings.subaddress_size(errorBoxPointer1);
+  final size = monero_flutter.bindings.subaddress_size(errorBoxPointer1);
 
-  final errorInfo1 = flutter_monero.extractErrorInfo(errorBoxPointer1);
+  final errorInfo1 = monero_flutter.extractErrorInfo(errorBoxPointer1);
 
   if (0 != errorInfo1.code) {
     throw Exception(errorInfo1.getErrorMessage());
   }
 
-  final errorBoxPointer2 = flutter_monero.buildErrorBoxPointer();
+  final errorBoxPointer2 = monero_flutter.buildErrorBoxPointer();
 
-  final subaddressAddressesPointer = flutter_monero.bindings.subaddress_get_all(
+  final subaddressAddressesPointer = monero_flutter.bindings.subaddress_get_all(
       errorBoxPointer2);
 
-  final errorInfo2 = flutter_monero.extractErrorInfo(errorBoxPointer2);
+  final errorInfo2 = monero_flutter.extractErrorInfo(errorBoxPointer2);
 
   if (0 != errorInfo2.code) {
     throw Exception(errorInfo2.getErrorMessage());
@@ -147,7 +147,7 @@ List<SubaddressRow> getAllSubaddresses() {
       .map((addr) => Pointer<SubaddressRow>.fromAddress(addr).ref)
       .toList();
 
-  flutter_monero.bindings.free_block_of_subaddresses(subaddressAddressesPointer, size);
+  monero_flutter.bindings.free_block_of_subaddresses(subaddressAddressesPointer, size);
 
   return result;
 }
@@ -161,12 +161,12 @@ void _addAccount(String label) => addAccountSync(label: label);
 
 void addAccountSync({required String label}) {
   final labelPointer = label.toNativeUtf8().cast<Char>();
-  final errorBoxPointer = flutter_monero.buildErrorBoxPointer();
+  final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
 
-  flutter_monero.bindings.account_add_row(labelPointer, errorBoxPointer);
+  monero_flutter.bindings.account_add_row(labelPointer, errorBoxPointer);
   calloc.free(labelPointer);
 
-  final errorInfo = flutter_monero.extractErrorInfo(errorBoxPointer);
+  final errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
 
   if (0 != errorInfo.code) {
     throw Exception(errorInfo.getErrorMessage());
@@ -188,12 +188,12 @@ void _addSubaddress(Map<String, dynamic> args) {
 
 void addSubaddressSync({required int accountIndex, required String label}) {
   final labelPointer = label.toNativeUtf8().cast<Char>();
-  final errorBoxPointer = flutter_monero.buildErrorBoxPointer();
+  final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
 
-  flutter_monero.bindings.subaddress_add_row(accountIndex, labelPointer, errorBoxPointer);
+  monero_flutter.bindings.subaddress_add_row(accountIndex, labelPointer, errorBoxPointer);
   calloc.free(labelPointer);
 
-  final errorInfo = flutter_monero.extractErrorInfo(errorBoxPointer);
+  final errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
 
   if (0 != errorInfo.code) {
     throw Exception(errorInfo.getErrorMessage());
@@ -217,12 +217,12 @@ void _setLabelForAccount(Map<String, dynamic> args) {
 void setLabelForAccountSync(
     {required int accountIndex, required String label}) {
   final labelPointer = label.toNativeUtf8().cast<Char>();
-  final errorBoxPointer = flutter_monero.buildErrorBoxPointer();
+  final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
 
-  flutter_monero.bindings.account_set_label_row(accountIndex, labelPointer, errorBoxPointer);
+  monero_flutter.bindings.account_set_label_row(accountIndex, labelPointer, errorBoxPointer);
   calloc.free(labelPointer);
 
-  final errorInfo = flutter_monero.extractErrorInfo(errorBoxPointer);
+  final errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
 
   if (0 != errorInfo.code) {
     throw Exception(errorInfo.getErrorMessage());
@@ -253,13 +253,13 @@ void setLabelForSubaddressSync(
     required int addressIndex,
     required String label}) {
   final labelPointer = label.toNativeUtf8().cast<Char>();
-  final errorBoxPointer = flutter_monero.buildErrorBoxPointer();
+  final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
 
-  flutter_monero.bindings
+  monero_flutter.bindings
       .subaddress_set_label(accountIndex, addressIndex, labelPointer, errorBoxPointer);
   calloc.free(labelPointer);
 
-  final errorInfo = flutter_monero.extractErrorInfo(errorBoxPointer);
+  final errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
 
   if (0 != errorInfo.code) {
     throw Exception(errorInfo.getErrorMessage());
@@ -267,14 +267,14 @@ void setLabelForSubaddressSync(
 }
 
 String getAddress({int accountIndex = 0, int addressIndex = 0}) {
-  final errorBoxPointer = flutter_monero.buildErrorBoxPointer();
+  final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
   final addressPointer =
-      flutter_monero.bindings.get_address(accountIndex, addressIndex, errorBoxPointer);
+      monero_flutter.bindings.get_address(accountIndex, addressIndex, errorBoxPointer);
 
   final address = addressPointer.cast<Utf8>().toDartString();
   calloc.free(addressPointer);
 
-  final errorInfo = flutter_monero.extractErrorInfo(errorBoxPointer);
+  final errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
 
   if (0 != errorInfo.code) {
     throw Exception(errorInfo.getErrorMessage());
@@ -284,10 +284,10 @@ String getAddress({int accountIndex = 0, int addressIndex = 0}) {
 }
 
 int getFullBalance({int accountIndex = 0}){
-  final errorBoxPointer = flutter_monero.buildErrorBoxPointer();
-  final result = flutter_monero.bindings.get_full_balance(accountIndex, errorBoxPointer);
+  final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
+  final result = monero_flutter.bindings.get_full_balance(accountIndex, errorBoxPointer);
 
-  final errorInfo = flutter_monero.extractErrorInfo(errorBoxPointer);
+  final errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
 
   if (0 != errorInfo.code) {
     throw Exception(errorInfo.getErrorMessage());
@@ -298,10 +298,10 @@ int getFullBalance({int accountIndex = 0}){
 
 
 int getUnlockedBalance(int accountIndex){
-  final errorBoxPointer = flutter_monero.buildErrorBoxPointer();
-  final result = flutter_monero.bindings.get_unlocked_balance(accountIndex, errorBoxPointer);
+  final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
+  final result = monero_flutter.bindings.get_unlocked_balance(accountIndex, errorBoxPointer);
 
-  final errorInfo = flutter_monero.extractErrorInfo(errorBoxPointer);
+  final errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
 
   if (0 != errorInfo.code) {
     throw Exception(errorInfo.getErrorMessage());
@@ -311,14 +311,14 @@ int getUnlockedBalance(int accountIndex){
 }
 
 String getSubaddressLabel(int accountIndex, int addressIndex) {
-  final errorBoxPointer = flutter_monero.buildErrorBoxPointer();
+  final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
   final labelPointer =
-      flutter_monero.bindings.get_subaddress_label(accountIndex, addressIndex, errorBoxPointer);
+      monero_flutter.bindings.get_subaddress_label(accountIndex, addressIndex, errorBoxPointer);
 
   final label = labelPointer.cast<Utf8>().toDartString();
   calloc.free(labelPointer);
 
-  final errorInfo = flutter_monero.extractErrorInfo(errorBoxPointer);
+  final errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
 
   if (0 != errorInfo.code) {
     throw Exception(errorInfo.getErrorMessage());

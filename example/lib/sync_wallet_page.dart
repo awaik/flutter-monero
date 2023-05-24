@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_monero/wallet_sync_api.dart' as api;
+import 'package:monero_flutter/wallet_sync_api.dart' as api;
 
 class SyncWalletPage extends StatelessWidget {
   final TextEditingController _resultController = TextEditingController();

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_monero_example/multisig_page.dart';
-import 'package:flutter_monero_example/sync_wallet_page.dart';
-import 'package:flutter_monero_example/transfer_page.dart';
-import 'package:flutter_monero_example/wallet_accounts_page.dart';
-import 'package:flutter_monero_example/wallet_management_page.dart';
+import 'package:monero_flutter_example/multisig_page.dart';
+import 'package:monero_flutter_example/sync_wallet_page.dart';
+import 'package:monero_flutter_example/transfer_page.dart';
+import 'package:monero_flutter_example/wallet_accounts_page.dart';
+import 'package:monero_flutter_example/wallet_management_page.dart';
 
 class MainScreen extends StatelessWidget {
   const MainScreen({super.key});
