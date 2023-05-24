@@ -8,7 +8,7 @@ import 'entities/monero_output.dart';
 import 'entities/pending_transaction.dart';
 import 'entities/transaction_info_row.dart';
 import 'exceptions/creation_transaction_exception.dart';
-import 'flutter_monero.dart' as flutter_monero;
+import 'monero_flutter.dart' as flutter_monero;
 import 'flutter_monero_bindings_generated.dart';
 
 void transactionsRefresh() {

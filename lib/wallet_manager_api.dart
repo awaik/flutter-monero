@@ -7,7 +7,7 @@ import 'exceptions/wallet_creation_exception.dart';
 import 'exceptions/wallet_restore_from_keys_exception.dart';
 import 'exceptions/wallet_restore_from_seed_exception.dart';
 
-import 'flutter_monero.dart' as flutter_monero;
+import 'monero_flutter.dart' as flutter_monero;
 
 Future<void> createWallet(
         {required String path,

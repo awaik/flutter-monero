@@ -5,7 +5,7 @@ import 'package:flutter/foundation.dart';
 
 import 'entities/account_row.dart';
 import 'entities/subaddress_row.dart';
-import 'flutter_monero.dart' as flutter_monero;
+import 'monero_flutter.dart' as flutter_monero;
 
 bool isUpdating = false;
 

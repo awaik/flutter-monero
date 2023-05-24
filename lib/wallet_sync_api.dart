@@ -5,7 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_monero/sync_listener.dart';
 
 import 'exceptions/setup_wallet_exception.dart';
-import 'flutter_monero.dart' as flutter_monero;
+import 'monero_flutter.dart' as flutter_monero;
 
 void onStartup() {
   final errorBoxPointer = flutter_monero.buildErrorBoxPointer();

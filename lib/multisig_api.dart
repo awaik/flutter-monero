@@ -2,7 +2,7 @@ import 'dart:ffi';
 
 import 'package:ffi/ffi.dart';
 
-import 'flutter_monero.dart' as flutter_monero;
+import 'monero_flutter.dart' as flutter_monero;
 
 bool isMultisig(){
   final errorBoxPointer = flutter_monero.buildErrorBoxPointer();
