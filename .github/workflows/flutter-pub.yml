@@ -111,7 +111,7 @@ jobs:
         path: monero/build_scripts/ios/dist-ios.zip
         retention-days: 1
 
-  publishing:
+  publication:
     runs-on: ubuntu-latest
     needs: [build-android, build-ios]
     steps:
