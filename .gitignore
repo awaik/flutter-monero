@@ -33,3 +33,8 @@ macos/external/
 .dart_tool/
 .packages
 build/
+*.lock
+**/*.lock
+example/ios/Podfile.lock
+example/macos/Podfile.lock
+example/pubspec.lock
