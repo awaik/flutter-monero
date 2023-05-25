@@ -136,7 +136,8 @@ jobs:
           wget https://github.com/awaik/monero/releases/latest/download/dist-ios.zip
           mkdir android/external
           mkdir ios/external
-          tar zxvf dist-ios.zip --strip-components=1 -C ios/external
+          unzip dist-ios.zip -d ios/external
+          mv ios/external/dist ios/external
           rm -f dist-ios.zip
 
       - name: fix gitignore
