@@ -137,7 +137,8 @@ jobs:
           mkdir android/external
           mkdir ios/external
           unzip dist-ios.zip -d ios/external
-          mv ios/external/dist ios/external
+          mv ios/external/dist/* ios/external
+          rm -rf ios/external/dist
           rm -f dist-ios.zip
 
       - name: fix gitignore
