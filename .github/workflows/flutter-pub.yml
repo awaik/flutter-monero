@@ -133,12 +133,12 @@ jobs:
       # unzip
       - name: Unzip.
         run: |
-          wget https://github.com/awaik/monero/releases/download/v0.1.10/dist-android.zip
-          wget https://github.com/awaik/monero/releases/download/v0.1.10/dist-ios.zip
+          wget https://github.com/awaik/monero/releases/latest/download/dist-android.zip
+          wget https://github.com/awaik/monero/releases/latest/download/dist-ios.zip
           mkdir android/external
           mkdir ios/external
-          unzip dist-android.zip "dist/*" -d android/external
-          unzip dist-ios.zip "dist/*" -d ios/external
+          tar zxvf dist-android.zip --strip-components=1 -C android/external
+          tar zxvf dist-ios.zip --strip-components=1 -C ios/external
           rm -f dist-android.zip
           rm -f dist-ios.zip
 
