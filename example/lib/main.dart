@@ -31,7 +31,7 @@ class MainScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Monero sample app 0.0.3')),
+      appBar: AppBar(title: Text('Monero sample app 0.0.4')),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
