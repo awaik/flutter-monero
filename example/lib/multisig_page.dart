@@ -34,7 +34,7 @@ class MultisigPage extends StatelessWidget {
   void _exchangeMultisigKeys() {
     try {
       List<String> list = _resultController.text.split(" ");
-      _resultController.text = api.exchangeMultisigKeys(infoList: list, size: 2);
+      _resultController.text = api.exchangeMultisigKeys(infoList: list);
     } catch (e) {
       _resultController.text = e.toString();
     }
@@ -51,7 +51,7 @@ class MultisigPage extends StatelessWidget {
   void _makeMultisig() {
     try {
       List<String> list = [_resultController.text];
-      _resultController.text = api.makeMultisig(infoList: list, size: 1, threshold: 2);
+      _resultController.text = api.makeMultisig(infoList: list,threshold: 2);
     } catch (e) {
       _resultController.text = e.toString();
     }
@@ -60,7 +60,7 @@ class MultisigPage extends StatelessWidget {
   void _importMultisigImages() {
     try {
       List<String> list = [_resultController.text];
-      _resultController.text = api.importMultisigImages(infoList: list, size: 1).toString();
+      _resultController.text = api.importMultisigImages(infoList: list).toString();
     } catch (e) {
       _resultController.text = e.toString();
     }

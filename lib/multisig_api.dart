@@ -51,7 +51,9 @@ String getMultisigInfo() {
 }
 
 String exchangeMultisigKeys(
-    {required List<String> infoList, required int size}) {
+    {required List<String> infoList}) {
+
+  final size = infoList.length;
   final List<Pointer<Char>> infoPointers =
       infoList.map((info) => info.toNativeUtf8().cast<Char>()).toList();
   final Pointer<Pointer<Char>> infoPointerPointer = calloc(size);
@@ -96,7 +98,9 @@ bool isMultisigImportNeeded(){
 }
 
 
-int importMultisigImages({required List<String> infoList, required int size}) {
+int importMultisigImages({required List<String> infoList}) {
+  final size = infoList.length;
+
   final List<Pointer<Char>> infoPointers =
       infoList.map((info) => info.toNativeUtf8().cast<Char>()).toList();
   final Pointer<Pointer<Char>> infoPointerPointer = calloc(size);
@@ -162,8 +166,9 @@ String exportMultisigImages() {
 
 String makeMultisig(
     {required List<String> infoList,
-    required int size,
     required int threshold}) {
+  final size = infoList.length;
+
   final List<Pointer<Char>> infoPointers =
       infoList.map((info) => info.toNativeUtf8().cast<Char>()).toList();
   final Pointer<Pointer<Char>> infoPointerPointer = calloc(size);
