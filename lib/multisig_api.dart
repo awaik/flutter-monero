@@ -138,8 +138,14 @@ String exportMultisigImages() {
     info = pointerToInfoPointer.value.cast<Utf8>().toDartString();
   }
 
-  calloc.free(infoPointer);
-  calloc.free(pointerToInfoPointer.value);
+  if (pointerToInfoPointer.value == infoPointer) {
+    calloc.free(infoPointer);
+  }
+  else{
+    calloc.free(pointerToInfoPointer.value);
+    calloc.free(infoPointer);
+  }
+
   calloc.free(pointerToInfoPointer);
 
   if (0 != errorInfo.code) {

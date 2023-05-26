@@ -42,7 +42,7 @@ class SyncWalletPage extends StatelessWidget {
 
   void _startRefresh() {
     try {
-      api.setRefreshFromBlockHeight(height: 2873657);
+      //api.setRefreshFromBlockHeight(height: 2873657);
       api.startRefresh();
     } catch (e) {
       _resultController.text = e.toString();
