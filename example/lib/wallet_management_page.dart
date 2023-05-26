@@ -10,17 +10,17 @@ class WalletManagementPage extends StatelessWidget {
 
   WalletManagementPage({super.key});
 
-  Future<String> _getWalletPath() async {
+  Future<String> _getWalletPath({String name = "test1"}) async {
     final root = await getApplicationDocumentsDirectory();
 
     final walletsDir = Directory('${root.path}/wallets');
-    final walletDir = Directory('${walletsDir.path}/wallet_v1');
+    final walletDir = Directory('${walletsDir.path}/wallet_v2');
 
     if (!walletDir.existsSync()) {
       walletDir.createSync(recursive: true);
     }
 
-    final walletPath = '${walletDir.path}/test2';
+    final walletPath = '${walletDir.path}/$name';
 
     return walletPath;
   }
@@ -309,6 +309,61 @@ class WalletManagementPage extends StatelessWidget {
     _resultController.text = testResult;
   }
 
+  String _keysFileBuffer = "";
+  String _cacheFileBuffer = "";
+
+  void _getKeysFileBuffer() async {
+    if (!await _checkIsWalletExist()) return;
+
+    String testResult;
+
+    try {
+      _keysFileBuffer = api.getKeysFileBuffer("1234", true);
+      testResult = _keysFileBuffer.length.toString();
+    } catch (e) {
+      testResult = e.toString();
+    }
+
+    _resultController.text = testResult;
+  }
+
+  void _getCacheFileBuffer() async {
+    if (!await _checkIsWalletExist()) return;
+
+    String testResult;
+
+    try {
+      _cacheFileBuffer = api.getCacheFileBuffer("1234");
+      testResult = _cacheFileBuffer.length.toString();
+    } catch (e) {
+      testResult = e.toString();
+    }
+
+    _resultController.text = testResult;
+  }
+
+  void _openWalletData() async{
+
+    String testResult;
+
+    String path = await _getWalletPath(name: "restored1");
+
+    try {
+      api.openWalletData("1234",
+          false,
+          _keysFileBuffer,
+          _cacheFileBuffer,
+          "node.moneroworld.com:18089",
+          "Daemon username",
+          "Daemon password");
+      testResult = "OK";
+    } catch (e) {
+      testResult = e.toString();
+    }
+
+    _resultController.text = testResult;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -459,6 +514,7 @@ class WalletManagementPage extends StatelessWidget {
                       ),
                     ),
                   ),
+
                   Padding(
                     padding: const EdgeInsets.all(10),
                     child: ElevatedButton(
@@ -470,6 +526,43 @@ class WalletManagementPage extends StatelessWidget {
                       ),
                     ),
                   ),
+
+                  Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: ElevatedButton(
+                      child: Text("get_keys_file_buffer", style: TextStyle(fontSize: 22)),
+                      onPressed: _getKeysFileBuffer,
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.all(10),
+                        minimumSize: Size(360, 60),
+                      ),
+                    ),
+                  ),
+
+                  Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: ElevatedButton(
+                      child: Text("get_cache_file_buffer", style: TextStyle(fontSize: 22)),
+                      onPressed: _getCacheFileBuffer,
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.all(10),
+                        minimumSize: Size(360, 60),
+                      ),
+                    ),
+                  ),
+
+                  Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: ElevatedButton(
+                      child: Text("open_wallet_data", style: TextStyle(fontSize: 22)),
+                      onPressed: _openWalletData,
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.all(10),
+                        minimumSize: Size(360, 60),
+                      ),
+                    ),
+                  ),
+
                 ],
               ),
             ),

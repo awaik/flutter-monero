@@ -410,6 +410,44 @@ extern "C"
             change_current_wallet(wallet);
     }
 
+    void open_wallet_data(const char *password,
+                                bool testnet,
+                                const char *keys_data_hex,
+                                const char *cache_data_hex,
+                                const char *daemon_address,
+                                const char *daemon_username,
+                                const char *daemon_password,
+                                ErrorBox* error)
+    {
+        #if defined(_POSIX_VERSION)
+        nice(19);
+        #endif
+        Monero::Wallet* wallet;
+
+        try
+        {
+            wallet = Monero::WalletManagerFactory::getWalletManager()->open_wallet_from_data(std::string(password),
+                                testnet,
+                                std::string(keys_data_hex),
+                                std::string(cache_data_hex),
+                                std::string(daemon_address),
+                                std::string(daemon_username),
+                                std::string(daemon_password));
+        }
+        catch (std::exception& e)
+        {
+            error->code = -1;
+            error->message = strdup(e.what());
+
+            return;
+        }
+
+        extract_wallet_error(wallet, error);
+
+        if (0 == error->code)
+            change_current_wallet(wallet);
+    }
+
     void close_current_wallet(ErrorBox* error)
     {
         if (!is_wallet_created(error))
@@ -654,6 +692,45 @@ extern "C"
         m_wallet->setRecoveringFromSeed(is_recovery);
     }
 
+    const char *get_keys_file_buffer(const char *password, bool view_only, ErrorBox* error)
+    {
+        if (!is_wallet_created(error))
+            return nullptr;
+
+        const char* buffer = nullptr;
+
+        try
+        {
+            buffer = strdup(m_wallet->get_keys_file_buffer(std::string(password), view_only).c_str());
+        }
+        catch (std::exception& e)
+        {
+            error->code = -2;
+            error->message = strdup(e.what());
+        }
+
+        return buffer;
+    }
+
+    const char *get_cache_file_buffer(const char *password, ErrorBox* error)
+    {
+        if (!is_wallet_created(error))
+            return nullptr;
+
+        const char* buffer = nullptr;
+
+        try
+        {
+            buffer = strdup(m_wallet->get_cache_file_buffer(std::string(password)).c_str());
+        }
+        catch (std::exception& e)
+        {
+            error->code = -2;
+            error->message = strdup(e.what());
+        }
+
+        return buffer;
+    }
 
     // **********************************************************************************************************************************
     // Synchronization

@@ -34,6 +34,16 @@ extern "C"
     void restore_wallet_from_keys(const char *path, const char *password, const char *language, const char *address, const char *view_key, const char *spend_key, int32_t network_type, uint64_t restore_height, ErrorBox *error);
     bool is_wallet_exist(const char *path);
     void load_wallet(const char *path, const char *password, int32_t net_type, ErrorBox *error);
+
+    void open_wallet_data(const char *password,
+                            bool testnet,
+                            const char *keys_data_hex,
+                            const char *cache_data_hex,
+                            const char *daemon_address,
+                            const char *daemon_username,
+                            const char *daemon_password,
+                            ErrorBox* error);
+
     void close_current_wallet(ErrorBox *error);
 
     // Get info
@@ -53,6 +63,9 @@ extern "C"
 
     // Unknown use case!
     void set_recovering_from_seed(bool is_recovery, ErrorBox *error);
+
+    const char *get_keys_file_buffer(const char *password, bool view_only, ErrorBox* error);
+    const char *get_cache_file_buffer(const char *password, ErrorBox* error);
 
     // **********************************************************************************************************************************
     // Synchronization

@@ -1113,6 +1113,9 @@ struct Wallet
 	virtual std::vector<std::string> submit_multisig_tx_hex(const std::string &signed_multisig_tx_hex) = 0;
 
     virtual std::string get_transfers() = 0;
+
+    virtual std::string get_keys_file_buffer(const std::string& password, bool view_only) const = 0;
+    virtual std::string get_cache_file_buffer(const std::string& password) const = 0;
 };
 
 /**
@@ -1146,11 +1149,38 @@ struct WalletManager
      * \return                Wallet instance (Wallet::status() needs to be called to check if opened successfully)
      */
     virtual Wallet * openWallet(const std::string &path, const std::string &password, NetworkType nettype, uint64_t kdf_rounds = 1, WalletListener * listener = nullptr) = 0;
+
     Wallet * openWallet(const std::string &path, const std::string &password, bool testnet = false)     // deprecated
     {
         return openWallet(path, password, testnet ? TESTNET : MAINNET);
     }
 
+    virtual Wallet *open_wallet_from_data(const std::string& password,
+                                NetworkType nettype,
+                                uint64_t kdf_rounds,
+                                const std::string& keys_data_hex,
+                                const std::string& cache_data_hex,
+                                const std::string& daemon_address,
+                                const std::string& daemon_username,
+                                const std::string& daemon_password) = 0;
+
+    Wallet * open_wallet_from_data(const std::string &password,
+                                    bool testnet,
+                                    const std::string& keys_data_hex,
+                                    const std::string& cache_data_hex,
+                                    const std::string& daemon_address,
+                                    const std::string& daemon_username,
+                                    const std::string& daemon_password)
+    {
+        return open_wallet_from_data(password,
+                                       testnet ? TESTNET : MAINNET,
+                                       1,
+                                       keys_data_hex,
+                                       cache_data_hex,
+                                       daemon_address,
+                                       daemon_username,
+                                       daemon_password);
+    }
     /*!
      * \brief  recovers existing wallet using mnemonic (electrum seed)
      * \param  path           Name of wallet file to be created

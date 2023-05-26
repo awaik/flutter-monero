@@ -1,5 +1,7 @@
 PODS:
+  - FlutterMacOS (1.0.0)
   - monero_flutter (0.0.1):
+    - FlutterMacOS
     - monero_flutter/Boost (= 0.0.1)
     - monero_flutter/Crypto (= 0.0.1)
     - monero_flutter/Iconv (= 0.0.1)
@@ -8,7 +10,6 @@ PODS:
     - monero_flutter/Ssl (= 0.0.1)
     - monero_flutter/Unbound (= 0.0.1)
     - monero_flutter/Zmq (= 0.0.1)
-    - FlutterMacOS
   - monero_flutter/Boost (0.0.1):
     - FlutterMacOS
   - monero_flutter/Crypto (0.0.1):
@@ -25,27 +26,26 @@ PODS:
     - FlutterMacOS
   - monero_flutter/Zmq (0.0.1):
     - FlutterMacOS
-  - FlutterMacOS (1.0.0)
   - path_provider_foundation (0.0.1):
     - Flutter
     - FlutterMacOS
 
 DEPENDENCIES:
-  - monero_flutter (from `Flutter/ephemeral/.symlinks/plugins/monero_flutter/macos`)
   - FlutterMacOS (from `Flutter/ephemeral`)
+  - monero_flutter (from `Flutter/ephemeral/.symlinks/plugins/monero_flutter/macos`)
   - path_provider_foundation (from `Flutter/ephemeral/.symlinks/plugins/path_provider_foundation/darwin`)
 
 EXTERNAL SOURCES:
-  monero_flutter:
-    :path: Flutter/ephemeral/.symlinks/plugins/monero_flutter/macos
   FlutterMacOS:
     :path: Flutter/ephemeral
+  monero_flutter:
+    :path: Flutter/ephemeral/.symlinks/plugins/monero_flutter/macos
   path_provider_foundation:
     :path: Flutter/ephemeral/.symlinks/plugins/path_provider_foundation/darwin
 
 SPEC CHECKSUMS:
-  monero_flutter: f8de6bf13a7a85db81a9c6f9918f42ff25fe865a
   FlutterMacOS: 8f6f14fa908a6fb3fba0cd85dbd81ec4b251fb24
+  monero_flutter: 3401812a1c3506dfc7097acefc5f6765f3a14e4c
   path_provider_foundation: eaf5b3e458fc0e5fbb9940fb09980e853fe058b8
 
 PODFILE CHECKSUM: 353c8bcc5d5b0994e508d035b5431cfe18c1dea7

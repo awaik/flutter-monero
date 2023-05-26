@@ -172,6 +172,50 @@ class MoneroApiBindings {
       void Function(ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Char>, int,
           ffi.Pointer<ErrorBox>)>();
 
+  void open_wallet_data(
+    ffi.Pointer<ffi.Char> password,
+    bool testnet,
+    ffi.Pointer<ffi.Char> keys_data_hex,
+    ffi.Pointer<ffi.Char> cache_data_hex,
+    ffi.Pointer<ffi.Char> daemon_address,
+    ffi.Pointer<ffi.Char> daemon_username,
+    ffi.Pointer<ffi.Char> daemon_password,
+    ffi.Pointer<ErrorBox> error,
+  ) {
+    return _open_wallet_data(
+      password,
+      testnet,
+      keys_data_hex,
+      cache_data_hex,
+      daemon_address,
+      daemon_username,
+      daemon_password,
+      error,
+    );
+  }
+
+  late final _open_wallet_dataPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(
+              ffi.Pointer<ffi.Char>,
+              ffi.Bool,
+              ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ErrorBox>)>>('open_wallet_data');
+  late final _open_wallet_data = _open_wallet_dataPtr.asFunction<
+      void Function(
+          ffi.Pointer<ffi.Char>,
+          bool,
+          ffi.Pointer<ffi.Char>,
+          ffi.Pointer<ffi.Char>,
+          ffi.Pointer<ffi.Char>,
+          ffi.Pointer<ffi.Char>,
+          ffi.Pointer<ffi.Char>,
+          ffi.Pointer<ErrorBox>)>();
+
   void close_current_wallet(
     ffi.Pointer<ErrorBox> error,
   ) {
@@ -329,6 +373,44 @@ class MoneroApiBindings {
               ffi.Bool, ffi.Pointer<ErrorBox>)>>('set_recovering_from_seed');
   late final _set_recovering_from_seed = _set_recovering_from_seedPtr
       .asFunction<void Function(bool, ffi.Pointer<ErrorBox>)>();
+
+  ffi.Pointer<ffi.Char> get_keys_file_buffer(
+    ffi.Pointer<ffi.Char> password,
+    bool view_only,
+    ffi.Pointer<ErrorBox> error,
+  ) {
+    return _get_keys_file_buffer(
+      password,
+      view_only,
+      error,
+    );
+  }
+
+  late final _get_keys_file_bufferPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Pointer<ffi.Char> Function(ffi.Pointer<ffi.Char>, ffi.Bool,
+              ffi.Pointer<ErrorBox>)>>('get_keys_file_buffer');
+  late final _get_keys_file_buffer = _get_keys_file_bufferPtr.asFunction<
+      ffi.Pointer<ffi.Char> Function(
+          ffi.Pointer<ffi.Char>, bool, ffi.Pointer<ErrorBox>)>();
+
+  ffi.Pointer<ffi.Char> get_cache_file_buffer(
+    ffi.Pointer<ffi.Char> password,
+    ffi.Pointer<ErrorBox> error,
+  ) {
+    return _get_cache_file_buffer(
+      password,
+      error,
+    );
+  }
+
+  late final _get_cache_file_bufferPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Pointer<ffi.Char> Function(ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ErrorBox>)>>('get_cache_file_buffer');
+  late final _get_cache_file_buffer = _get_cache_file_bufferPtr.asFunction<
+      ffi.Pointer<ffi.Char> Function(
+          ffi.Pointer<ffi.Char>, ffi.Pointer<ErrorBox>)>();
 
   /// **********************************************************************************************************************************
   /// Synchronization
