@@ -268,7 +268,7 @@ String getTransactionKey(String transactionId) {
   return result;
 }
 
-String getTransferTest() {
+String getAllTransferAsJson() {
 
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
   final resultPointer = monero_flutter.bindings.get_transfers(errorBoxPointer);

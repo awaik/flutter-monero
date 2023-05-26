@@ -8,7 +8,7 @@ class TransferPage extends StatelessWidget {
 
   void _getTransfers() {
     try {
-      _resultController.text = api.getTransferTest();
+      _resultController.text = api.getAllTransferAsJson();
     } catch (e) {
       _resultController.text = e.toString();
     }
