@@ -914,6 +914,24 @@ extern "C"
         }
     }
 
+    void pause_refresh(ErrorBox *error)
+    {
+        if (!is_wallet_created(error))
+            return;
+
+        auto wallet = m_wallet;
+
+        try
+        {
+            wallet->pauseRefresh();
+        }
+        catch (std::exception& e)
+        {
+            error->code = -2;
+            error->message = strdup(e.what());
+        }
+    }
+
     void set_refresh_from_block_height(uint64_t height, ErrorBox* error)
     {
         if (!is_wallet_created(error))

@@ -49,6 +49,14 @@ class SyncWalletPage extends StatelessWidget {
     }
   }
 
+  void _pauseRefresh() {
+    try {
+      api.pauseRefresh();
+    } catch (e) {
+      _resultController.text = e.toString();
+    }
+  }
+
   void _connectToNode() {
     try {
       api.connectToNode();
@@ -143,6 +151,17 @@ class SyncWalletPage extends StatelessWidget {
                     child: ElevatedButton(
                       child: Text("Start synchronization", style: TextStyle(fontSize: 22)),
                       onPressed: _startRefresh,
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.all(10),
+                        minimumSize: Size(360, 60),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: ElevatedButton(
+                      child: Text("Pause synchronization", style: TextStyle(fontSize: 22)),
+                      onPressed: _pauseRefresh,
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.all(10),
                         minimumSize: Size(360, 60),

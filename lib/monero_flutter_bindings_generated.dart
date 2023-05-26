@@ -530,6 +530,20 @@ class MoneroApiBindings {
   late final _start_refresh =
       _start_refreshPtr.asFunction<void Function(ffi.Pointer<ErrorBox>)>();
 
+  void pause_refresh(
+    ffi.Pointer<ErrorBox> error,
+  ) {
+    return _pause_refresh(
+      error,
+    );
+  }
+
+  late final _pause_refreshPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ErrorBox>)>>(
+          'pause_refresh');
+  late final _pause_refresh =
+      _pause_refreshPtr.asFunction<void Function(ffi.Pointer<ErrorBox>)>();
+
   void set_refresh_from_block_height(
     int height,
     ffi.Pointer<ErrorBox> error,

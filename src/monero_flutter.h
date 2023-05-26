@@ -78,6 +78,7 @@ extern "C"
     bool is_connected(ErrorBox *error);
     bool is_needed_to_refresh(ErrorBox *error);
     void start_refresh(ErrorBox *error);
+    void pause_refresh(ErrorBox *error);
     void set_refresh_from_block_height(uint64_t height, ErrorBox *error);
     void rescan_blockchain(ErrorBox *error);
     void set_trusted_daemon(bool arg, ErrorBox *error);

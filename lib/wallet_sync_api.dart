@@ -148,6 +148,17 @@ void startRefresh() {
   }
 }
 
+void pauseRefresh() {
+  final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
+  monero_flutter.bindings.pause_refresh(errorBoxPointer);
+
+  final errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
+
+  if (0 != errorInfo.code) {
+    throw Exception(errorInfo.getErrorMessage());
+  }
+}
+
 void setRefreshFromBlockHeight({required int height}) {
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
   monero_flutter.bindings.set_refresh_from_block_height(height, errorBoxPointer);
