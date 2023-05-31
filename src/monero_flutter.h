@@ -13,6 +13,11 @@ extern "C"
         const char *message;
     } ErrorBox;
 
+    typedef struct ByteArray {
+        const uint8_t *bytes;
+        int32_t length;
+    } ByteArray;
+
     typedef struct ExternPendingTransactionRaw
     {
         int64_t amount;
@@ -35,14 +40,27 @@ extern "C"
     bool is_wallet_exist(const char *path);
     void load_wallet(const char *path, const char *password, int32_t net_type, ErrorBox *error);
 
+    void open_wallet_data_hex(const char *password,
+                                  bool testnet,
+                                  const char *keys_data_hex,
+                                  const char *cache_data_hex,
+                                  const char *daemon_address,
+                                  const char *daemon_username,
+                                  const char *daemon_password,
+                                  ErrorBox* error);
+
     void open_wallet_data(const char *password,
-                            bool testnet,
-                            const char *keys_data_hex,
-                            const char *cache_data_hex,
-                            const char *daemon_address,
-                            const char *daemon_username,
-                            const char *daemon_password,
-                            ErrorBox* error);
+                              bool testnet,
+                              const uint8_t *keys_data,
+                              const int32_t keys_data_len,
+                              const uint8_t *cache_data,
+                              const int32_t cache_data_len,
+                              const char *daemon_address,
+                              const char *daemon_username,
+                              const char *daemon_password,
+                              ErrorBox* error);
+
+    const ByteArray getByteArray(const uint8_t *keys_data, const int32_t keys_data_len);
 
     void close_current_wallet(ErrorBox *error);
 
@@ -64,8 +82,10 @@ extern "C"
     // Unknown use case!
     void set_recovering_from_seed(bool is_recovery, ErrorBox *error);
 
-    const char *get_keys_file_buffer(const char *password, bool view_only, ErrorBox* error);
-    const char *get_cache_file_buffer(const char *password, ErrorBox* error);
+    const char *get_keys_data_hex(const char *password, bool view_only, ErrorBox* error);
+    const ByteArray get_keys_data(const char *password, bool view_only, ErrorBox* error);
+    const char *get_cache_data_hex(const char *password, ErrorBox* error);
+    const ByteArray get_cache_data(const char *password, ErrorBox* error);
 
     // **********************************************************************************************************************************
     // Synchronization

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:monero_flutter/wallet_manager_api.dart' as api;
@@ -103,6 +104,11 @@ class WalletManagementPage extends StatelessWidget {
 
       return;
     }
+
+    // if (isWalletExist){
+    //   await File(walletPath).delete();
+    //   isWalletExist = false;
+    // }
 
     if (isWalletExist) {
       testResult = "Error: wallet already exists!";
@@ -309,8 +315,11 @@ class WalletManagementPage extends StatelessWidget {
     _resultController.text = testResult;
   }
 
-  String _keysFileBuffer = "";
-  String _cacheFileBuffer = "";
+  Uint8List? _keysFileBuffer;
+  Uint8List? _cacheFileBuffer;
+
+  String? _keysFileHex;
+  String? _cacheFileHex;
 
   void _getKeysFileBuffer() async {
     if (!await _checkIsWalletExist()) return;
@@ -318,8 +327,13 @@ class WalletManagementPage extends StatelessWidget {
     String testResult;
 
     try {
-      _keysFileBuffer = api.getKeysFileBuffer("1234", true);
-      testResult = _keysFileBuffer.length.toString();
+      _keysFileHex = api.getKeysDataHex("1234", false);
+      _keysFileBuffer = api.getKeysDataBuffer("1234", false);
+
+      var hex1  = _keysFileHex!;
+      var hex2 = _keysFileBuffer!.map((byte) => byte.toRadixString(16).padLeft(2, '0')).join('');
+
+      testResult = "$hex1 $hex2";
     } catch (e) {
       testResult = e.toString();
     }
@@ -333,8 +347,13 @@ class WalletManagementPage extends StatelessWidget {
     String testResult;
 
     try {
-      _cacheFileBuffer = api.getCacheFileBuffer("1234");
-      testResult = _cacheFileBuffer.length.toString();
+      _cacheFileHex = api.getCacheDataHex("1234");
+      _cacheFileBuffer = api.getCacheDataBuffer("1234");
+
+      var hex1  = _cacheFileHex!;
+      var hex2 = _cacheFileBuffer!.map((byte) => byte.toRadixString(16).padLeft(2, '0')).join('');
+
+      testResult = "${hex1.length} ${hex2.length}";
     } catch (e) {
       testResult = e.toString();
     }
@@ -346,21 +365,23 @@ class WalletManagementPage extends StatelessWidget {
 
     String testResult;
 
-    String path = await _getWalletPath(name: "restored1");
-
-    try {
-      api.openWalletData("1234",
-          false,
-          _keysFileBuffer,
-          _cacheFileBuffer,
-          "node.moneroworld.com:18089",
-          "Daemon username",
-          "Daemon password");
-      testResult = "OK";
-    } catch (e) {
-      testResult = e.toString();
+    if (null == _keysFileBuffer || null == _cacheFileBuffer) {
+      testResult = "keysFileBuffer or cacheFileBuffer is null!";
     }
-
+    else {
+      try {
+        api.openWalletData("1234",
+            false,
+            _keysFileBuffer!,
+            _cacheFileBuffer!,
+            "node.moneroworld.com:18089",
+            "Daemon username",
+            "Daemon password");
+        testResult = "OK";
+      } catch (e) {
+        testResult = e.toString();
+      }
+    }
     _resultController.text = testResult;
   }
 

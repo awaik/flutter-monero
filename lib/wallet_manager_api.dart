@@ -367,14 +367,45 @@ void setRecoveringFromSeed({required bool isRecovery}) {
   }
 }
 
-String getKeysFileBuffer(String password, bool viewOnly)
+String getKeysDataHex(String password, bool viewOnly)
 {
   final passwordPointer = password.toNativeUtf8().cast<Char>();
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
-  final bufferPointer = monero_flutter.bindings.get_keys_file_buffer(passwordPointer, viewOnly, errorBoxPointer);
+  final hexPointer = monero_flutter.bindings.get_keys_data_hex(passwordPointer, viewOnly, errorBoxPointer);
   calloc.free(passwordPointer);
-  final buffer = bufferPointer.cast<Utf8>().toDartString();
-  calloc.free(bufferPointer);
+
+  String? hexString;
+
+  if (nullptr != hexPointer) {
+    hexString = hexPointer.cast<Utf8>().toDartString();
+    calloc.free(hexPointer);
+  }
+
+  final errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
+
+  if (0 != errorInfo.code) {
+    throw Exception(errorInfo.getErrorMessage());
+  }
+
+  if (null == hexString) {
+    throw Exception("Empty response!");
+  }
+
+  return hexString;
+}
+
+Uint8List getKeysDataBuffer(String password, bool viewOnly)
+{
+  final passwordPointer = password.toNativeUtf8().cast<Char>();
+  final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
+  final byteArray = monero_flutter.bindings.get_keys_data(passwordPointer, viewOnly, errorBoxPointer);
+  calloc.free(passwordPointer);
+
+  final buffer = Uint8List.fromList(byteArray.bytes.asTypedList(byteArray.length));
+
+  if (byteArray.length > 0) {
+    calloc.free(byteArray.bytes);
+  }
 
   final errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
 
@@ -385,14 +416,45 @@ String getKeysFileBuffer(String password, bool viewOnly)
   return buffer;
 }
 
-String getCacheFileBuffer(String password)
+String getCacheDataHex(String password)
 {
   final passwordPointer = password.toNativeUtf8().cast<Char>();
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
-  final bufferPointer = monero_flutter.bindings.get_cache_file_buffer(passwordPointer, errorBoxPointer);
+  final hexPointer = monero_flutter.bindings.get_cache_data_hex(passwordPointer, errorBoxPointer);
   calloc.free(passwordPointer);
-  final buffer = bufferPointer.cast<Utf8>().toDartString();
-  calloc.free(bufferPointer);
+
+  String? hexString;
+
+  if (nullptr != hexPointer) {
+    hexString = hexPointer.cast<Utf8>().toDartString();
+    calloc.free(hexPointer);
+  }
+
+  final errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
+
+  if (0 != errorInfo.code) {
+    throw Exception(errorInfo.getErrorMessage());
+  }
+
+  if (null == hexString) {
+    throw Exception("Empty response!");
+  }
+
+  return hexString;
+}
+
+Uint8List getCacheDataBuffer(String password)
+{
+  final passwordPointer = password.toNativeUtf8().cast<Char>();
+  final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
+  final byteArray = monero_flutter.bindings.get_cache_data(passwordPointer, errorBoxPointer);
+  calloc.free(passwordPointer);
+
+  final buffer = Uint8List.fromList(byteArray.bytes.asTypedList(byteArray.length));
+
+  if (byteArray.length > 0) {
+    calloc.free(byteArray.bytes);
+  }
 
   final errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
 
@@ -403,13 +465,37 @@ String getCacheFileBuffer(String password)
   return buffer;
 }
 
-void openWalletData(String password,
-                      bool testnet,
-                      String keysDataHex,
-                      String cacheDataHex,
-                      String daemonAddress,
-                      String daemonUsername,
-                      String daemonPassword)
+Uint8List getByteArray(Uint8List keysData)
+{
+  final keysDataPointer = _toNativeByteArray(keysData);
+
+  final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
+  final byteArray = monero_flutter.bindings.getByteArray(keysDataPointer, keysData.length);
+
+  final buffer = Uint8List.fromList(byteArray.bytes.asTypedList(byteArray.length));
+
+  calloc.free(keysDataPointer);
+
+  if (byteArray.length > 0) {
+    calloc.free(byteArray.bytes);
+  }
+
+  final errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
+
+  if (0 != errorInfo.code) {
+    throw Exception(errorInfo.getErrorMessage());
+  }
+
+  return buffer;
+}
+
+void openWalletDataHex(String password,
+    bool testnet,
+    String keysDataHex,
+    String cacheDataHex,
+    String daemonAddress,
+    String daemonUsername,
+    String daemonPassword)
 {
   final passwordPointer = password.toNativeUtf8().cast<Char>();
   final keysDataHexPointer = keysDataHex.toNativeUtf8().cast<Char>();
@@ -418,7 +504,8 @@ void openWalletData(String password,
   final daemonUsernamePointer = daemonUsername.toNativeUtf8().cast<Char>();
   final daemonPasswordPointer = daemonPassword.toNativeUtf8().cast<Char>();
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
-  monero_flutter.bindings.open_wallet_data(passwordPointer,
+
+  monero_flutter.bindings.open_wallet_data_hex(passwordPointer,
       testnet,
       keysDataHexPointer,
       cacheDataHexPointer,
@@ -439,4 +526,53 @@ void openWalletData(String password,
   if (0 != errorInfo.code) {
     throw Exception(errorInfo.getErrorMessage());
   }
+}
+
+void openWalletData(String password,
+                      bool testnet,
+                      Uint8List keysData,
+                      Uint8List cacheData,
+                      String daemonAddress,
+                      String daemonUsername,
+                      String daemonPassword)
+{
+  final passwordPointer = password.toNativeUtf8().cast<Char>();
+  final keysDataPointer = _toNativeByteArray(keysData);
+  final cacheDataPointer = _toNativeByteArray(cacheData);
+  final daemonAddressPointer = daemonAddress.toNativeUtf8().cast<Char>();
+  final daemonUsernamePointer = daemonUsername.toNativeUtf8().cast<Char>();
+  final daemonPasswordPointer = daemonPassword.toNativeUtf8().cast<Char>();
+  final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
+
+  monero_flutter.bindings.open_wallet_data(passwordPointer,
+      testnet,
+      keysDataPointer,
+      keysData.length,
+      cacheDataPointer,
+      cacheData.length,
+      daemonAddressPointer,
+      daemonUsernamePointer,
+      daemonPasswordPointer,
+      errorBoxPointer);
+
+  calloc.free(passwordPointer);
+  calloc.free(keysDataPointer);
+  calloc.free(cacheDataPointer);
+  calloc.free(daemonAddressPointer);
+  calloc.free(daemonUsernamePointer);
+  calloc.free(daemonPasswordPointer);
+
+  final errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
+
+  if (0 != errorInfo.code) {
+    throw Exception(errorInfo.getErrorMessage());
+  }
+}
+
+Pointer<Uint8> _toNativeByteArray(Uint8List bytes){
+
+  final nativeData = calloc<Uint8>(bytes.length);
+  nativeData.asTypedList(bytes.length).setAll(0, bytes);
+
+  return nativeData;
 }

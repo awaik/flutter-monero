@@ -172,7 +172,7 @@ class MoneroApiBindings {
       void Function(ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Char>, int,
           ffi.Pointer<ErrorBox>)>();
 
-  void open_wallet_data(
+  void open_wallet_data_hex(
     ffi.Pointer<ffi.Char> password,
     bool testnet,
     ffi.Pointer<ffi.Char> keys_data_hex,
@@ -182,11 +182,59 @@ class MoneroApiBindings {
     ffi.Pointer<ffi.Char> daemon_password,
     ffi.Pointer<ErrorBox> error,
   ) {
-    return _open_wallet_data(
+    return _open_wallet_data_hex(
       password,
       testnet,
       keys_data_hex,
       cache_data_hex,
+      daemon_address,
+      daemon_username,
+      daemon_password,
+      error,
+    );
+  }
+
+  late final _open_wallet_data_hexPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(
+              ffi.Pointer<ffi.Char>,
+              ffi.Bool,
+              ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ErrorBox>)>>('open_wallet_data_hex');
+  late final _open_wallet_data_hex = _open_wallet_data_hexPtr.asFunction<
+      void Function(
+          ffi.Pointer<ffi.Char>,
+          bool,
+          ffi.Pointer<ffi.Char>,
+          ffi.Pointer<ffi.Char>,
+          ffi.Pointer<ffi.Char>,
+          ffi.Pointer<ffi.Char>,
+          ffi.Pointer<ffi.Char>,
+          ffi.Pointer<ErrorBox>)>();
+
+  void open_wallet_data(
+    ffi.Pointer<ffi.Char> password,
+    bool testnet,
+    ffi.Pointer<ffi.Uint8> keys_data,
+    int keys_data_len,
+    ffi.Pointer<ffi.Uint8> cache_data,
+    int cache_data_len,
+    ffi.Pointer<ffi.Char> daemon_address,
+    ffi.Pointer<ffi.Char> daemon_username,
+    ffi.Pointer<ffi.Char> daemon_password,
+    ffi.Pointer<ErrorBox> error,
+  ) {
+    return _open_wallet_data(
+      password,
+      testnet,
+      keys_data,
+      keys_data_len,
+      cache_data,
+      cache_data_len,
       daemon_address,
       daemon_username,
       daemon_password,
@@ -199,8 +247,10 @@ class MoneroApiBindings {
           ffi.Void Function(
               ffi.Pointer<ffi.Char>,
               ffi.Bool,
-              ffi.Pointer<ffi.Char>,
-              ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Uint8>,
+              ffi.Int32,
+              ffi.Pointer<ffi.Uint8>,
+              ffi.Int32,
               ffi.Pointer<ffi.Char>,
               ffi.Pointer<ffi.Char>,
               ffi.Pointer<ffi.Char>,
@@ -209,12 +259,31 @@ class MoneroApiBindings {
       void Function(
           ffi.Pointer<ffi.Char>,
           bool,
-          ffi.Pointer<ffi.Char>,
-          ffi.Pointer<ffi.Char>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
           ffi.Pointer<ffi.Char>,
           ffi.Pointer<ffi.Char>,
           ffi.Pointer<ffi.Char>,
           ffi.Pointer<ErrorBox>)>();
+
+  ByteArray getByteArray(
+    ffi.Pointer<ffi.Uint8> keys_data,
+    int keys_data_len,
+  ) {
+    return _getByteArray(
+      keys_data,
+      keys_data_len,
+    );
+  }
+
+  late final _getByteArrayPtr = _lookup<
+      ffi.NativeFunction<
+          ByteArray Function(
+              ffi.Pointer<ffi.Uint8>, ffi.Int32)>>('getByteArray');
+  late final _getByteArray = _getByteArrayPtr
+      .asFunction<ByteArray Function(ffi.Pointer<ffi.Uint8>, int)>();
 
   void close_current_wallet(
     ffi.Pointer<ErrorBox> error,
@@ -374,43 +443,79 @@ class MoneroApiBindings {
   late final _set_recovering_from_seed = _set_recovering_from_seedPtr
       .asFunction<void Function(bool, ffi.Pointer<ErrorBox>)>();
 
-  ffi.Pointer<ffi.Char> get_keys_file_buffer(
+  ffi.Pointer<ffi.Char> get_keys_data_hex(
     ffi.Pointer<ffi.Char> password,
     bool view_only,
     ffi.Pointer<ErrorBox> error,
   ) {
-    return _get_keys_file_buffer(
+    return _get_keys_data_hex(
       password,
       view_only,
       error,
     );
   }
 
-  late final _get_keys_file_bufferPtr = _lookup<
+  late final _get_keys_data_hexPtr = _lookup<
       ffi.NativeFunction<
           ffi.Pointer<ffi.Char> Function(ffi.Pointer<ffi.Char>, ffi.Bool,
-              ffi.Pointer<ErrorBox>)>>('get_keys_file_buffer');
-  late final _get_keys_file_buffer = _get_keys_file_bufferPtr.asFunction<
+              ffi.Pointer<ErrorBox>)>>('get_keys_data_hex');
+  late final _get_keys_data_hex = _get_keys_data_hexPtr.asFunction<
       ffi.Pointer<ffi.Char> Function(
           ffi.Pointer<ffi.Char>, bool, ffi.Pointer<ErrorBox>)>();
 
-  ffi.Pointer<ffi.Char> get_cache_file_buffer(
+  ByteArray get_keys_data(
+    ffi.Pointer<ffi.Char> password,
+    bool view_only,
+    ffi.Pointer<ErrorBox> error,
+  ) {
+    return _get_keys_data(
+      password,
+      view_only,
+      error,
+    );
+  }
+
+  late final _get_keys_dataPtr = _lookup<
+      ffi.NativeFunction<
+          ByteArray Function(ffi.Pointer<ffi.Char>, ffi.Bool,
+              ffi.Pointer<ErrorBox>)>>('get_keys_data');
+  late final _get_keys_data = _get_keys_dataPtr.asFunction<
+      ByteArray Function(ffi.Pointer<ffi.Char>, bool, ffi.Pointer<ErrorBox>)>();
+
+  ffi.Pointer<ffi.Char> get_cache_data_hex(
     ffi.Pointer<ffi.Char> password,
     ffi.Pointer<ErrorBox> error,
   ) {
-    return _get_cache_file_buffer(
+    return _get_cache_data_hex(
       password,
       error,
     );
   }
 
-  late final _get_cache_file_bufferPtr = _lookup<
+  late final _get_cache_data_hexPtr = _lookup<
       ffi.NativeFunction<
           ffi.Pointer<ffi.Char> Function(ffi.Pointer<ffi.Char>,
-              ffi.Pointer<ErrorBox>)>>('get_cache_file_buffer');
-  late final _get_cache_file_buffer = _get_cache_file_bufferPtr.asFunction<
+              ffi.Pointer<ErrorBox>)>>('get_cache_data_hex');
+  late final _get_cache_data_hex = _get_cache_data_hexPtr.asFunction<
       ffi.Pointer<ffi.Char> Function(
           ffi.Pointer<ffi.Char>, ffi.Pointer<ErrorBox>)>();
+
+  ByteArray get_cache_data(
+    ffi.Pointer<ffi.Char> password,
+    ffi.Pointer<ErrorBox> error,
+  ) {
+    return _get_cache_data(
+      password,
+      error,
+    );
+  }
+
+  late final _get_cache_dataPtr = _lookup<
+      ffi.NativeFunction<
+          ByteArray Function(
+              ffi.Pointer<ffi.Char>, ffi.Pointer<ErrorBox>)>>('get_cache_data');
+  late final _get_cache_data = _get_cache_dataPtr.asFunction<
+      ByteArray Function(ffi.Pointer<ffi.Char>, ffi.Pointer<ErrorBox>)>();
 
   /// **********************************************************************************************************************************
   /// Synchronization
@@ -1383,6 +1488,13 @@ class ErrorBox extends ffi.Struct {
   external int code;
 
   external ffi.Pointer<ffi.Char> message;
+}
+
+class ByteArray extends ffi.Struct {
+  external ffi.Pointer<ffi.Uint8> bytes;
+
+  @ffi.Int32()
+  external int length;
 }
 
 class ExternPendingTransactionRaw extends ffi.Struct {

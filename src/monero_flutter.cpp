@@ -410,10 +410,51 @@ extern "C"
             change_current_wallet(wallet);
     }
 
+    void open_wallet_data_hex(const char *password,
+                                  bool testnet,
+                                  const char *keys_data_hex,
+                                  const char *cache_data_hex,
+                                  const char *daemon_address,
+                                  const char *daemon_username,
+                                  const char *daemon_password,
+                                  ErrorBox* error)
+    {
+        #if defined(_POSIX_VERSION)
+        nice(19);
+        #endif
+
+        Monero::Wallet* wallet;
+
+        try
+        {
+            wallet = Monero::WalletManagerFactory::getWalletManager()->open_wallet_data_hex(std::string(password),
+                                testnet,
+                                std::string(keys_data_hex),
+                                std::string(cache_data_hex),
+                                std::string(daemon_address),
+                                std::string(daemon_username),
+                                std::string(daemon_password));
+        }
+        catch (std::exception& e)
+        {
+            error->code = -1;
+            error->message = strdup(e.what());
+
+            return;
+        }
+
+        extract_wallet_error(wallet, error);
+
+        if (0 == error->code)
+            change_current_wallet(wallet);
+    }
+
     void open_wallet_data(const char *password,
                                 bool testnet,
-                                const char *keys_data_hex,
-                                const char *cache_data_hex,
+                                const uint8_t *keys_data,
+                                const int32_t keys_data_len,
+                                const uint8_t *cache_data,
+                                const int32_t cache_data_len,
                                 const char *daemon_address,
                                 const char *daemon_username,
                                 const char *daemon_password,
@@ -422,14 +463,15 @@ extern "C"
         #if defined(_POSIX_VERSION)
         nice(19);
         #endif
+
         Monero::Wallet* wallet;
 
         try
         {
-            wallet = Monero::WalletManagerFactory::getWalletManager()->open_wallet_from_data(std::string(password),
+            wallet = Monero::WalletManagerFactory::getWalletManager()->open_wallet_data(std::string(password),
                                 testnet,
-                                std::string(keys_data_hex),
-                                std::string(cache_data_hex),
+                                std::string(reinterpret_cast<const char*>(keys_data), keys_data_len),
+                                std::string(reinterpret_cast<const char*>(cache_data), cache_data_len),
                                 std::string(daemon_address),
                                 std::string(daemon_username),
                                 std::string(daemon_password));
@@ -683,7 +725,6 @@ extern "C"
     }
 
     // Unknown use case!
-
     void set_recovering_from_seed(bool is_recovery, ErrorBox* error)
     {
         if (!is_wallet_created(error))
@@ -692,8 +733,35 @@ extern "C"
         m_wallet->setRecoveringFromSeed(is_recovery);
     }
 
-    const char *get_keys_file_buffer(const char *password, bool view_only, ErrorBox* error)
+    // Work correctly with '\0' characters!
+    static const uint8_t* duplicate_bytes(const std::string& str)
     {
+        std::size_t length = str.length();
+
+        // deallocate memory in the calling code!
+        uint8_t* bytes = (uint8_t*)calloc(length, sizeof(uint8_t));
+        std::memcpy(bytes, str.c_str(), length);
+
+        return bytes;
+    }
+
+    const ByteArray getByteArray(const uint8_t *keys_data, const int32_t keys_data_len)
+    {
+        std::string data_buf = std::string(reinterpret_cast<const char*>(keys_data), keys_data_len);
+
+        ByteArray result;
+        result.length = (uint32_t)data_buf.length();
+        result.bytes = duplicate_bytes(data_buf);
+
+        return result;
+    }
+
+    const char *get_keys_data_hex(const char *password, bool view_only, ErrorBox* error)
+    {
+        #if defined(_POSIX_VERSION)
+        nice(19);
+        #endif
+
         if (!is_wallet_created(error))
             return nullptr;
 
@@ -701,27 +769,34 @@ extern "C"
 
         try
         {
-            buffer = strdup(m_wallet->get_keys_file_buffer(std::string(password), view_only).c_str());
+            buffer = strdup(m_wallet->get_keys_data_hex(std::string(password), view_only).c_str());
         }
         catch (std::exception& e)
         {
-            error->code = -2;
             error->message = strdup(e.what());
         }
 
         return buffer;
     }
 
-    const char *get_cache_file_buffer(const char *password, ErrorBox* error)
+    const ByteArray get_keys_data(const char *password, bool view_only, ErrorBox* error)
     {
-        if (!is_wallet_created(error))
-            return nullptr;
+        #if defined(_POSIX_VERSION)
+        nice(19);
+        #endif
 
-        const char* buffer = nullptr;
+        ByteArray result;
+        result.length = 0;
+        result.bytes = nullptr;
+
+        if (!is_wallet_created(error))
+            return result;
 
         try
         {
-            buffer = strdup(m_wallet->get_cache_file_buffer(std::string(password)).c_str());
+            std::string data_buf = m_wallet->get_keys_data_buf(std::string(password), view_only);
+            result.length = (int32_t)data_buf.length();
+            result.bytes = duplicate_bytes(data_buf);
         }
         catch (std::exception& e)
         {
@@ -729,7 +804,58 @@ extern "C"
             error->message = strdup(e.what());
         }
 
+        return result;
+    }
+
+    const char *get_cache_data_hex(const char *password, ErrorBox* error)
+    {
+        #if defined(_POSIX_VERSION)
+        nice(19);
+        #endif
+
+        if (!is_wallet_created(error))
+            return nullptr;
+
+        const char* buffer = nullptr;
+
+        try
+        {
+            buffer = strdup(m_wallet->get_cache_data_hex(std::string(password)).c_str());
+        }
+        catch (std::exception& e)
+        {
+            error->message = strdup(e.what());
+        }
+
         return buffer;
+    }
+
+    const ByteArray get_cache_data(const char *password, ErrorBox* error)
+    {
+        #if defined(_POSIX_VERSION)
+        nice(19);
+        #endif
+
+        ByteArray result;
+        result.length = 0;
+        result.bytes = nullptr;
+
+        if (!is_wallet_created(error))
+            return result;
+
+        try
+        {
+            std::string data_buf = m_wallet->get_cache_data_buf(std::string(password));
+            result.length = (int32_t)data_buf.length();
+            result.bytes = duplicate_bytes(data_buf);
+        }
+        catch (std::exception& e)
+        {
+            error->code = -2;
+            error->message = strdup(e.what());
+        }
+
+        return result;
     }
 
     // **********************************************************************************************************************************
@@ -755,9 +881,9 @@ extern "C"
         if (!is_wallet_created(error))
             return;
 
-#if defined(_POSIX_VERSION)
+        #if defined(_POSIX_VERSION)
         nice(19);
-#endif
+        #endif
 
         Monero::Wallet* wallet = m_wallet;
 
@@ -837,9 +963,9 @@ extern "C"
 
         auto wallet = m_wallet;
 
-#if defined(_POSIX_VERSION)
-        nice(19);
-#endif
+        #if defined(_POSIX_VERSION)
+                nice(19);
+        #endif
 
         bool is_success = false;
 

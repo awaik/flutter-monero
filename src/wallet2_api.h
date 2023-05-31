@@ -1114,8 +1114,10 @@ struct Wallet
 
     virtual std::string get_transfers() = 0;
 
-    virtual std::string get_keys_file_buffer(const std::string& password, bool view_only) const = 0;
-    virtual std::string get_cache_file_buffer(const std::string& password) const = 0;
+    virtual std::string get_keys_data_buf(const std::string& password, bool view_only) const = 0;
+    virtual std::string get_keys_data_hex(const std::string& password, bool view_only) const = 0;
+    virtual std::string get_cache_data_buf(const std::string& password) const = 0;
+    virtual std::string get_cache_data_hex(const std::string& password) const = 0;
 };
 
 /**
@@ -1155,7 +1157,7 @@ struct WalletManager
         return openWallet(path, password, testnet ? TESTNET : MAINNET);
     }
 
-    virtual Wallet *open_wallet_from_data(const std::string& password,
+    virtual Wallet *open_wallet_data_hex(const std::string& password,
                                 NetworkType nettype,
                                 uint64_t kdf_rounds,
                                 const std::string& keys_data_hex,
@@ -1164,7 +1166,7 @@ struct WalletManager
                                 const std::string& daemon_username,
                                 const std::string& daemon_password) = 0;
 
-    Wallet * open_wallet_from_data(const std::string &password,
+    Wallet *open_wallet_data_hex(const std::string &password,
                                     bool testnet,
                                     const std::string& keys_data_hex,
                                     const std::string& cache_data_hex,
@@ -1172,11 +1174,38 @@ struct WalletManager
                                     const std::string& daemon_username,
                                     const std::string& daemon_password)
     {
-        return open_wallet_from_data(password,
+        return open_wallet_data_hex(password,
                                        testnet ? TESTNET : MAINNET,
                                        1,
                                        keys_data_hex,
                                        cache_data_hex,
+                                       daemon_address,
+                                       daemon_username,
+                                       daemon_password);
+    }
+
+    virtual Wallet *open_wallet_data(const std::string& password,
+                                NetworkType nettype,
+                                uint64_t kdf_rounds,
+                                const std::string& keys_data_buf,
+                                const std::string& cache_data_buf,
+                                const std::string& daemon_address,
+                                const std::string& daemon_username,
+                                const std::string& daemon_password) = 0;
+
+    Wallet *open_wallet_data(const std::string &password,
+                                    bool testnet,
+                                    const std::string& keys_data_buf,
+                                    const std::string& cache_data_buf,
+                                    const std::string& daemon_address,
+                                    const std::string& daemon_username,
+                                    const std::string& daemon_password)
+    {
+        return open_wallet_data(password,
+                                       testnet ? TESTNET : MAINNET,
+                                       1,
+                                       keys_data_buf,
+                                       cache_data_buf,
                                        daemon_address,
                                        daemon_username,
                                        daemon_password);
