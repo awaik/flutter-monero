@@ -268,23 +268,6 @@ class MoneroApiBindings {
           ffi.Pointer<ffi.Char>,
           ffi.Pointer<ErrorBox>)>();
 
-  ByteArray getByteArray(
-    ffi.Pointer<ffi.Uint8> keys_data,
-    int keys_data_len,
-  ) {
-    return _getByteArray(
-      keys_data,
-      keys_data_len,
-    );
-  }
-
-  late final _getByteArrayPtr = _lookup<
-      ffi.NativeFunction<
-          ByteArray Function(
-              ffi.Pointer<ffi.Uint8>, ffi.Int32)>>('getByteArray');
-  late final _getByteArray = _getByteArrayPtr
-      .asFunction<ByteArray Function(ffi.Pointer<ffi.Uint8>, int)>();
-
   void close_current_wallet(
     ffi.Pointer<ErrorBox> error,
   ) {

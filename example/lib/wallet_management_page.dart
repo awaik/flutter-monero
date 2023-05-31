@@ -73,7 +73,7 @@ class WalletManagementPage extends StatelessWidget {
       testResult = "Error: wallet already exist!";
     } else {
       try {
-        final password = "1234";
+        var password = "1234";
 
         await api.createWallet(
           path: walletPath,
@@ -114,12 +114,12 @@ class WalletManagementPage extends StatelessWidget {
       testResult = "Error: wallet already exists!";
     } else {
       try {
-        final password = "1234";
+        var password = "1234";
 
         // final seed =
         //     "cell sonic farming toxic mechanic drunk terminal mayor maze fonts dove jazz truth attire october onto bomb molten twofold goggles voice liar loaded lush fonts";
 
-        final seed =
+        var seed =
             "tycoon odds launching anchor academy ought inflamed vivid payment large musical enhanced loincloth having wallets earth ditch thirsty somewhere himself pact village awoken basin tycoon";
 
         api.restoreWalletFromSeedSync(
@@ -156,7 +156,7 @@ class WalletManagementPage extends StatelessWidget {
       testResult = "Error: wallet wasn't created!";
     } else {
       try {
-        final password = "1234";
+        var password = "1234";
         api.loadWalletSync(path: walletPath, password: password);
         testResult = "Wallet opened successfully!";
       } catch (e) {
@@ -327,8 +327,8 @@ class WalletManagementPage extends StatelessWidget {
     String testResult;
 
     try {
-      _keysFileHex = api.getKeysDataHex("1234", false);
-      _keysFileBuffer = api.getKeysDataBuffer("1234", false);
+      _keysFileHex = await api.getKeysDataHex("1234", false);
+      _keysFileBuffer = await api.getKeysDataBuffer("1234", false);
 
       var hex1  = _keysFileHex!;
       var hex2 = _keysFileBuffer!.map((byte) => byte.toRadixString(16).padLeft(2, '0')).join('');
@@ -347,8 +347,8 @@ class WalletManagementPage extends StatelessWidget {
     String testResult;
 
     try {
-      _cacheFileHex = api.getCacheDataHex("1234");
-      _cacheFileBuffer = api.getCacheDataBuffer("1234");
+      _cacheFileHex = await api.getCacheDataHex("1234");
+      _cacheFileBuffer = await api.getCacheDataBuffer("1234");
 
       var hex1  = _cacheFileHex!;
       var hex2 = _cacheFileBuffer!.map((byte) => byte.toRadixString(16).padLeft(2, '0')).join('');
@@ -370,7 +370,7 @@ class WalletManagementPage extends StatelessWidget {
     }
     else {
       try {
-        api.openWalletData("1234",
+        await api.openWalletData("1234",
             false,
             _keysFileBuffer!,
             _cacheFileBuffer!,

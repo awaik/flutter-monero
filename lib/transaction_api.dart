@@ -268,7 +268,7 @@ String getTransactionKey(String transactionId) {
   return result;
 }
 
-String getAllTransferAsJson() {
+String getAllTransfersAsJson() {
 
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
   final resultPointer = monero_flutter.bindings.get_transfers(errorBoxPointer);
@@ -283,37 +283,4 @@ String getAllTransferAsJson() {
   }
 
   return result;
-
-  // final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
-  //
-  // final resultPointer = monero_flutter.bindings.get_transfers(errorBoxPointer);
-  //
-  // final result = resultPointer.cast<Uint8>();
-  //
-  // int count = 0;
-  //
-  // List<int> list = [];
-  //
-  // String resString = "";
-  //
-  // for (int i = 0; i < 1000; i++) {
-  //
-  //   int byte = result.elementAt(i).value;
-  //   list.add(byte);
-  //   //resString += byte.toString() + ",";
-  //
-  //   //count++;
-  // }
-  //
-  // calloc.free(resultPointer);
-  //
-  // final errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
-  //
-  // if (0 != errorInfo.code) {
-  //   throw Exception(errorInfo.getErrorMessage());
-  // }
-  //
-  // String base64String = base64.encode(list);
-  //
-  // return base64String;
 }

@@ -745,17 +745,6 @@ extern "C"
         return bytes;
     }
 
-    const ByteArray getByteArray(const uint8_t *keys_data, const int32_t keys_data_len)
-    {
-        std::string data_buf = std::string(reinterpret_cast<const char*>(keys_data), keys_data_len);
-
-        ByteArray result;
-        result.length = (uint32_t)data_buf.length();
-        result.bytes = duplicate_bytes(data_buf);
-
-        return result;
-    }
-
     const char *get_keys_data_hex(const char *password, bool view_only, ErrorBox* error)
     {
         #if defined(_POSIX_VERSION)

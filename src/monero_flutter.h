@@ -60,8 +60,6 @@ extern "C"
                               const char *daemon_password,
                               ErrorBox* error);
 
-    const ByteArray getByteArray(const uint8_t *keys_data, const int32_t keys_data_len);
-
     void close_current_wallet(ErrorBox *error);
 
     // Get info

@@ -367,7 +367,19 @@ void setRecoveringFromSeed({required bool isRecovery}) {
   }
 }
 
-String getKeysDataHex(String password, bool viewOnly)
+Future<String> getKeysDataHex(String password, bool viewOnly)
+{
+  return compute<Map<String, Object?>, String>(_getKeysDataHexSync, {'password': password, 'viewOnly': viewOnly});
+}
+
+String _getKeysDataHexSync(Map<String, Object?> args) {
+  final password = args['password'] as String;
+  final viewOnly = args['viewOnly'] as bool;
+
+  return getKeysDataHexSync(password, viewOnly);
+}
+
+String getKeysDataHexSync(String password, bool viewOnly)
 {
   final passwordPointer = password.toNativeUtf8().cast<Char>();
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
@@ -394,7 +406,19 @@ String getKeysDataHex(String password, bool viewOnly)
   return hexString;
 }
 
-Uint8List getKeysDataBuffer(String password, bool viewOnly)
+Future<Uint8List> getKeysDataBuffer(String password, bool viewOnly) {
+  return compute<Map<String, Object?>, Uint8List>(_getKeysDataBufferSync, {'password': password, 'viewOnly': viewOnly});
+}
+
+Uint8List _getKeysDataBufferSync(Map<String, Object?> args)
+{
+  final password = args['password'] as String;
+  final viewOnly = args['viewOnly'] as bool;
+
+  return getKeysDataBufferSync(password, viewOnly);
+}
+
+Uint8List getKeysDataBufferSync(String password, bool viewOnly)
 {
   final passwordPointer = password.toNativeUtf8().cast<Char>();
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
@@ -416,7 +440,16 @@ Uint8List getKeysDataBuffer(String password, bool viewOnly)
   return buffer;
 }
 
-String getCacheDataHex(String password)
+Future<String> getCacheDataHex(String password) {
+  return compute<Map<String, Object?>, String>(_getCacheDataHexSync, {'password': password });
+}
+
+String _getCacheDataHexSync(Map<String, Object?> args) {
+  final password = args['password'] as String;
+  return getCacheDataHexSync(password);
+}
+
+String getCacheDataHexSync(String password)
 {
   final passwordPointer = password.toNativeUtf8().cast<Char>();
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
@@ -443,7 +476,16 @@ String getCacheDataHex(String password)
   return hexString;
 }
 
-Uint8List getCacheDataBuffer(String password)
+Future<Uint8List> getCacheDataBuffer(String password) {
+  return compute<Map<String, Object?>, Uint8List>(_getCacheDataBufferSync, {'password': password });
+}
+
+Uint8List _getCacheDataBufferSync(Map<String, Object?> args) {
+  final password = args['password'] as String;
+  return getCacheDataBufferSync(password);
+}
+
+Uint8List getCacheDataBufferSync(String password)
 {
   final passwordPointer = password.toNativeUtf8().cast<Char>();
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
@@ -465,31 +507,37 @@ Uint8List getCacheDataBuffer(String password)
   return buffer;
 }
 
-Uint8List getByteArray(Uint8List keysData)
-{
-  final keysDataPointer = _toNativeByteArray(keysData);
-
-  final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
-  final byteArray = monero_flutter.bindings.getByteArray(keysDataPointer, keysData.length);
-
-  final buffer = Uint8List.fromList(byteArray.bytes.asTypedList(byteArray.length));
-
-  calloc.free(keysDataPointer);
-
-  if (byteArray.length > 0) {
-    calloc.free(byteArray.bytes);
-  }
-
-  final errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
-
-  if (0 != errorInfo.code) {
-    throw Exception(errorInfo.getErrorMessage());
-  }
-
-  return buffer;
+Future openWalletDataHex(String password,
+    bool testnet,
+    String keysDataHex,
+    String cacheDataHex,
+    String daemonAddress,
+    String daemonUsername,
+    String daemonPassword) {
+  return compute<Map<String, Object?>, void>(_openWalletDataHexSync, {
+    'password': password,
+    'testnet': testnet,
+    'keysDataHex': keysDataHex,
+    'cacheDataHex': cacheDataHex,
+    'daemonAddress': daemonAddress,
+    'daemonUsername': daemonUsername,
+    'daemonPassword': daemonPassword
+  });
 }
 
-void openWalletDataHex(String password,
+void _openWalletDataHexSync (Map<String, Object?> args){
+  final password = args['password'] as String;
+  final testnet = args['testnet'] as bool;
+  final keysDataHex = args['keysDataHex'] as String;
+  final cacheDataHex = args['cacheDataHex'] as String;
+  final daemonAddress = args['daemonAddress'] as String;
+  final daemonUsername = args['daemonUsername'] as String;
+  final daemonPassword = args['daemonPassword'] as String;
+
+  openWalletDataHexSync(password, testnet, keysDataHex, cacheDataHex, daemonAddress, daemonUsername, daemonPassword);
+}
+
+void openWalletDataHexSync(String password,
     bool testnet,
     String keysDataHex,
     String cacheDataHex,
@@ -528,7 +576,37 @@ void openWalletDataHex(String password,
   }
 }
 
-void openWalletData(String password,
+Future openWalletData(String password,
+    bool testnet,
+    Uint8List keysData,
+    Uint8List cacheData,
+    String daemonAddress,
+    String daemonUsername,
+    String daemonPassword) {
+  return compute<Map<String, Object?>, void>(_openWalletDataSync, {
+    'password': password,
+    'testnet': testnet,
+    'keysData': keysData,
+    'cacheData': cacheData,
+    'daemonAddress': daemonAddress,
+    'daemonUsername': daemonUsername,
+    'daemonPassword': daemonPassword
+  });
+}
+
+void _openWalletDataSync(Map<String, Object?> args){
+  final password = args['password'] as String;
+  final testnet = args['testnet'] as bool;
+  final keysData = args['keysData'] as Uint8List;
+  final cacheData = args['cacheData'] as Uint8List;
+  final daemonAddress = args['daemonAddress'] as String;
+  final daemonUsername = args['daemonUsername'] as String;
+  final daemonPassword = args['daemonPassword'] as String;
+
+  openWalletDataSync(password, testnet, keysData, cacheData, daemonAddress, daemonUsername, daemonPassword);
+}
+
+void openWalletDataSync(String password,
                       bool testnet,
                       Uint8List keysData,
                       Uint8List cacheData,
