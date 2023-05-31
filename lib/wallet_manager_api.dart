@@ -9,6 +9,16 @@ import 'exceptions/wallet_restore_from_seed_exception.dart';
 
 import 'monero_flutter.dart' as monero_flutter;
 
+/// Creates a new Monero wallet (async version).
+///
+/// Generates a new Monero wallet using the specified [path], [password], [language],
+/// and optional [nettype].
+///
+/// Parameters:
+///   [path] - The path to store the new wallet file.
+///   [password] - The password to encrypt the wallet.
+///   [language] - The language used for the wallet's mnemonic seed.
+///   [nettype] - (Optional) The network type. Defaults to 0.
 Future<void> createWallet(
         {required String path,
         required String password,
@@ -25,6 +35,16 @@ void _createWallet(Map<String, dynamic> args) {
   createWalletSync(path: path, password: password, language: language);
 }
 
+/// Creates a new Monero wallet (sync version).
+///
+/// Generates a new Monero wallet using the specified [path], [password], [language],
+/// and optional [nettype].
+///
+/// Parameters:
+///   [path] - The path to store the new wallet file.
+///   [password] - The password to encrypt the wallet.
+///   [language] - The language used for the wallet's mnemonic seed.
+///   [nettype] - (Optional) The network type. Defaults to 0.
 void createWalletSync(
     {required String path,
     required String password,
@@ -48,6 +68,17 @@ void createWalletSync(
   }
 }
 
+/// Restores a Monero wallet from a mnemonic seed (async version).
+///
+/// Restores a Monero wallet using the specified [path], [password], [seed],
+/// and optional [nettype] and [restoreHeight].
+///
+/// Parameters:
+///   [path] - The path to store the restored wallet file.
+///   [password] - The password to encrypt the wallet.
+///   [seed] - The mnemonic seed used to restore the wallet.
+///   [nettype] - (Optional) The network type. Defaults to 0.
+///   [restoreHeight] - (Optional) The block height to restore from. Defaults to 0.
 Future<void> restoreWalletFromSeed(
         {required String path,
         required String password,
@@ -72,6 +103,17 @@ void _restoreWalletFromSeed(Map<String, dynamic> args) {
       path: path, password: password, seed: seed, restoreHeight: restoreHeight);
 }
 
+/// Restores a Monero wallet from a mnemonic seed (sync version).
+///
+/// Restores a Monero wallet using the specified [path], [password], [seed],
+/// and optional [nettype] and [restoreHeight].
+///
+/// Parameters:
+///   [path] - The path to store the restored wallet file.
+///   [password] - The password to encrypt the wallet.
+///   [seed] - The mnemonic seed used to restore the wallet.
+///   [nettype] - (Optional) The network type. Defaults to 0.
+///   [restoreHeight] - (Optional) The block height to restore from. Defaults to 0.
 void restoreWalletFromSeedSync({
   required String path,
   required String password,
@@ -103,6 +145,20 @@ void restoreWalletFromSeedSync({
   }
 }
 
+/// Restores a Monero wallet from keys (async version).
+///
+/// Restores a Monero wallet using the specified [path], [password], [language],
+/// [address], [viewKey], [spendKey], and optional [nettype] and [restoreHeight].
+///
+/// Parameters:
+///   [path] - The path to store the restored wallet file.
+///   [password] - The password to encrypt the wallet.
+///   [language] - The language used for the wallet's mnemonic seed.
+///   [address] - The address associated with the wallet.
+///   [viewKey] - The view key of the wallet.
+///   [spendKey] - The spend key of the wallet.
+///   [nettype] - (Optional) The network type. Defaults to 0.
+///   [restoreHeight] - (Optional) The block height to restore from. Defaults to 0.
 Future restoreWalletFromKeys(
         {required String path,
         required String password,
@@ -142,6 +198,20 @@ void _restoreWalletFromKeys(Map<String, dynamic> args) {
       spendKey: spendKey);
 }
 
+/// Restores a Monero wallet from keys (sync version).
+///
+/// Restores a Monero wallet using the specified [path], [password], [language],
+/// [address], [viewKey], [spendKey], and optional [nettype] and [restoreHeight].
+///
+/// Parameters:
+///   [path] - The path to store the restored wallet file.
+///   [password] - The password to encrypt the wallet.
+///   [language] - The language used for the wallet's mnemonic seed.
+///   [address] - The address associated with the wallet.
+///   [viewKey] - The view key of the wallet.
+///   [spendKey] - The spend key of the wallet.
+///   [nettype] - (Optional) The network type. Defaults to 0.
+///   [restoreHeight] - (Optional) The block height to restore from. Defaults to 0.
 void restoreWalletFromKeysSync({
   required String path,
   required String password,
@@ -185,6 +255,15 @@ void restoreWalletFromKeysSync({
   }
 }
 
+/// Checks if a Monero wallet exists at the specified path.
+///
+/// Determines whether a Monero wallet exists at the given [path].
+///
+/// Parameters:
+///   [path] - The path to the wallet file.
+///
+/// Returns:
+///   A boolean value indicating whether the wallet exists.
 bool isWalletExist({required String path}) {
   final pathPointer = path.toNativeUtf8().cast<Char>();
   final isExist = monero_flutter.bindings.is_wallet_exist(pathPointer);
@@ -194,6 +273,14 @@ bool isWalletExist({required String path}) {
   return isExist;
 }
 
+/// Loads an existing Monero wallet (async version).
+///
+/// Loads an existing Monero wallet from the specified [path] using the provided [password].
+///
+/// Parameters:
+///   [path] - The path to the wallet file.
+///   [password] - The password to decrypt the wallet.
+///   [nettype] - (Optional) The network type. Defaults to 0.
 Future<void> loadWallet(
         {required String path,
         required String password,
@@ -207,6 +294,14 @@ void _loadWallet(Map<String, dynamic> args) {
   loadWalletSync(path: path, password: password);
 }
 
+/// Loads an existing Monero wallet (sync version).
+///
+/// Loads an existing Monero wallet from the specified [path] using the provided [password].
+///
+/// Parameters:
+///   [path] - The path to the wallet file.
+///   [password] - The password to decrypt the wallet.
+///   [nettype] - (Optional) The network type. Defaults to 0.
 void loadWalletSync(
     {required String path, required String password, int nettype = 0}) {
   final pathPointer = path.toNativeUtf8().cast<Char>();
@@ -225,6 +320,10 @@ void loadWalletSync(
   }
 }
 
+/// Closes the currently opened Monero wallet.
+///
+/// Closes the currently opened Monero wallet, if any.
+/// After calling this function, the wallet is no longer available in memory.
 void closeCurrentWallet() {
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
   monero_flutter.bindings.close_current_wallet(errorBoxPointer);
@@ -235,6 +334,12 @@ void closeCurrentWallet() {
   }
 }
 
+/// Retrieves the secret view key of the currently opened Monero wallet.
+///
+/// Returns the secret view key of the currently opened Monero wallet as a string.
+///
+/// Returns:
+///   The secret view key of the wallet as a string.
 String getSecretViewKey() {
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
   final secretViewKeyPointer =
@@ -251,6 +356,12 @@ String getSecretViewKey() {
   return secretViewKey;
 }
 
+/// Retrieves the public view key of the currently opened Monero wallet.
+///
+/// Returns the public view key of the currently opened Monero wallet as a string.
+///
+/// Returns:
+///   The public view key of the wallet as a string.
 String getPublicViewKey() {
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
   final viewKeyPointer =
@@ -267,6 +378,12 @@ String getPublicViewKey() {
   return viewKey;
 }
 
+/// Retrieves the secret spend key of the currently opened Monero wallet.
+///
+/// Returns the secret spend key of the currently opened Monero wallet as a string.
+///
+/// Returns:
+///   The secret spend key of the wallet as a string.
 String getSecretSpendKey() {
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
   final secretSpendKeyPointer =
@@ -283,6 +400,12 @@ String getSecretSpendKey() {
   return secretSpendKey;
 }
 
+/// Retrieves the public spend key of the currently opened Monero wallet.
+///
+/// Returns the public spend key of the currently opened Monero wallet as a string.
+///
+/// Returns:
+///   The public spend key of the wallet as a string.
 String getPublicSpendKey() {
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
   final spendKeyPointer =
@@ -299,6 +422,12 @@ String getPublicSpendKey() {
   return spendKey;
 }
 
+/// Retrieves the mnemonic seed of the currently opened Monero wallet.
+///
+/// Returns the mnemonic seed of the currently opened Monero wallet as a string.
+///
+/// Returns:
+///   The mnemonic seed of the wallet as a string.
 String getSeed() {
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
   final seedPointer = monero_flutter.bindings.seed(errorBoxPointer);
@@ -314,6 +443,12 @@ String getSeed() {
   return seed;
 }
 
+/// Retrieves the filename of the currently opened Monero wallet.
+///
+/// Returns the filename of the currently opened Monero wallet as a string.
+///
+/// Returns:
+///   The filename of the wallet as a string.
 String getFilename() {
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
   final filenamePointer = monero_flutter.bindings.get_filename(errorBoxPointer);
@@ -329,6 +464,12 @@ String getFilename() {
   return filename;
 }
 
+/// Sets a new password for the currently opened Monero wallet.
+///
+/// Sets a new [password] for the currently opened Monero wallet.
+///
+/// Parameters:
+///   [password] - The new password for the wallet.
 void setPassword({required String password}) {
   final passwordPointer = password.toNativeUtf8().cast<Char>();
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
@@ -343,6 +484,12 @@ void setPassword({required String password}) {
   }
 }
 
+/// Stores the currently opened Monero wallet.
+///
+/// Stores the currently opened Monero wallet at the specified [path].
+///
+/// Parameters:
+///   [path] - The path to store the wallet file.
 void store({required String path}) {
   final pathPointer = path.toNativeUtf8().cast<Char>();
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
@@ -357,6 +504,13 @@ void store({required String path}) {
   }
 }
 
+/// Sets the recovering from seed flag for the currently opened Monero wallet.
+///
+/// Sets the flag indicating whether the currently opened Monero wallet is in recovery mode
+/// from a seed.
+///
+/// Parameters:
+///   [isRecovery] - A boolean value indicating whether the wallet is in recovery mode.
 void setRecoveringFromSeed({required bool isRecovery}) {
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
   monero_flutter.bindings.set_recovering_from_seed(isRecovery, errorBoxPointer);
@@ -367,6 +521,17 @@ void setRecoveringFromSeed({required bool isRecovery}) {
   }
 }
 
+/// Retrieves the hexadecimal representation of the keys data for the currently opened Monero wallet (async version).
+///
+/// Retrieves the hexadecimal representation of the keys data for the currently opened Monero wallet,
+/// using the specified [password] and [viewOnly] flag.
+///
+/// Parameters:
+///   [password] - The password to decrypt the wallet.
+///   [viewOnly] - A boolean flag indicating whether to retrieve view-only keys.
+///
+/// Returns:
+///   A [Future] that completes with the hexadecimal representation of the keys data as a string.
 Future<String> getKeysDataHex(String password, bool viewOnly)
 {
   return compute<Map<String, Object?>, String>(_getKeysDataHexSync, {'password': password, 'viewOnly': viewOnly});
@@ -379,6 +544,17 @@ String _getKeysDataHexSync(Map<String, Object?> args) {
   return getKeysDataHexSync(password, viewOnly);
 }
 
+/// Retrieves the hexadecimal representation of the keys data synchronously for the currently opened Monero wallet.
+///
+/// Retrieves the hexadecimal representation of the keys data synchronously for the currently opened Monero wallet,
+/// using the specified [password] and [viewOnly] flag.
+///
+/// Parameters:
+///   [password] - The password to decrypt the wallet.
+///   [viewOnly] - A boolean flag indicating whether to retrieve view-only keys.
+///
+/// Returns:
+///   The hexadecimal representation of the keys data as a string.
 String getKeysDataHexSync(String password, bool viewOnly)
 {
   final passwordPointer = password.toNativeUtf8().cast<Char>();
@@ -406,6 +582,17 @@ String getKeysDataHexSync(String password, bool viewOnly)
   return hexString;
 }
 
+/// Retrieves the keys data buffer for the currently opened Monero wallet (async version).
+///
+/// Retrieves the keys data buffer for the currently opened Monero wallet,
+/// using the specified [password] and [viewOnly] flag.
+///
+/// Parameters:
+///   [password] - The password to decrypt the wallet.
+///   [viewOnly] - A boolean flag indicating whether to retrieve view-only keys.
+///
+/// Returns:
+///   A [Future] that completes with the keys data buffer as a [Uint8List].
 Future<Uint8List> getKeysDataBuffer(String password, bool viewOnly) {
   return compute<Map<String, Object?>, Uint8List>(_getKeysDataBufferSync, {'password': password, 'viewOnly': viewOnly});
 }
@@ -418,6 +605,17 @@ Uint8List _getKeysDataBufferSync(Map<String, Object?> args)
   return getKeysDataBufferSync(password, viewOnly);
 }
 
+/// Retrieves the keys data buffer synchronously for the currently opened Monero wallet.
+///
+/// Retrieves the keys data buffer synchronously for the currently opened Monero wallet,
+/// using the specified [password] and [viewOnly] flag.
+///
+/// Parameters:
+///   [password] - The password to decrypt the wallet.
+///   [viewOnly] - A boolean flag indicating whether to retrieve view-only keys.
+///
+/// Returns:
+///   The keys data buffer as a [Uint8List].
 Uint8List getKeysDataBufferSync(String password, bool viewOnly)
 {
   final passwordPointer = password.toNativeUtf8().cast<Char>();
@@ -440,6 +638,16 @@ Uint8List getKeysDataBufferSync(String password, bool viewOnly)
   return buffer;
 }
 
+/// Retrieves the hexadecimal representation of the cache data for the currently opened Monero wallet (async version).
+///
+/// Retrieves the hexadecimal representation of the cache data for the currently opened Monero wallet,
+/// using the specified [password].
+///
+/// Parameters:
+///   [password] - The password to decrypt the wallet.
+///
+/// Returns:
+///   A [Future] that completes with the hexadecimal representation of the cache data as a string.
 Future<String> getCacheDataHex(String password) {
   return compute<Map<String, Object?>, String>(_getCacheDataHexSync, {'password': password });
 }
@@ -449,6 +657,16 @@ String _getCacheDataHexSync(Map<String, Object?> args) {
   return getCacheDataHexSync(password);
 }
 
+/// Retrieves the hexadecimal representation of the cache data synchronously for the currently opened Monero wallet.
+///
+/// Retrieves the hexadecimal representation of the cache data synchronously for the currently opened Monero wallet,
+/// using the specified [password].
+///
+/// Parameters:
+///   [password] - The password to decrypt the wallet.
+///
+/// Returns:
+///   The hexadecimal representation of the cache data as a string.
 String getCacheDataHexSync(String password)
 {
   final passwordPointer = password.toNativeUtf8().cast<Char>();
@@ -476,6 +694,16 @@ String getCacheDataHexSync(String password)
   return hexString;
 }
 
+/// Retrieves the cache data buffer for the currently opened Monero wallet.
+///
+/// Retrieves the cache data buffer for the currently opened Monero wallet,
+/// using the specified [password].
+///
+/// Parameters:
+///   [password] - The password to decrypt the wallet.
+///
+/// Returns:
+///   A [Future] that completes with the cache data buffer as a [Uint8List].
 Future<Uint8List> getCacheDataBuffer(String password) {
   return compute<Map<String, Object?>, Uint8List>(_getCacheDataBufferSync, {'password': password });
 }
@@ -485,6 +713,16 @@ Uint8List _getCacheDataBufferSync(Map<String, Object?> args) {
   return getCacheDataBufferSync(password);
 }
 
+/// Retrieves the cache data buffer synchronously for the currently opened Monero wallet.
+///
+/// Retrieves the cache data buffer synchronously for the currently opened Monero wallet,
+/// using the specified [password].
+///
+/// Parameters:
+///   [password] - The password to decrypt the wallet.
+///
+/// Returns:
+///   The cache data buffer as a [Uint8List].
 Uint8List getCacheDataBufferSync(String password)
 {
   final passwordPointer = password.toNativeUtf8().cast<Char>();
@@ -507,6 +745,22 @@ Uint8List getCacheDataBufferSync(String password)
   return buffer;
 }
 
+/// Opens a Monero wallet using the provided keys data and cache data in hexadecimal format.
+///
+/// Opens a Monero wallet using the provided [password], [testnet] flag, [keysDataHex], [cacheDataHex],
+/// [daemonAddress], [daemonUsername], and [daemonPassword].
+///
+/// Parameters:
+///   [password] - The password to decrypt the wallet.
+///   [testnet] - A boolean flag indicating whether to use the testnet.
+///   [keysDataHex] - The hexadecimal representation of the keys data.
+///   [cacheDataHex] - The hexadecimal representation of the cache data.
+///   [daemonAddress] - The address of the Monero daemon.
+///   [daemonUsername] - The username for the Monero daemon.
+///   [daemonPassword] - The password for the Monero daemon.
+///
+/// Returns:
+///   A [Future] that completes with no result.
 Future openWalletDataHex(String password,
     bool testnet,
     String keysDataHex,
@@ -537,6 +791,19 @@ void _openWalletDataHexSync (Map<String, Object?> args){
   openWalletDataHexSync(password, testnet, keysDataHex, cacheDataHex, daemonAddress, daemonUsername, daemonPassword);
 }
 
+/// Opens a Monero wallet synchronously using the provided keys data and cache data in hexadecimal format.
+///
+/// Opens a Monero wallet synchronously using the provided [password], [testnet] flag, [keysDataHex], [cacheDataHex],
+/// [daemonAddress], [daemonUsername], and [daemonPassword].
+///
+/// Parameters:
+///   [password] - The password to decrypt the wallet.
+///   [testnet] - A boolean flag indicating whether to use the testnet.
+///   [keysDataHex] - The hexadecimal representation of the keys data.
+///   [cacheDataHex] - The hexadecimal representation of the cache data.
+///   [daemonAddress] - The address of the Monero daemon.
+///   [daemonUsername] - The username for the Monero daemon.
+///   [daemonPassword] - The password for the Monero daemon.
 void openWalletDataHexSync(String password,
     bool testnet,
     String keysDataHex,
@@ -576,6 +843,22 @@ void openWalletDataHexSync(String password,
   }
 }
 
+/// Opens a Monero wallet using the provided keys data and cache data as `Uint8List`.
+///
+/// Opens a Monero wallet using the provided [password], [testnet] flag, [keysData], [cacheData],
+/// [daemonAddress], [daemonUsername], and [daemonPassword].
+///
+/// Parameters:
+///   [password] - The password to decrypt the wallet.
+///   [testnet] - A boolean flag indicating whether to use the testnet.
+///   [keysData] - The keys data as a `Uint8List`.
+///   [cacheData] - The cache data as a `Uint8List`.
+///   [daemonAddress] - The address of the Monero daemon.
+///   [daemonUsername] - The username for the Monero daemon.
+///   [daemonPassword] - The password for the Monero daemon.
+///
+/// Returns:
+///   A [Future] that completes with no result.
 Future openWalletData(String password,
     bool testnet,
     Uint8List keysData,
@@ -606,6 +889,19 @@ void _openWalletDataSync(Map<String, Object?> args){
   openWalletDataSync(password, testnet, keysData, cacheData, daemonAddress, daemonUsername, daemonPassword);
 }
 
+/// Opens a Monero wallet synchronously using the provided keys data and cache data as `Uint8List`.
+///
+/// Opens a Monero wallet synchronously using the provided [password], [testnet] flag, [keysData], [cacheData],
+/// [daemonAddress], [daemonUsername], and [daemonPassword].
+///
+/// Parameters:
+///   [password] - The password to decrypt the wallet.
+///   [testnet] - A boolean flag indicating whether to use the testnet.
+///   [keysData] - The keys data as a `Uint8List`.
+///   [cacheData] - The cache data as a `Uint8List`.
+///   [daemonAddress] - The address of the Monero daemon.
+///   [daemonUsername] - The username for the Monero daemon.
+///   [daemonPassword] - The password for the Monero daemon.
 void openWalletDataSync(String password,
                       bool testnet,
                       Uint8List keysData,

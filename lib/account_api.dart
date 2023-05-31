@@ -9,6 +9,10 @@ import 'monero_flutter.dart' as monero_flutter;
 
 bool isUpdating = false;
 
+/// Refreshes the accounts of the currently opened Monero wallet.
+///
+/// Refreshes the accounts of the currently opened Monero wallet, updating the balances
+/// and transaction history.
 void refreshAccounts() {
 
   if (isUpdating) {
@@ -35,6 +39,13 @@ void refreshAccounts() {
 
 bool isSubaddressesUpdating = false;
 
+/// Refreshes the subaddresses of a specific account in the currently opened Monero wallet.
+///
+/// Refreshes the subaddresses of the account specified by [accountIndex] in the currently opened Monero wallet,
+/// updating their balances and transaction history.
+///
+/// Parameters:
+///   [accountIndex] - The index of the account to refresh the subaddresses for.
 void refreshSubaddresses({required int accountIndex}) {
   if (isSubaddressesUpdating) {
     return;
@@ -59,6 +70,12 @@ void refreshSubaddresses({required int accountIndex}) {
   }
 }
 
+/// Retrieves the total number of accounts in the currently opened Monero wallet.
+///
+/// Retrieves the total number of accounts in the currently opened Monero wallet.
+///
+/// Returns:
+///   The total number of accounts as an integer.
 int getAccountCount() {
 
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
@@ -73,6 +90,12 @@ int getAccountCount() {
   return result;
 }
 
+/// Retrieves the total number of accounts in the currently opened Monero wallet.
+///
+/// Retrieves the total number of accounts in the currently opened Monero wallet.
+///
+/// Returns:
+///   The total number of accounts as an integer.
 List<AccountRow> getAllAccount() {
 
   final errorBoxPointer1 = monero_flutter.buildErrorBoxPointer();
@@ -105,6 +128,12 @@ List<AccountRow> getAllAccount() {
   return result;
 }
 
+/// Retrieves the total number of subaddresses in the currently opened Monero wallet.
+///
+/// Retrieves the total number of subaddresses in the currently opened Monero wallet.
+///
+/// Returns:
+///   The total number of subaddresses as an integer.
 int getSubaddressesCount() {
 
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
@@ -119,6 +148,12 @@ int getSubaddressesCount() {
   return result;
 }
 
+/// Retrieves all the subaddresses in the currently opened Monero wallet.
+///
+/// Retrieves all the subaddresses in the currently opened Monero wallet and returns them as a list of [SubaddressRow] objects.
+///
+/// Returns:
+///   A list of [SubaddressRow] objects representing the subaddresses in the wallet.
 List<SubaddressRow> getAllSubaddresses() {
   final errorBoxPointer1 = monero_flutter.buildErrorBoxPointer();
 
@@ -152,6 +187,15 @@ List<SubaddressRow> getAllSubaddresses() {
   return result;
 }
 
+/// Adds a new account to the currently opened Monero wallet.
+///
+/// Adds a new account to the currently opened Monero wallet with the specified [label].
+///
+/// Parameters:
+///   [label] - The label for the new account.
+///
+/// Returns:
+///   A [Future] that completes with no result.
 Future<void> addAccount({required String label}) async {
   await compute(_addAccount, label);
   //await store();
@@ -159,6 +203,12 @@ Future<void> addAccount({required String label}) async {
 
 void _addAccount(String label) => addAccountSync(label: label);
 
+/// Adds a new account synchronously to the currently opened Monero wallet.
+///
+/// Adds a new account synchronously to the currently opened Monero wallet with the specified [label].
+///
+/// Parameters:
+///   [label] - The label for the new account.
 void addAccountSync({required String label}) {
   final labelPointer = label.toNativeUtf8().cast<Char>();
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
@@ -173,6 +223,17 @@ void addAccountSync({required String label}) {
   }
 }
 
+/// Adds a new subaddress to the specified account in the currently opened Monero wallet.
+///
+/// Adds a new subaddress to the account specified by [accountIndex] in the currently opened Monero wallet
+/// with the specified [label].
+///
+/// Parameters:
+///   [accountIndex] - The index of the account to add the subaddress to.
+///   [label] - The label for the new subaddress.
+///
+/// Returns:
+///   A [Future] that completes with no result.
 Future<void> addSubaddress({required int accountIndex, required String label}) async {
   await compute<Map<String, Object>, void>(
       _addSubaddress, {'accountIndex': accountIndex, 'label': label});
@@ -186,6 +247,14 @@ void _addSubaddress(Map<String, dynamic> args) {
   addSubaddressSync(accountIndex: accountIndex, label: label);
 }
 
+/// Adds a new subaddress synchronously to the specified account in the currently opened Monero wallet.
+///
+/// Adds a new subaddress synchronously to the account specified by [accountIndex] in the currently opened Monero wallet
+/// with the specified [label].
+///
+/// Parameters:
+///   [accountIndex] - The index of the account to add the subaddress to.
+///   [label] - The label for the new subaddress.
 void addSubaddressSync({required int accountIndex, required String label}) {
   final labelPointer = label.toNativeUtf8().cast<Char>();
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
@@ -200,6 +269,16 @@ void addSubaddressSync({required int accountIndex, required String label}) {
   }
 }
 
+/// Sets a label for the specified account in the currently opened Monero wallet.
+///
+/// Sets a [label] for the account specified by [accountIndex] in the currently opened Monero wallet.
+///
+/// Parameters:
+///   [accountIndex] - The index of the account to set the label for.
+///   [label] - The label to set for the account.
+///
+/// Returns:
+///   A [Future] that completes with no result.
 Future<void> setLabelForAccount(
     {required int accountIndex, required String label}) async {
   await compute(
@@ -214,6 +293,13 @@ void _setLabelForAccount(Map<String, dynamic> args) {
   setLabelForAccountSync(label: label, accountIndex: accountIndex);
 }
 
+/// Sets a label synchronously for the specified account in the currently opened Monero wallet.
+///
+/// Sets a [label] synchronously for the account specified by [accountIndex] in the currently opened Monero wallet.
+///
+/// Parameters:
+///   [accountIndex] - The index of the account to set the label for.
+///   [label] - The label to set for the account.
 void setLabelForAccountSync(
     {required int accountIndex, required String label}) {
   final labelPointer = label.toNativeUtf8().cast<Char>();
@@ -229,6 +315,17 @@ void setLabelForAccountSync(
   }
 }
 
+/// Sets a label for the specified subaddress in the currently opened Monero wallet.
+///
+/// Sets a [label] for the subaddress specified by [accountIndex] and [addressIndex] in the currently opened Monero wallet.
+///
+/// Parameters:
+///   [accountIndex] - The index of the account that contains the subaddress.
+///   [addressIndex] - The index of the subaddress to set the label for.
+///   [label] - The label to set for the subaddress.
+///
+/// Returns:
+///   A [Future] that completes with no result.
 Future<void> setLabelForSubaddress(
     {required int accountIndex, required int addressIndex, required String label}) async {
   await compute<Map<String, Object>, void>(_setLabelForSubaddress, {
@@ -248,6 +345,15 @@ void _setLabelForSubaddress(Map<String, dynamic> args) {
       accountIndex: accountIndex, addressIndex: addressIndex, label: label);
 }
 
+/// Sets a label synchronously for the specified subaddress in the currently opened Monero wallet.
+///
+/// Sets a [label] synchronously for the subaddress specified by [accountIndex] and [addressIndex]
+/// in the currently opened Monero wallet.
+///
+/// Parameters:
+///   [accountIndex] - The index of the account that contains the subaddress.
+///   [addressIndex] - The index of the subaddress to set the label for.
+///   [label] - The label to set for the subaddress.
 void setLabelForSubaddressSync(
     {required int accountIndex,
     required int addressIndex,
@@ -266,6 +372,17 @@ void setLabelForSubaddressSync(
   }
 }
 
+/// Retrieves the address for the specified account and subaddress in the currently opened Monero wallet.
+///
+/// Retrieves the address for the specified [accountIndex] and [addressIndex] in the currently opened Monero wallet.
+/// The default values for [accountIndex] and [addressIndex] are 0, which correspond to the first account and subaddress.
+///
+/// Parameters:
+///   [accountIndex] - The index of the account.
+///   [addressIndex] - The index of the subaddress.
+///
+/// Returns:
+///   The address as a string.
 String getAddress({int accountIndex = 0, int addressIndex = 0}) {
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
   final addressPointer =
@@ -283,6 +400,16 @@ String getAddress({int accountIndex = 0, int addressIndex = 0}) {
   return address;
 }
 
+/// Retrieves the total balance of the specified account in the currently opened Monero wallet.
+///
+/// Retrieves the total balance of the account specified by [accountIndex] in the currently opened Monero wallet.
+/// The default value for [accountIndex] is 0, which corresponds to the first account.
+///
+/// Parameters:
+///   [accountIndex] - The index of the account.
+///
+/// Returns:
+///   The total balance of the account as an integer.
 int getFullBalance({int accountIndex = 0}){
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
   final result = monero_flutter.bindings.get_full_balance(accountIndex, errorBoxPointer);
@@ -296,7 +423,15 @@ int getFullBalance({int accountIndex = 0}){
   return result;
 }
 
-
+/// Retrieves the unlocked balance of the specified account in the currently opened Monero wallet.
+///
+/// Retrieves the unlocked balance of the account specified by [accountIndex] in the currently opened Monero wallet.
+///
+/// Parameters:
+///   [accountIndex] - The index of the account.
+///
+/// Returns:
+///   The unlocked balance of the account as an integer.
 int getUnlockedBalance(int accountIndex){
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
   final result = monero_flutter.bindings.get_unlocked_balance(accountIndex, errorBoxPointer);
@@ -310,6 +445,17 @@ int getUnlockedBalance(int accountIndex){
   return result;
 }
 
+/// Retrieves the label of the specified subaddress in the currently opened Monero wallet.
+///
+/// Retrieves the label of the subaddress specified by [accountIndex] and [addressIndex]
+/// in the currently opened Monero wallet.
+///
+/// Parameters:
+///   [accountIndex] - The index of the account that contains the subaddress.
+///   [addressIndex] - The index of the subaddress.
+///
+/// Returns:
+///   The label of the subaddress as a string.
 String getSubaddressLabel(int accountIndex, int addressIndex) {
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
   final labelPointer =
