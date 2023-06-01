@@ -17,10 +17,6 @@ import 'monero_flutter_bindings_generated.dart';
 /// synchronizing it with the latest transactions on the blockchain. It is
 /// useful to call this function when you want to update the wallet's transaction
 /// data after new transactions have been made.
-///
-/// Example usage:
-/// dart /// transactionsRefresh(); /// print('Wallet transactions refresh initiated.'); /// ///
-/// Throws an exception if there is an error while initiating the transaction refresh.
 void transactionsRefresh() {
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
   monero_flutter.bindings.transactions_refresh(errorBoxPointer);
@@ -34,11 +30,8 @@ void transactionsRefresh() {
 /// Returns the count of transactions in the wallet.
 ///
 /// This function retrieves the total number of transactions stored in the wallet.
-/// It returns an integer value representing the count of transactions.
 ///
-/// Example usage:
-/// dart /// int transactionCount = transactionsCount(); /// print('Total number of transactions: $transactionCount'); /// ///
-/// Throws an exception if there is an error while retrieving the transaction count.
+/// Returns an integer value representing the count of transactions.
 int transactionsCount() {
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
   var result = monero_flutter.bindings.transactions_count(errorBoxPointer);
@@ -56,10 +49,6 @@ int transactionsCount() {
 /// This function retrieves all transactions stored in the wallet and returns them
 /// as a list of [TransactionInfoRow] objects. Each [TransactionInfoRow] object represents
 /// a single transaction with its associated details such as amount, date, sender, and recipient.
-///
-/// Example usage:
-/// dart /// List<TransactionInfoRow> allTransactions = getAllTransactions(); /// for (var transaction in allTransactions) { /// print('Transaction ID: ${transaction.id}'); /// print('Amount: ${transaction.amount}'); /// print('Date: ${transaction.date}'); /// print('Sender: ${transaction.sender}'); /// print('Recipient: ${transaction.recipient}'); /// print('-----'); /// } /// ///
-/// Throws an exception if there is an error while retrieving the transactions.
 List<TransactionInfoRow> getAllTransactions() {
   final errorBoxPointer1 = monero_flutter.buildErrorBoxPointer();
   final size = monero_flutter.bindings.transactions_count(errorBoxPointer1);
@@ -100,10 +89,6 @@ List<TransactionInfoRow> getAllTransactions() {
 /// - amount: (Optional) The amount to send in the transaction. If not specified, the entire balance will be sent.
 /// - paymentId: (Optional) The payment ID associated with the transaction.
 /// - accountIndex: (Optional) The index of the account to use for the transaction. Default is 0.
-///
-/// Example usage:
-/// dart /// Future<void> createNewTransaction() async { /// try { /// PendingTransactionDescription transaction = await createTransaction( /// address: 'destination_address', /// priorityRaw: 1, /// amount: '1.5', /// paymentId: 'payment_id', /// accountIndex: 0, /// ); /// print('Transaction created. Transaction ID: ${transaction.id}'); /// } catch (e) { /// print('Error creating transaction: $e'); /// } /// } /// ///
-/// Throws an exception if there is an error while creating the transaction.
 Future<PendingTransactionDescription> createTransaction(
         {required String address,
         required int priorityRaw,
@@ -145,10 +130,6 @@ PendingTransactionDescription _createTransactionSync(Map args) {
 /// - paymentId: (Optional) The payment ID associated with the transaction.
 /// - priorityRaw: The priority for the transaction, represented as an integer value.
 /// - subaddrAccount: (Optional) The index of the subaddress account to use for the transaction. Default is 0.
-///
-/// Example usage:
-/// dart /// void createNewTransaction() { /// try { /// PendingTransactionDescription transaction = createTransactionSync( /// address: 'destination_address', /// amount: '1.5', /// paymentId: 'payment_id', /// priorityRaw: 1, /// subaddrAccount: 0, /// ); /// print('Transaction created. Transaction ID: ${transaction.id}'); /// } catch (e) { /// print('Error creating transaction: $e'); /// } /// } /// ///
-/// Throws an exception if there is an error while creating the transaction.
 PendingTransactionDescription createTransactionSync(
     {required String address,
     String? amount,
@@ -210,10 +191,6 @@ PendingTransactionDescription createTransactionSync(
 /// - priorityRaw: The priority for the transaction, represented as an integer value.
 /// - paymentId: (Optional) The payment ID associated with the transaction.
 /// - accountIndex: (Optional) The index of the account to use for the transaction. Default is 0.
-///
-/// Example usage:
-/// dart /// Future<void> createNewTransactionMultDest() async { /// try { /// List<MoneroOutput> outputs = [ /// MoneroOutput(address: 'destination_address_1', amount: '1.5'), /// MoneroOutput(address: 'destination_address_2', amount: '2.0'), /// ]; /// PendingTransactionDescription transaction = await createTransactionMultDest( /// outputs: outputs, /// priorityRaw: 1, /// paymentId: 'payment_id', /// accountIndex: 0, /// ); /// print('Transaction created. Transaction ID: ${transaction.id}'); /// } catch (e) { /// print('Error creating transaction: $e'); /// } /// } /// ///
-/// Throws an exception if there is an error while creating the transaction.
 Future<PendingTransactionDescription> createTransactionMultDest(
         {required List<MoneroOutput> outputs,
         required int priorityRaw,
@@ -249,10 +226,6 @@ PendingTransactionDescription _createTransactionMultDestSync(Map args) {
 /// - paymentId: (Optional) The payment ID associated with the transaction.
 /// - priorityRaw: The priority for the transaction, represented as an integer value.
 /// - accountIndex: (Optional) The index of the account to use for the transaction. Default is 0.
-///
-/// Example usage:
-/// dart /// void createNewTransactionMultDest() { /// try { /// List<MoneroOutput> outputs = [ /// MoneroOutput(address: 'destination_address_1', amount: '1.5'), /// MoneroOutput(address: 'destination_address_2', amount: '2.0'), /// ]; /// PendingTransactionDescription transaction = createTransactionMultDestSync( /// outputs: outputs, /// paymentId: 'payment_id', /// priorityRaw: 1, /// accountIndex: 0, /// ); /// print('Transaction created. Transaction ID: ${transaction.id}'); /// } catch (e) { /// print('Error creating transaction: $e'); /// } /// } /// ///
-/// Throws an exception if there is an error while creating the transaction.
 PendingTransactionDescription createTransactionMultDestSync(
     {required List<MoneroOutput> outputs,
     required String paymentId,
@@ -327,11 +300,6 @@ PendingTransactionDescription createTransactionMultDestSync(
 /// parameter. It finalizes the transaction and sends the funds to the specified destinations.
 /// The transactionDescription parameter should be a [PendingTransactionDescription] object
 /// obtained from the createTransaction or createTransactionMultDest functions.
-///
-/// Example usage:
-/// dart /// Future<void> commitTransaction(PendingTransactionDescription transaction) async { /// try { /// await transactionCommit(transaction); /// print('Transaction committed successfully.'); /// } catch (e) { /// print('Error committing transaction: $e'); /// } /// } /// ///
-/// Throws an exception if there is an error while committing the transaction.
-
 void transactionCommit(PendingTransactionDescription transactionDescription) {
   final pendingTransactionPointer =
       Pointer<ExternPendingTransactionRaw>.fromAddress(
@@ -356,10 +324,6 @@ void transactionCommit(PendingTransactionDescription transactionDescription) {
 ///
 /// Parameters:
 /// - transactionId: The ID of the transaction for which to retrieve the transaction key.
-///
-/// Example usage:
-/// dart /// String transactionId = '1234567890abcdef'; /// String transactionKey = getTransactionKey(transactionId); /// print('Transaction Key: $transactionKey'); /// ///
-/// Returns the transaction key as a string.
 String getTransactionKey(String transactionId) {
   Pointer<Char> transactionIdPointer =
       transactionId.toNativeUtf8().cast<Char>();
@@ -385,8 +349,6 @@ String getTransactionKey(String transactionId) {
 /// This function retrieves all transfers made by the wallet and returns them as a JSON string.
 /// Each transfer represents a transaction involving the wallet, including both incoming and outgoing transfers.
 ///
-/// Example usage:
-/// dart /// String transfersJson = getAllTransfersAsJson(); /// print('Transfers JSON: $transfersJson'); /// ///
 /// Returns a JSON string containing all transfers.
 String getAllTransfersAsJson() {
 

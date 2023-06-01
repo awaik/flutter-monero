@@ -336,8 +336,6 @@ void closeCurrentWallet() {
 
 /// Retrieves the secret view key of the currently opened Monero wallet.
 ///
-/// Returns the secret view key of the currently opened Monero wallet as a string.
-///
 /// Returns:
 ///   The secret view key of the wallet as a string.
 String getSecretViewKey() {
@@ -356,8 +354,6 @@ String getSecretViewKey() {
   return secretViewKey;
 }
 
-/// Retrieves the public view key of the currently opened Monero wallet.
-///
 /// Returns the public view key of the currently opened Monero wallet as a string.
 ///
 /// Returns:
@@ -378,8 +374,6 @@ String getPublicViewKey() {
   return viewKey;
 }
 
-/// Retrieves the secret spend key of the currently opened Monero wallet.
-///
 /// Returns the secret spend key of the currently opened Monero wallet as a string.
 ///
 /// Returns:
@@ -400,8 +394,6 @@ String getSecretSpendKey() {
   return secretSpendKey;
 }
 
-/// Retrieves the public spend key of the currently opened Monero wallet.
-///
 /// Returns the public spend key of the currently opened Monero wallet as a string.
 ///
 /// Returns:
@@ -422,8 +414,6 @@ String getPublicSpendKey() {
   return spendKey;
 }
 
-/// Retrieves the mnemonic seed of the currently opened Monero wallet.
-///
 /// Returns the mnemonic seed of the currently opened Monero wallet as a string.
 ///
 /// Returns:
@@ -443,8 +433,6 @@ String getSeed() {
   return seed;
 }
 
-/// Retrieves the filename of the currently opened Monero wallet.
-///
 /// Returns the filename of the currently opened Monero wallet as a string.
 ///
 /// Returns:
@@ -464,8 +452,6 @@ String getFilename() {
   return filename;
 }
 
-/// Sets a new password for the currently opened Monero wallet.
-///
 /// Sets a new [password] for the currently opened Monero wallet.
 ///
 /// Parameters:
@@ -484,8 +470,6 @@ void setPassword({required String password}) {
   }
 }
 
-/// Stores the currently opened Monero wallet.
-///
 /// Stores the currently opened Monero wallet at the specified [path].
 ///
 /// Parameters:
@@ -504,8 +488,6 @@ void store({required String path}) {
   }
 }
 
-/// Sets the recovering from seed flag for the currently opened Monero wallet.
-///
 /// Sets the flag indicating whether the currently opened Monero wallet is in recovery mode
 /// from a seed.
 ///
@@ -544,7 +526,7 @@ String _getKeysDataHexSync(Map<String, Object?> args) {
   return getKeysDataHexSync(password, viewOnly);
 }
 
-/// Retrieves the hexadecimal representation of the keys data synchronously for the currently opened Monero wallet.
+/// Retrieves the hexadecimal representation of the keys data synchronously for the currently opened Monero wallet (sync version).
 ///
 /// Retrieves the hexadecimal representation of the keys data synchronously for the currently opened Monero wallet,
 /// using the specified [password] and [viewOnly] flag.
@@ -605,7 +587,7 @@ Uint8List _getKeysDataBufferSync(Map<String, Object?> args)
   return getKeysDataBufferSync(password, viewOnly);
 }
 
-/// Retrieves the keys data buffer synchronously for the currently opened Monero wallet.
+/// Retrieves the keys data buffer synchronously for the currently opened Monero wallet (sync version).
 ///
 /// Retrieves the keys data buffer synchronously for the currently opened Monero wallet,
 /// using the specified [password] and [viewOnly] flag.
@@ -657,7 +639,7 @@ String _getCacheDataHexSync(Map<String, Object?> args) {
   return getCacheDataHexSync(password);
 }
 
-/// Retrieves the hexadecimal representation of the cache data synchronously for the currently opened Monero wallet.
+/// Retrieves the hexadecimal representation of the cache data synchronously for the currently opened Monero wallet (sync version).
 ///
 /// Retrieves the hexadecimal representation of the cache data synchronously for the currently opened Monero wallet,
 /// using the specified [password].
@@ -694,7 +676,7 @@ String getCacheDataHexSync(String password)
   return hexString;
 }
 
-/// Retrieves the cache data buffer for the currently opened Monero wallet.
+/// Retrieves the cache data buffer for the currently opened Monero wallet (async version).
 ///
 /// Retrieves the cache data buffer for the currently opened Monero wallet,
 /// using the specified [password].
@@ -713,7 +695,7 @@ Uint8List _getCacheDataBufferSync(Map<String, Object?> args) {
   return getCacheDataBufferSync(password);
 }
 
-/// Retrieves the cache data buffer synchronously for the currently opened Monero wallet.
+/// Retrieves the cache data buffer synchronously for the currently opened Monero wallet (sync version).
 ///
 /// Retrieves the cache data buffer synchronously for the currently opened Monero wallet,
 /// using the specified [password].
@@ -745,7 +727,7 @@ Uint8List getCacheDataBufferSync(String password)
   return buffer;
 }
 
-/// Opens a Monero wallet using the provided keys data and cache data in hexadecimal format.
+/// Opens a Monero wallet using the provided keys data and cache data in hexadecimal format (async version).
 ///
 /// Opens a Monero wallet using the provided [password], [testnet] flag, [keysDataHex], [cacheDataHex],
 /// [daemonAddress], [daemonUsername], and [daemonPassword].
@@ -791,7 +773,7 @@ void _openWalletDataHexSync (Map<String, Object?> args){
   openWalletDataHexSync(password, testnet, keysDataHex, cacheDataHex, daemonAddress, daemonUsername, daemonPassword);
 }
 
-/// Opens a Monero wallet synchronously using the provided keys data and cache data in hexadecimal format.
+/// Opens a Monero wallet synchronously using the provided keys data and cache data in hexadecimal format (sync version).
 ///
 /// Opens a Monero wallet synchronously using the provided [password], [testnet] flag, [keysDataHex], [cacheDataHex],
 /// [daemonAddress], [daemonUsername], and [daemonPassword].
@@ -843,7 +825,7 @@ void openWalletDataHexSync(String password,
   }
 }
 
-/// Opens a Monero wallet using the provided keys data and cache data as `Uint8List`.
+/// Opens a Monero wallet using the provided keys data and cache data as `Uint8List` (async version).
 ///
 /// Opens a Monero wallet using the provided [password], [testnet] flag, [keysData], [cacheData],
 /// [daemonAddress], [daemonUsername], and [daemonPassword].
@@ -889,7 +871,7 @@ void _openWalletDataSync(Map<String, Object?> args){
   openWalletDataSync(password, testnet, keysData, cacheData, daemonAddress, daemonUsername, daemonPassword);
 }
 
-/// Opens a Monero wallet synchronously using the provided keys data and cache data as `Uint8List`.
+/// Opens a Monero wallet synchronously using the provided keys data and cache data as `Uint8List` (sync version).
 ///
 /// Opens a Monero wallet synchronously using the provided [password], [testnet] flag, [keysData], [cacheData],
 /// [daemonAddress], [daemonUsername], and [daemonPassword].
