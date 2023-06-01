@@ -9,8 +9,6 @@ import 'monero_flutter.dart' as monero_flutter;
 /// This function checks whether the wallet is using a multisig scheme for transactions.
 /// It returns a boolean value indicating whether the wallet is using multisig.
 ///
-/// Example usage:
-/// dart /// bool isMultisigWallet = isMultisig(); /// if (isMultisigWallet) { /// print('The wallet is using a multisig scheme.'); /// } else { /// print('The wallet is not using a multisig scheme.'); /// } /// ///
 /// Returns true if the wallet is using multisig, false otherwise.
 bool isMultisig(){
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
@@ -27,13 +25,13 @@ bool isMultisig(){
 
 /// Prepares the wallet for a multisig transaction.
 ///
-/// This function prepares the wallet for a multisig transaction by generating the necessary data
-/// and returning it as a string. This data is typically used by other participants in the multisig scheme
-/// to complete the transaction.
+/// This function prepares the wallet for a multisig transaction by generating initialization data
+/// and returning it as a string. Participants then send their initialization data manually to all
+/// other participants over a secure channel.
+/// The method is equivalent to the "prepare_multisig" command in the Monero command-line interface (monero-wallet-cli).
+/// See https://resilience365.com/monero-multisig-how-to/.
 ///
-/// Example usage:
-/// dart /// String multisigData = prepareMultisig(); /// print('Multisig data: $multisigData'); /// ///
-/// Returns a string containing the multisig data.
+/// Returns a string containing the multisig initialization data (MultisigxV2R1...).
 String prepareMultisig() {
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
 
@@ -51,15 +49,12 @@ String prepareMultisig() {
   return result;
 }
 
-/// Retrieves information about the current multisig setup.
+/// Retrieves initialization data of the current multisig setup.
 ///
-/// This function retrieves information about the current multisig setup, including the number
-/// of participants, their addresses, and the threshold required for transaction signing.
-/// It returns this information as a string in JSON format.
+/// This function retrieves initialization data of the current multisig setup.
+/// The output of method getMultisigInfo is similar to the output of method prepareMultisig.
 ///
-/// Example usage:
-/// dart /// String multisigInfo = getMultisigInfo(); /// print('Multisig info: $multisigInfo'); /// ///
-/// Returns a JSON string containing the multisig information.
+/// Returns a string containing the multisig initialization data (MultisigxV2R1...).
 String getMultisigInfo() {
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
   final resultPointer = monero_flutter.bindings.get_multisig_info(errorBoxPointer);
@@ -76,11 +71,56 @@ String getMultisigInfo() {
   return result;
 }
 
-/// Generates and exchanges multisig keys with other participants.
+/// Method set the threshold and the initialization data from the other participants.
+/// The method is equivalent to the "make_multisig" command in the Monero command-line interface (monero-wallet-cli).
+/// See https://resilience365.com/monero-multisig-how-to/.
 ///
-/// Takes a list of [infoList] strings containing the necessary information for key exchange.
+/// [infoList] is a list of strings containing initialization data from the other participants.
+/// Initialization data can be obtained using either functionprepareMultisig or getMultisigInfo.
+/// [threshold] is an integer representing the minimum number of signatures required to sign transactions.
 ///
-/// Returns a [String] representing the exchanged multisig keys.
+/// Returns a [String] representing the second round of initialization data (MultisigxV2Rn...).
+String makeMultisig(
+    {required List<String> infoList,
+      required int threshold}) {
+  final size = infoList.length;
+
+  final List<Pointer<Char>> infoPointers =
+  infoList.map((info) => info.toNativeUtf8().cast<Char>()).toList();
+  final Pointer<Pointer<Char>> infoPointerPointer = calloc(size);
+  final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
+
+  for (int i = 0; i < size; i++) {
+    infoPointerPointer[i] = infoPointers[i];
+  }
+
+  Pointer<Char> resultPointer =
+  monero_flutter.bindings.make_multisig(infoPointerPointer, size, threshold, errorBoxPointer);
+
+  final result = resultPointer.cast<Utf8>().toDartString();
+
+  for (var element in infoPointers) {
+    calloc.free(element);
+  }
+
+  calloc.free(infoPointerPointer);
+  calloc.free(resultPointer);
+
+  final errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
+
+  if (0 != errorInfo.code) {
+    throw Exception(errorInfo.getErrorMessage());
+  }
+
+  return result;
+}
+
+/// The method is equivalent to the "exchange_multisig_keys" command in the Monero command-line interface (monero-wallet-cli).
+/// See https://resilience365.com/monero-multisig-how-to/.
+///
+/// Takes a list of [infoList] strings containing the second round of initialization data (MultisigxV2Rn...) each of the participants.
+///
+/// Returns a [String] with multisig address.
 String exchangeMultisigKeys(
     {required List<String> infoList}) {
 
@@ -114,7 +154,7 @@ String exchangeMultisigKeys(
   return result;
 }
 
-/// Checks if importing multisig is required.
+/// The method checks whether there is a need to import a partial key image.
 ///
 /// Returns a [bool] indicating whether importing multisig is needed or not.
 bool isMultisigImportNeeded(){
@@ -131,11 +171,14 @@ bool isMultisigImportNeeded(){
   return result;
 }
 
-/// Imports multisig images.
+/// Import partial key image.
+/// The method is equivalent to the "import_multisig_info" command in the Monero command-line interface (monero-wallet-cli).
+/// See https://resilience365.com/monero-multisig-how-to/.
 ///
-/// Takes a list of [infoList] strings containing the necessary information for importing multisig images.
+/// Takes a list of [infoList] strings containing partial key image(s) from the other participants.
+/// Partial key image is produced by exportMultisigImages function.
 ///
-/// Returns an [int] indicating the success of importing multisig images.
+/// Returns an [int], which display how many new inputs it has verified.
 int importMultisigImages({required List<String> infoList}) {
   final size = infoList.length;
 
@@ -165,9 +208,11 @@ int importMultisigImages({required List<String> infoList}) {
   return result;
 }
 
-/// Exports multisig images.
+/// Exports partial key image.
+/// The method is equivalent to the "export_multisig_info" command in the Monero command-line interface (monero-wallet-cli).
+/// See https://resilience365.com/monero-multisig-how-to/.
 ///
-/// Returns a [String] representing the exported multisig images.
+/// Returns a partial key image.
 String exportMultisigImages() {
   final infoPointer = ''.toNativeUtf8().cast<Char>();
   Pointer<Pointer<Char>> pointerToInfoPointer = calloc.call();
@@ -205,50 +250,11 @@ String exportMultisigImages() {
   return info;
 }
 
-/// Generates a multisig wallet with the provided [infoList] and [threshold].
-///
-/// [infoList] is a list of strings containing the necessary information for generating the multisig wallet.
-/// [threshold] is an integer representing the minimum number of signatures required to sign transactions.
-///
-/// Returns a [String] representing the generated multisig wallet.
-String makeMultisig(
-    {required List<String> infoList,
-    required int threshold}) {
-  final size = infoList.length;
-
-  final List<Pointer<Char>> infoPointers =
-      infoList.map((info) => info.toNativeUtf8().cast<Char>()).toList();
-  final Pointer<Pointer<Char>> infoPointerPointer = calloc(size);
-  final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
-
-  for (int i = 0; i < size; i++) {
-    infoPointerPointer[i] = infoPointers[i];
-  }
-
-  Pointer<Char> resultPointer =
-      monero_flutter.bindings.make_multisig(infoPointerPointer, size, threshold, errorBoxPointer);
-
-  final result = resultPointer.cast<Utf8>().toDartString();
-
-  for (var element in infoPointers) {
-    calloc.free(element);
-  }
-
-  calloc.free(infoPointerPointer);
-  calloc.free(resultPointer);
-
-  final errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
-
-  if (0 != errorInfo.code) {
-    throw Exception(errorInfo.getErrorMessage());
-  }
-
-  return result;
-}
-
 /// Signs a multisig transaction in hexadecimal format.
+/// The method is equivalent to the "sign_multisig" command in the Monero command-line interface (monero-wallet-cli).
+/// See https://resilience365.com/monero-multisig-how-to/.
 ///
-/// Takes [multisigTxHex] as a [String] representing the multisig transaction in hexadecimal format.
+/// Takes [multisigTxHex] as a [String] representing the multisig transaction in hexadecimal format (PendingTransactionDescription.multisigSignData).
 ///
 /// Returns a [String] containing the signed multisig transaction.
 String signMultisigTxHex(String multisigTxHex)
@@ -273,10 +279,12 @@ String signMultisigTxHex(String multisigTxHex)
 }
 
 /// Submits a signed multisig transaction in hexadecimal format for processing.
+/// The method is equivalent to the "submit_multisig" command in the Monero command-line interface (monero-wallet-cli).
+/// See https://resilience365.com/monero-multisig-how-to/.
 ///
 /// Takes [signedMultisigTxHex] as a [String] representing the signed multisig transaction in hexadecimal format.
 ///
-/// Returns a [List<String>] containing the submission result or any error messages.
+/// Returns a [List<String>] containing identifiers of the submitted transactions.
 List<String> submitMultisigTxHex(String signedMultisigTxHex)
 {
   Pointer<Char> signedMultisigTxHexPointer = signedMultisigTxHex.toNativeUtf8().cast<Char>();
