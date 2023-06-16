@@ -39,7 +39,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
-  monero_flutter: c3ca3ad28818a3a82369b6c42c3511a1e25de0ae
+  monero_flutter: b4e2de15e30e0d76affd17c781860bd00fad719d
   path_provider_foundation: eaf5b3e458fc0e5fbb9940fb09980e853fe058b8
 
 PODFILE CHECKSUM: ef19549a9bc3046e7bb7d2fab4d021637c0c58a3
