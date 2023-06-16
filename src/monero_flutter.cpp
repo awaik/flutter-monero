@@ -1951,7 +1951,7 @@ extern "C"
 
         try
         {
-            result = m_wallet->exchangeMultisigKeys(info_vector);
+            result = m_wallet->exchangeMultisigKeys(info_vector, true);
         }
         catch (std::exception& e)
         {

@@ -1,8 +1,11 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:convert/convert.dart';
+import 'package:monero_flutter/exceptions/wallet_restore_from_keys_exception.dart';
 import 'package:monero_flutter/wallet_manager_api.dart' as api;
 import 'package:path_provider/path_provider.dart';
 
@@ -11,11 +14,13 @@ class WalletManagementPage extends StatelessWidget {
 
   WalletManagementPage({super.key});
 
-  Future<String> _getWalletPath({String name = "test1"}) async {
+  Future<String> _getWalletPath({String name = "test3"}) async {
     final root = await getApplicationDocumentsDirectory();
 
     final walletsDir = Directory('${root.path}/wallets');
     final walletDir = Directory('${walletsDir.path}/wallet_v2');
+
+    //final walletDir = Directory("/Users/test/Documents/TEMP");
 
     if (!walletDir.existsSync()) {
       walletDir.createSync(recursive: true);
@@ -137,7 +142,42 @@ class WalletManagementPage extends StatelessWidget {
   }
 
   void _openWallet() async {
+
+
+    // final walletPath = await _getWalletPath();
+    // String testResult;
+    //
+    // try {
+    //   var password = " ";
+    //   api.loadWalletSync(path: walletPath, password: password);
+    //   testResult = "Wallet opened successfully!";
+    // } catch (e) {
+    //
+    //   WalletRestoreFromKeysException rwk = e as WalletRestoreFromKeysException;
+    //
+    //   testResult = e.message;
+    // }
+    //
+    // _resultController.text = testResult;
+
+        // final walletPath = await _getWalletPath();
+        // String testResult;
+        //
+        // try {
+        //   var password = " ";
+        //   api.loadWalletSync(path: walletPath, password: password);
+        //   testResult = "Wallet opened successfully!";
+        // } catch (e) {
+        //
+        //   WalletRestoreFromKeysException rwk = e as WalletRestoreFromKeysException;
+        //
+        //   testResult = e.message;
+        // }
+        //
+        // _resultController.text = testResult;final walletPath = await _getWalletPath();
+
     final walletPath = await _getWalletPath();
+
     bool isWalletExist;
 
     String testResult;
@@ -160,7 +200,10 @@ class WalletManagementPage extends StatelessWidget {
         api.loadWalletSync(path: walletPath, password: password);
         testResult = "Wallet opened successfully!";
       } catch (e) {
-        testResult = e.toString();
+
+        WalletRestoreFromKeysException rwk = e as WalletRestoreFromKeysException;
+
+        testResult = e.message;
       }
     }
 
@@ -361,19 +404,39 @@ class WalletManagementPage extends StatelessWidget {
     _resultController.text = testResult;
   }
 
-  void _openWalletData() async{
-
+  void _openWalletData() async {
     String testResult;
 
-    if (null == _keysFileBuffer || null == _cacheFileBuffer) {
-      testResult = "keysFileBuffer or cacheFileBuffer is null!";
-    }
-    else {
+    // var keyHex = await File('/Users/test/Downloads/key-wallet-2023-06-09.txt')
+    //     .readAsString();
+    // var cacheHex = await File('/Users/test/Downloads/wallet-2023-06-09.txt')
+    //     .readAsString();
+
+    // final keysFileBuffer = hex.decode(keyHex) as Uint8List;
+    // final cacheFileBuffer = hex.decode(cacheHex) as Uint8List;
+
+    // await File('/Users/test/Documents/TEMP/test2.keys').writeAsBytes(keysFileBuffer);
+    // await File('/Users/test/Documents/TEMP/test2').writeAsBytes(cacheFileBuffer);
+
+    // Uint8List part = Uint8List(100);
+    //
+    // for (int i = 0; i < 100; i++){
+    //   part[i] = cacheFileBuffer[i];
+    // }
+    //
+    // final b64 = base64.encode(part);
+
+    //testResult = b64;
+
+    final keysFileBuffer = _keysFileBuffer!;
+    final cacheFileBuffer = _cacheFileBuffer!;
+    //final cacheFileBuffer = new Uint8List(0);
+
       try {
         await api.openWalletData("1234",
             false,
-            _keysFileBuffer!,
-            _cacheFileBuffer!,
+            keysFileBuffer,
+            cacheFileBuffer,
             "node.moneroworld.com:18089",
             "Daemon username",
             "Daemon password");
@@ -381,7 +444,25 @@ class WalletManagementPage extends StatelessWidget {
       } catch (e) {
         testResult = e.toString();
       }
-    }
+
+    // if (null == _keysFileBuffer || null == _cacheFileBuffer) {
+    //   testResult = "keysFileBuffer or cacheFileBuffer is null!";
+    // }
+    // else {
+    //   try {
+    //     await api.openWalletData("1234",
+    //         false,
+    //         _keysFileBuffer!,
+    //         _cacheFileBuffer!,
+    //         "node.moneroworld.com:18089",
+    //         "Daemon username",
+    //         "Daemon password");
+    //     testResult = "OK";
+    //   } catch (e) {
+    //     testResult = e.toString();
+    //   }
+    // }
+
     _resultController.text = testResult;
   }
 
