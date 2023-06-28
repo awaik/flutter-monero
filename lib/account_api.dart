@@ -11,7 +11,6 @@ bool isUpdating = false;
 
 /// Refreshes the accounts of the currently opened Monero wallet.
 void refreshAccounts() {
-
   if (isUpdating) {
     return;
   }
@@ -71,7 +70,6 @@ void refreshSubaddresses({required int accountIndex}) {
 /// Returns:
 ///   The total number of accounts as an integer.
 int getAccountCount() {
-
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
   final result = monero_flutter.bindings.account_size(errorBoxPointer);
 
@@ -89,7 +87,6 @@ int getAccountCount() {
 /// Returns:
 ///   The total number of accounts as an integer.
 List<AccountRow> getAllAccount() {
-
   final errorBoxPointer1 = monero_flutter.buildErrorBoxPointer();
   final size = monero_flutter.bindings.account_size(errorBoxPointer1);
 
@@ -111,9 +108,7 @@ List<AccountRow> getAllAccount() {
 
   final accountAddresses = accountAddressesPointer.asTypedList(size);
 
-  final result = accountAddresses
-      .map((addr) => Pointer<AccountRow>.fromAddress(addr).ref)
-      .toList();
+  final result = accountAddresses.map((addr) => Pointer<AccountRow>.fromAddress(addr).ref).toList();
 
   monero_flutter.bindings.free_block_of_accounts(accountAddressesPointer, size);
 
@@ -125,7 +120,6 @@ List<AccountRow> getAllAccount() {
 /// Returns:
 ///   The total number of subaddresses as an integer.
 int getSubaddressesCount() {
-
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
   final result = monero_flutter.bindings.subaddress_size(errorBoxPointer);
 
@@ -138,10 +132,14 @@ int getSubaddressesCount() {
   return result;
 }
 
-/// Retrieves all the subaddresses in the currently opened Monero wallet.
-///
-/// Returns:
-///   A list of [SubaddressRow] objects representing the subaddresses in the wallet.
+/// `.getSubaddresses()` method returns a list of created subaddresses for an
+/// account. A subaddress is added to the list either when `.createSubaddress()`
+/// is called, or when an output is received by a subaddress. When an output
+/// is received, account's subaddresses list will be populated with all the
+/// subaddresses up to an index of the receiving subaddress. At index 0 of the
+/// list is the account's primary address. Therefore, if we never manually call
+/// `.createSubaddress()`, the length of this list tells us exactly the index of
+/// the next unused subaddress, since the list has only been updated on address use.
 List<SubaddressRow> getAllSubaddresses() {
   final errorBoxPointer1 = monero_flutter.buildErrorBoxPointer();
 
@@ -155,8 +153,7 @@ List<SubaddressRow> getAllSubaddresses() {
 
   final errorBoxPointer2 = monero_flutter.buildErrorBoxPointer();
 
-  final subaddressAddressesPointer = monero_flutter.bindings.subaddress_get_all(
-      errorBoxPointer2);
+  final subaddressAddressesPointer = monero_flutter.bindings.subaddress_get_all(errorBoxPointer2);
 
   final errorInfo2 = monero_flutter.extractErrorInfo(errorBoxPointer2);
 
@@ -166,9 +163,7 @@ List<SubaddressRow> getAllSubaddresses() {
 
   final subaddressAddresses = subaddressAddressesPointer.asTypedList(size);
 
-  final result = subaddressAddresses
-      .map((addr) => Pointer<SubaddressRow>.fromAddress(addr).ref)
-      .toList();
+  final result = subaddressAddresses.map((addr) => Pointer<SubaddressRow>.fromAddress(addr).ref).toList();
 
   monero_flutter.bindings.free_block_of_subaddresses(subaddressAddressesPointer, size);
 
@@ -217,8 +212,7 @@ void addAccountSync({required String label}) {
 /// Returns:
 ///   A [Future] that completes with no result.
 Future<void> addSubaddress({required int accountIndex, required String label}) async {
-  await compute<Map<String, Object>, void>(
-      _addSubaddress, {'accountIndex': accountIndex, 'label': label});
+  await compute<Map<String, Object>, void>(_addSubaddress, {'accountIndex': accountIndex, 'label': label});
   //await store();
 }
 
@@ -257,10 +251,8 @@ void addSubaddressSync({required int accountIndex, required String label}) {
 ///
 /// Returns:
 ///   A [Future] that completes with no result.
-Future<void> setLabelForAccount(
-    {required int accountIndex, required String label}) async {
-  await compute(
-      _setLabelForAccount, {'accountIndex': accountIndex, 'label': label});
+Future<void> setLabelForAccount({required int accountIndex, required String label}) async {
+  await compute(_setLabelForAccount, {'accountIndex': accountIndex, 'label': label});
   //await store();
 }
 
@@ -276,8 +268,7 @@ void _setLabelForAccount(Map<String, dynamic> args) {
 /// Parameters:
 ///   [accountIndex] - The index of the account to set the label for.
 ///   [label] - The label to set for the account.
-void setLabelForAccountSync(
-    {required int accountIndex, required String label}) {
+void setLabelForAccountSync({required int accountIndex, required String label}) {
   final labelPointer = label.toNativeUtf8().cast<Char>();
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
 
@@ -302,11 +293,8 @@ void setLabelForAccountSync(
 ///   A [Future] that completes with no result.
 Future<void> setLabelForSubaddress(
     {required int accountIndex, required int addressIndex, required String label}) async {
-  await compute<Map<String, Object>, void>(_setLabelForSubaddress, {
-    'accountIndex': accountIndex,
-    'addressIndex': addressIndex,
-    'label': label
-  });
+  await compute<Map<String, Object>, void>(
+      _setLabelForSubaddress, {'accountIndex': accountIndex, 'addressIndex': addressIndex, 'label': label});
   //await store();
 }
 
@@ -315,8 +303,7 @@ void _setLabelForSubaddress(Map<String, dynamic> args) {
   final accountIndex = args['accountIndex'] as int;
   final addressIndex = args['addressIndex'] as int;
 
-  setLabelForSubaddressSync(
-      accountIndex: accountIndex, addressIndex: addressIndex, label: label);
+  setLabelForSubaddressSync(accountIndex: accountIndex, addressIndex: addressIndex, label: label);
 }
 
 /// Sets a [label] synchronously for the subaddress specified by [accountIndex] and [addressIndex]
@@ -326,15 +313,11 @@ void _setLabelForSubaddress(Map<String, dynamic> args) {
 ///   [accountIndex] - The index of the account that contains the subaddress.
 ///   [addressIndex] - The index of the subaddress to set the label for.
 ///   [label] - The label to set for the subaddress.
-void setLabelForSubaddressSync(
-    {required int accountIndex,
-    required int addressIndex,
-    required String label}) {
+void setLabelForSubaddressSync({required int accountIndex, required int addressIndex, required String label}) {
   final labelPointer = label.toNativeUtf8().cast<Char>();
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
 
-  monero_flutter.bindings
-      .subaddress_set_label(accountIndex, addressIndex, labelPointer, errorBoxPointer);
+  monero_flutter.bindings.subaddress_set_label(accountIndex, addressIndex, labelPointer, errorBoxPointer);
   calloc.free(labelPointer);
 
   final errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
@@ -355,8 +338,7 @@ void setLabelForSubaddressSync(
 ///   The address as a string.
 String getAddress({int accountIndex = 0, int addressIndex = 0}) {
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
-  final addressPointer =
-      monero_flutter.bindings.get_address(accountIndex, addressIndex, errorBoxPointer);
+  final addressPointer = monero_flutter.bindings.get_address(accountIndex, addressIndex, errorBoxPointer);
 
   final address = addressPointer.cast<Utf8>().toDartString();
   calloc.free(addressPointer);
@@ -378,7 +360,7 @@ String getAddress({int accountIndex = 0, int addressIndex = 0}) {
 ///
 /// Returns:
 ///   The total balance of the account as an integer.
-int getFullBalance({int accountIndex = 0}){
+int getFullBalance({int accountIndex = 0}) {
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
   final result = monero_flutter.bindings.get_full_balance(accountIndex, errorBoxPointer);
 
@@ -398,7 +380,7 @@ int getFullBalance({int accountIndex = 0}){
 ///
 /// Returns:
 ///   The unlocked balance of the account as an integer.
-int getUnlockedBalance(int accountIndex){
+int getUnlockedBalance(int accountIndex) {
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
   final result = monero_flutter.bindings.get_unlocked_balance(accountIndex, errorBoxPointer);
 
@@ -422,8 +404,7 @@ int getUnlockedBalance(int accountIndex){
 ///   The label of the subaddress as a string.
 String getSubaddressLabel(int accountIndex, int addressIndex) {
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
-  final labelPointer =
-      monero_flutter.bindings.get_subaddress_label(accountIndex, addressIndex, errorBoxPointer);
+  final labelPointer = monero_flutter.bindings.get_subaddress_label(accountIndex, addressIndex, errorBoxPointer);
 
   final label = labelPointer.cast<Utf8>().toDartString();
   calloc.free(labelPointer);

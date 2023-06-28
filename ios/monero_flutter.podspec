@@ -42,13 +42,14 @@ A new Flutter FFI plugin project.
     openssl.pod_target_xcconfig = { "OTHER_LDFLAGS" => "-force_load '$(PODS_TARGET_SRCROOT)/external/lib/libssl.a' -force_load '$(PODS_TARGET_SRCROOT)/external/lib/libcrypto.a'" }
   end
 
-#   s.subspec 'Sodium' do |sodium|
-#     sodium.preserve_paths = 'external/include/**/*.h'
-#     sodium.vendored_libraries = 'external/lib/libsodium.a'
-#     sodium.libraries = 'sodium'
-#     sodium.xcconfig = { 'HEADER_SEARCH_PATHS' => "${PODS_ROOT}/ios/external/include/**" }
-#     sodium.pod_target_xcconfig = { "OTHER_LDFLAGS" => "-force_load $(PODS_TARGET_SRCROOT)/external/lib/libsodium.a" }
-#   end
+
+   s.subspec 'Sodium' do |sodium|
+     sodium.preserve_paths = 'external/include/**/*.h'
+     sodium.vendored_libraries = 'external/lib/libsodium.a'
+     sodium.libraries = 'sodium'
+     sodium.xcconfig = { 'HEADER_SEARCH_PATHS' => "${PODS_ROOT}/ios/external/include/**" }
+     sodium.pod_target_xcconfig = { "OTHER_LDFLAGS" => "-force_load $(PODS_TARGET_SRCROOT)/external/lib/libsodium.a" }
+   end
 
   s.subspec 'Unbound' do |unbound|
     unbound.preserve_paths = 'external/include/**/*.h'

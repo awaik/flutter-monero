@@ -1,10 +1,8 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
-import 'package:convert/convert.dart';
 import 'package:monero_flutter/exceptions/wallet_restore_from_keys_exception.dart';
 import 'package:monero_flutter/wallet_manager_api.dart' as api;
 import 'package:path_provider/path_provider.dart';
@@ -14,11 +12,11 @@ class WalletManagementPage extends StatelessWidget {
 
   WalletManagementPage({super.key});
 
-  Future<String> _getWalletPath({String name = "test3"}) async {
+  Future<String> _getWalletPath({String name = "test5"}) async {
     final root = await getApplicationDocumentsDirectory();
 
-    final walletsDir = Directory('${root.path}/wallets');
-    final walletDir = Directory('${walletsDir.path}/wallet_v2');
+    final walletsDir = Directory('${root.path}/wallets3');
+    final walletDir = Directory('${walletsDir.path}/wallet_v3');
 
     //final walletDir = Directory("/Users/test/Documents/TEMP");
 
@@ -78,7 +76,7 @@ class WalletManagementPage extends StatelessWidget {
       testResult = "Error: wallet already exist!";
     } else {
       try {
-        var password = "1234";
+        var password = " ";
 
         await api.createWallet(
           path: walletPath,
@@ -119,13 +117,13 @@ class WalletManagementPage extends StatelessWidget {
       testResult = "Error: wallet already exists!";
     } else {
       try {
-        var password = "1234";
+        var password = " ";
 
         // final seed =
         //     "cell sonic farming toxic mechanic drunk terminal mayor maze fonts dove jazz truth attire october onto bomb molten twofold goggles voice liar loaded lush fonts";
-
+        print('+++++++++++++++++++++++++++++++++++++11 0000');
         var seed =
-            "tycoon odds launching anchor academy ought inflamed vivid payment large musical enhanced loincloth having wallets earth ditch thirsty somewhere himself pact village awoken basin tycoon";
+            "point nerves ungainly gather loudly theatrics october misery aphid website attire erected shelter ouch hesitate nouns suede omnibus folding last fruit upbeat haystack hedgehog gather";
 
         api.restoreWalletFromSeedSync(
           path: walletPath,
@@ -142,8 +140,6 @@ class WalletManagementPage extends StatelessWidget {
   }
 
   void _openWallet() async {
-
-
     // final walletPath = await _getWalletPath();
     // String testResult;
     //
@@ -160,21 +156,21 @@ class WalletManagementPage extends StatelessWidget {
     //
     // _resultController.text = testResult;
 
-        // final walletPath = await _getWalletPath();
-        // String testResult;
-        //
-        // try {
-        //   var password = " ";
-        //   api.loadWalletSync(path: walletPath, password: password);
-        //   testResult = "Wallet opened successfully!";
-        // } catch (e) {
-        //
-        //   WalletRestoreFromKeysException rwk = e as WalletRestoreFromKeysException;
-        //
-        //   testResult = e.message;
-        // }
-        //
-        // _resultController.text = testResult;final walletPath = await _getWalletPath();
+    // final walletPath = await _getWalletPath();
+    // String testResult;
+    //
+    // try {
+    //   var password = " ";
+    //   api.loadWalletSync(path: walletPath, password: password);
+    //   testResult = "Wallet opened successfully!";
+    // } catch (e) {
+    //
+    //   WalletRestoreFromKeysException rwk = e as WalletRestoreFromKeysException;
+    //
+    //   testResult = e.message;
+    // }
+    //
+    // _resultController.text = testResult;final walletPath = await _getWalletPath();
 
     final walletPath = await _getWalletPath();
 
@@ -200,7 +196,6 @@ class WalletManagementPage extends StatelessWidget {
         api.loadWalletSync(path: walletPath, password: password);
         testResult = "Wallet opened successfully!";
       } catch (e) {
-
         WalletRestoreFromKeysException rwk = e as WalletRestoreFromKeysException;
 
         testResult = e.message;
@@ -373,7 +368,7 @@ class WalletManagementPage extends StatelessWidget {
       _keysFileHex = await api.getKeysDataHex("1234", false);
       _keysFileBuffer = await api.getKeysDataBuffer("1234", false);
 
-      var hex1  = _keysFileHex!;
+      var hex1 = _keysFileHex!;
       var hex2 = _keysFileBuffer!.map((byte) => byte.toRadixString(16).padLeft(2, '0')).join('');
 
       testResult = "$hex1 $hex2";
@@ -393,7 +388,7 @@ class WalletManagementPage extends StatelessWidget {
       _cacheFileHex = await api.getCacheDataHex("1234");
       _cacheFileBuffer = await api.getCacheDataBuffer("1234");
 
-      var hex1  = _cacheFileHex!;
+      var hex1 = _cacheFileHex!;
       var hex2 = _cacheFileBuffer!.map((byte) => byte.toRadixString(16).padLeft(2, '0')).join('');
 
       testResult = "${hex1.length} ${hex2.length}";
@@ -432,18 +427,13 @@ class WalletManagementPage extends StatelessWidget {
     final cacheFileBuffer = _cacheFileBuffer!;
     //final cacheFileBuffer = new Uint8List(0);
 
-      try {
-        await api.openWalletData("1234",
-            false,
-            keysFileBuffer,
-            cacheFileBuffer,
-            "node.moneroworld.com:18089",
-            "Daemon username",
-            "Daemon password");
-        testResult = "OK";
-      } catch (e) {
-        testResult = e.toString();
-      }
+    try {
+      await api.openWalletData("1234", false, keysFileBuffer, cacheFileBuffer, "node.moneroworld.com:18089",
+          "Daemon username", "Daemon password");
+      testResult = "OK";
+    } catch (e) {
+      testResult = e.toString();
+    }
 
     // if (null == _keysFileBuffer || null == _cacheFileBuffer) {
     //   testResult = "keysFileBuffer or cacheFileBuffer is null!";
@@ -616,7 +606,6 @@ class WalletManagementPage extends StatelessWidget {
                       ),
                     ),
                   ),
-
                   Padding(
                     padding: const EdgeInsets.all(10),
                     child: ElevatedButton(
@@ -628,7 +617,6 @@ class WalletManagementPage extends StatelessWidget {
                       ),
                     ),
                   ),
-
                   Padding(
                     padding: const EdgeInsets.all(10),
                     child: ElevatedButton(
@@ -640,7 +628,6 @@ class WalletManagementPage extends StatelessWidget {
                       ),
                     ),
                   ),
-
                   Padding(
                     padding: const EdgeInsets.all(10),
                     child: ElevatedButton(
@@ -652,7 +639,6 @@ class WalletManagementPage extends StatelessWidget {
                       ),
                     ),
                   ),
-
                   Padding(
                     padding: const EdgeInsets.all(10),
                     child: ElevatedButton(
@@ -664,7 +650,6 @@ class WalletManagementPage extends StatelessWidget {
                       ),
                     ),
                   ),
-
                 ],
               ),
             ),
