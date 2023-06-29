@@ -68,6 +68,7 @@ extern "C"
     const char *secret_spend_key(ErrorBox *error);
     const char *public_spend_key(ErrorBox *error);
     const char *seed(ErrorBox *error);
+    const char *get_mnemonic(ErrorBox *error);
 
     const char *get_filename(ErrorBox *error);
 

@@ -51,3 +51,14 @@ ErrorInfo extractErrorInfo(Pointer<ErrorBox> errorBoxPointer) {
 
   return ErrorInfo(code: code, message: message);
 }
+
+String? extractString(Pointer<Char> charPointer) {
+
+  if (nullptr == charPointer) {
+    return null;
+  }
+
+  String value = charPointer.cast<Utf8>().toDartString();
+  calloc.free(charPointer);
+  return value;
+}

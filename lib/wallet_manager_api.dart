@@ -419,11 +419,10 @@ String getPublicSpendKey() {
 ///
 /// Returns:
 ///   The mnemonic seed of the wallet as a string.
-String getSeed() {
+String? getSeed() {
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
   final seedPointer = monero_flutter.bindings.seed(errorBoxPointer);
-  final seed = seedPointer.cast<Utf8>().toDartString();
-  calloc.free(seedPointer);
+  final seed = monero_flutter.extractString(seedPointer);
 
   final errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
 
@@ -434,11 +433,10 @@ String getSeed() {
   return seed;
 }
 
-String getSeedAsHex() {
+String? getMnemonic() {
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
-  final seedPointer = monero_flutter.bindings.seed(errorBoxPointer);
-  final seed = seedPointer.cast<Utf8>().toDartString();
-  calloc.free(seedPointer);
+  final mnemonicPointer = monero_flutter.bindings.get_mnemonic(errorBoxPointer);
+  final mnemonic = monero_flutter.extractString(mnemonicPointer);
 
   final errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
 
@@ -446,10 +444,7 @@ String getSeedAsHex() {
     throw Exception(errorInfo.getErrorMessage());
   }
 
-  final seedBytes = utf8.encode(seed);
-  final seedHex = seedBytes.map((byte) => byte.toRadixString(16).padLeft(2, '0')).join('');
-
-  return seedHex;
+  return mnemonic;
 }
 
 /// Returns the filename of the currently opened Monero wallet as a string.

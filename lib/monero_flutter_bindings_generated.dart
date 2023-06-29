@@ -357,6 +357,21 @@ class MoneroApiBindings {
   late final _seed = _seedPtr
       .asFunction<ffi.Pointer<ffi.Char> Function(ffi.Pointer<ErrorBox>)>();
 
+  ffi.Pointer<ffi.Char> get_mnemonic(
+    ffi.Pointer<ErrorBox> error,
+  ) {
+    return _get_mnemonic(
+      error,
+    );
+  }
+
+  late final _get_mnemonicPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Pointer<ffi.Char> Function(
+              ffi.Pointer<ErrorBox>)>>('get_mnemonic');
+  late final _get_mnemonic = _get_mnemonicPtr
+      .asFunction<ffi.Pointer<ffi.Char> Function(ffi.Pointer<ErrorBox>)>();
+
   ffi.Pointer<ffi.Char> get_filename(
     ffi.Pointer<ErrorBox> error,
   ) {

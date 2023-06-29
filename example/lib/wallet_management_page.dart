@@ -192,7 +192,7 @@ class WalletManagementPage extends StatelessWidget {
       testResult = "Error: wallet wasn't created!";
     } else {
       try {
-        var password = "1234";
+        var password = " ";
         api.loadWalletSync(path: walletPath, password: password);
         testResult = "Wallet opened successfully!";
       } catch (e) {
@@ -269,7 +269,7 @@ class WalletManagementPage extends StatelessWidget {
     String testResult;
 
     try {
-      testResult = api.getSeed();
+      testResult = api.getSeed() ?? "empty";
     } catch (e) {
       testResult = e.toString();
     }
@@ -283,7 +283,7 @@ class WalletManagementPage extends StatelessWidget {
     String testResult;
 
     try {
-      testResult = api.getSeedAsHex();
+      testResult = api.getMnemonic() ?? "empty";
     } catch (e) {
       testResult = e.toString();
     }

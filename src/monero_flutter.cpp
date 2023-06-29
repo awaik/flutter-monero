@@ -630,6 +630,26 @@ extern "C"
         return result;
     }
 
+    const char *get_mnemonic(ErrorBox *error)
+    {
+        if (!is_wallet_created(error))
+            return nullptr;
+
+        const char* result = nullptr;
+
+        try
+        {
+            result = strdup(m_wallet->get_mnemonic().c_str());
+        }
+        catch (std::exception& e)
+        {
+            error->code = -2;
+            error->message = strdup(e.what());
+        }
+
+        return result;
+    }
+
     const char* get_filename(ErrorBox* error)
     {
         if (!is_wallet_created(error))
