@@ -12,7 +12,7 @@ class WalletManagementPage extends StatelessWidget {
 
   WalletManagementPage({super.key});
 
-  Future<String> _getWalletPath({String name = "test5"}) async {
+  Future<String> _getWalletPath({String name = "test6"}) async {
     final root = await getApplicationDocumentsDirectory();
 
     final walletsDir = Directory('${root.path}/wallets3');
@@ -270,6 +270,20 @@ class WalletManagementPage extends StatelessWidget {
 
     try {
       testResult = api.getSeed();
+    } catch (e) {
+      testResult = e.toString();
+    }
+
+    _resultController.text = testResult;
+  }
+
+  void _showSeedAsHex() async {
+    if (!await _checkIsWalletExist()) return;
+
+    String testResult;
+
+    try {
+      testResult = api.getSeedAsHex();
     } catch (e) {
       testResult = e.toString();
     }
@@ -551,6 +565,7 @@ class WalletManagementPage extends StatelessWidget {
                       ),
                     ),
                   ),
+
                   Padding(
                     padding: const EdgeInsets.all(10),
                     child: ElevatedButton(
@@ -562,6 +577,19 @@ class WalletManagementPage extends StatelessWidget {
                       ),
                     ),
                   ),
+
+                  Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: ElevatedButton(
+                      child: Text("Seed HEX", style: TextStyle(fontSize: 22)),
+                      onPressed: _showSeedAsHex,
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.all(10),
+                        minimumSize: Size(360, 60),
+                      ),
+                    ),
+                  ),
+
                   Padding(
                     padding: const EdgeInsets.all(10),
                     child: ElevatedButton(

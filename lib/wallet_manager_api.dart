@@ -2,6 +2,7 @@ import 'dart:ffi';
 import 'package:ffi/ffi.dart';
 import 'package:flutter/foundation.dart';
 import 'dart:async';
+import 'dart:convert';
 
 import 'exceptions/wallet_creation_exception.dart';
 import 'exceptions/wallet_restore_from_keys_exception.dart';
@@ -431,6 +432,24 @@ String getSeed() {
   }
 
   return seed;
+}
+
+String getSeedAsHex() {
+  final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
+  final seedPointer = monero_flutter.bindings.seed(errorBoxPointer);
+  final seed = seedPointer.cast<Utf8>().toDartString();
+  calloc.free(seedPointer);
+
+  final errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
+
+  if (0 != errorInfo.code) {
+    throw Exception(errorInfo.getErrorMessage());
+  }
+
+  final seedBytes = utf8.encode(seed);
+  final seedHex = seedBytes.map((byte) => byte.toRadixString(16).padLeft(2, '0')).join('');
+
+  return seedHex;
 }
 
 /// Returns the filename of the currently opened Monero wallet as a string.
