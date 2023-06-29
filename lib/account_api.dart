@@ -4,8 +4,10 @@ import 'package:ffi/ffi.dart';
 import 'package:flutter/foundation.dart';
 
 import 'entities/account_row.dart';
+import 'entities/error_info.dart';
 import 'entities/subaddress_row.dart';
 import 'monero_flutter.dart' as monero_flutter;
+import 'monero_flutter_bindings_generated.dart';
 
 bool isUpdating = false;
 
@@ -416,4 +418,29 @@ String getSubaddressLabel(int accountIndex, int addressIndex) {
   }
 
   return label;
+}
+
+String getReceiveAddress() {
+  Pointer<ErrorBox> errorBoxPointer = monero_flutter.buildErrorBoxPointer();
+  final addressIndex = monero_flutter.bindings.get_num_subaddresses(0, errorBoxPointer);
+
+  ErrorInfo errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
+
+  if (0 != errorInfo.code) {
+    throw Exception(errorInfo.getErrorMessage());
+  }
+
+  errorBoxPointer = monero_flutter.buildErrorBoxPointer();
+  final addressPointer = monero_flutter.bindings.get_address(0, addressIndex, errorBoxPointer);
+
+  errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
+
+  if (0 != errorInfo.code) {
+    throw Exception(errorInfo.getErrorMessage());
+  }
+
+  final address = addressPointer.cast<Utf8>().toDartString();
+  calloc.free(addressPointer);
+
+  return address;
 }

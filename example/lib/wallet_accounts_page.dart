@@ -14,6 +14,14 @@ class WalletAccountsPage extends StatelessWidget {
     }
   }
 
+  void _getReceiveAddress() {
+    try {
+      _resultController.text = api.getReceiveAddress();
+    } catch (e) {
+      _resultController.text = e.toString();
+    }
+  }
+
   void _getBalance() {
     try {
       _resultController.text = api.getFullBalance().toString();
@@ -51,6 +59,19 @@ class WalletAccountsPage extends StatelessWidget {
                       ),
                     ),
                   ),
+
+                  Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: ElevatedButton(
+                      child: Text("Receive address", style: TextStyle(fontSize: 22)),
+                      onPressed: _getReceiveAddress,
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.all(10),
+                        minimumSize: Size(360, 60),
+                      ),
+                    ),
+                  ),
+
                   Padding(
                     padding: const EdgeInsets.all(10),
                     child: ElevatedButton(

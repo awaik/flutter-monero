@@ -811,6 +811,23 @@ class MoneroApiBindings {
   late final _free_block_of_accounts = _free_block_of_accountsPtr
       .asFunction<void Function(ffi.Pointer<ffi.Int64>, int)>();
 
+  int get_num_subaddresses(
+    int account_index,
+    ffi.Pointer<ErrorBox> error,
+  ) {
+    return _get_num_subaddresses(
+      account_index,
+      error,
+    );
+  }
+
+  late final _get_num_subaddressesPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Int32 Function(
+              ffi.Int32, ffi.Pointer<ErrorBox>)>>('get_num_subaddresses');
+  late final _get_num_subaddresses = _get_num_subaddressesPtr
+      .asFunction<int Function(int, ffi.Pointer<ErrorBox>)>();
+
   ffi.Pointer<ffi.Int64> subaddress_get_all(
     ffi.Pointer<ErrorBox> error,
   ) {

@@ -1268,6 +1268,14 @@ extern "C"
         delete[] p;
     }
 
+    int32_t get_num_subaddresses(int32_t account_index, ErrorBox *error)
+    {
+        if (!is_wallet_created(error))
+            return 0;
+
+        return (int32_t)m_wallet->numSubaddresses(account_index);
+    }
+
     int64_t* subaddress_get_all(ErrorBox* error)
     {
         if (!is_subaddress_loaded(error))
