@@ -419,6 +419,7 @@ String getPublicSpendKey() {
 ///
 /// Returns:
 ///   The mnemonic seed of the wallet as a string.
+@Deprecated('Use [getMnemonic] instead')
 String? getSeed() {
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
   final seedPointer = monero_flutter.bindings.seed(errorBoxPointer);
@@ -433,6 +434,10 @@ String? getSeed() {
   return seed;
 }
 
+/// Returns the wallet's mnemonic phrase. If the wallet is in multisig mode, it returns a hexadecimal string.
+///
+/// Returns:
+/// The mnemonic phrase of the wallet as a string.
 String? getMnemonic() {
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
   final mnemonicPointer = monero_flutter.bindings.get_mnemonic(errorBoxPointer);

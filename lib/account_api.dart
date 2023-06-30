@@ -420,6 +420,17 @@ String getSubaddressLabel(int accountIndex, int addressIndex) {
   return label;
 }
 
+/// Retrieves the receive address for the wallet. A new address is generated
+/// after an output is received at the old address.
+///
+/// Returns:
+/// A string representing the receive address.
+///
+/// Description:
+/// The receive address is a subaddress belonging to account 0. If no subaddresses
+/// have been manually created using `.createSubaddress()`, the next unused
+/// subaddress will be returned. The subaddresses list is updated automatically
+/// when an output is received by a subaddress or when `.addSubaddress()` is called.
 String getReceiveAddress() {
   Pointer<ErrorBox> errorBoxPointer = monero_flutter.buildErrorBoxPointer();
   final addressIndex = monero_flutter.bindings.get_num_subaddresses(0, errorBoxPointer);
