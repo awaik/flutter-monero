@@ -341,6 +341,7 @@ String getTransactionKey(String transactionId) {
   return result!;
 }
 
+// {}
 String getOutputs(String jsonRequest)
 {
   final jsonRequestPointer = jsonRequest.toNativeUtf8().cast<Char>();
@@ -358,6 +359,9 @@ String getOutputs(String jsonRequest)
   return result!;
 }
 
+// {
+// "txs": [{"hash":"28d0825270cd06364f04c32992e3d918ad3fa3aceba66efa7ad3d6d1cc7ab4b6"}]
+// }
 String getTxs(String jsonRequest) {
   final jsonRequestPointer = jsonRequest.toNativeUtf8().cast<Char>();
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
@@ -373,6 +377,15 @@ String getTxs(String jsonRequest) {
 
   return result!;
 }
+
+
+// {
+// "unsignedTxHex": "28d0825270cd06364f04c32992e3d918ad3fa3aceba66efa7ad3d6d1cc7ab4b6"
+// }
+// =================
+// {
+// "multisigTxHex": "28d0825270cd06364f04c32992e3d918ad3fa3aceba66efa7ad3d6d1cc7ab4b6"
+// }
 
 String describeTxSet(String jsonRequest) {
   final jsonRequestPointer = jsonRequest.toNativeUtf8().cast<Char>();
@@ -390,6 +403,9 @@ String describeTxSet(String jsonRequest) {
   return result!;
 }
 
+// {
+// "destinations": [{"address":"86gwCboZti2hRP4m6pwFfVHwjtdptJVgFKhppuEQL6f2aJZZuJVaPzqK16NBfxWvPnFNDgKtAkptJPa1UCX1BnnUQsogxqA"}]
+// }
 String sweepUnlocked(String jsonRequest) {
   final jsonRequestPointer = jsonRequest.toNativeUtf8().cast<Char>();
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
@@ -404,6 +420,44 @@ String sweepUnlocked(String jsonRequest) {
   }
 
   return result!;
+}
+
+void thaw(String keyImage) {
+  final keyImagePointer = keyImage.toNativeUtf8().cast<Char>();
+  final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
+  monero_flutter.bindings.thaw(keyImagePointer, errorBoxPointer);
+
+  final errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
+
+  if (0 != errorInfo.code) {
+    throw Exception(errorInfo.getErrorMessage());
+  }
+}
+
+void freeze(String keyImage) {
+  final keyImagePointer = keyImage.toNativeUtf8().cast<Char>();
+  final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
+  monero_flutter.bindings.freeze(keyImagePointer, errorBoxPointer);
+
+  final errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
+
+  if (0 != errorInfo.code) {
+    throw Exception(errorInfo.getErrorMessage());
+  }
+}
+
+bool isFrozen(String keyImage) {
+  final keyImagePointer = keyImage.toNativeUtf8().cast<Char>();
+  final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
+  bool result = monero_flutter.bindings.frozen(keyImagePointer, errorBoxPointer);
+
+  final errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
+
+  if (0 != errorInfo.code) {
+    throw Exception(errorInfo.getErrorMessage());
+  }
+
+  return result;
 }
 
 /// Retrieves all transfers as JSON.

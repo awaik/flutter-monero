@@ -50,6 +50,32 @@ class TransferPage extends StatelessWidget {
     }
   }
 
+  void _thaw() {
+    try {
+      api.thaw(_resultController.text);
+      _resultController.text = "ok";
+    } catch (e) {
+      _resultController.text = e.toString();
+    }
+  }
+
+  void _freeze() {
+    try {
+      api.freeze(_resultController.text);
+      _resultController.text = "ok";
+    } catch (e) {
+      _resultController.text = e.toString();
+    }
+  }
+
+  void _isFrozen() {
+    try {
+      _resultController.text = api.isFrozen(_resultController.text).toString();
+    } catch (e) {
+      _resultController.text = e.toString();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -135,6 +161,46 @@ class TransferPage extends StatelessWidget {
                       ),
                     ),
                   ),
+
+                  Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: ElevatedButton(
+                      child:
+                      Text("Thaw", style: TextStyle(fontSize: 22)),
+                      onPressed: _thaw,
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.all(10),
+                        minimumSize: Size(360, 60),
+                      ),
+                    ),
+                  ),
+
+                  Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: ElevatedButton(
+                      child:
+                      Text("Freeze", style: TextStyle(fontSize: 22)),
+                      onPressed: _freeze,
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.all(10),
+                        minimumSize: Size(360, 60),
+                      ),
+                    ),
+                  ),
+
+                  Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: ElevatedButton(
+                      child:
+                      Text("IsFrozen", style: TextStyle(fontSize: 22)),
+                      onPressed: _isFrozen,
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.all(10),
+                        minimumSize: Size(360, 60),
+                      ),
+                    ),
+                  ),
+
                 ],
               ),
             ),
