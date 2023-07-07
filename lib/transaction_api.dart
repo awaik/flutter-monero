@@ -390,6 +390,22 @@ String describeTxSet(String jsonRequest) {
   return result!;
 }
 
+String sweepUnlocked(String jsonRequest) {
+  final jsonRequestPointer = jsonRequest.toNativeUtf8().cast<Char>();
+  final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
+  final resultPointer = monero_flutter.bindings.sweep_unlocked(jsonRequestPointer, errorBoxPointer);
+
+  final result = monero_flutter.extractString(resultPointer);
+
+  final errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
+
+  if (0 != errorInfo.code) {
+    throw Exception(errorInfo.getErrorMessage());
+  }
+
+  return result!;
+}
+
 /// Retrieves all transfers as JSON.
 ///
 /// This function retrieves all transfers made by the wallet and returns them as a JSON string.

@@ -24,11 +24,19 @@ class TransferPage extends StatelessWidget {
     }
   }
 
-
   void _describeTxSet() {
     try {
       String jsonRequest = _resultController.text;
       _resultController.text = api.describeTxSet(jsonRequest);
+    } catch (e) {
+      _resultController.text = e.toString();
+    }
+  }
+
+  void _sweepUnlocked() {
+    try {
+      String jsonRequest = _resultController.text;
+      _resultController.text = api.sweepUnlocked(jsonRequest);
     } catch (e) {
       _resultController.text = e.toString();
     }
@@ -95,6 +103,19 @@ class TransferPage extends StatelessWidget {
                       child: Text("Describe TxSet",
                           style: TextStyle(fontSize: 22)),
                       onPressed: _describeTxSet,
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.all(10),
+                        minimumSize: Size(360, 60),
+                      ),
+                    ),
+                  ),
+
+                  Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: ElevatedButton(
+                      child: Text("Sweep unlocked",
+                          style: TextStyle(fontSize: 22)),
+                      onPressed: _sweepUnlocked,
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.all(10),
                         minimumSize: Size(360, 60),
