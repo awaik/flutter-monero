@@ -1837,6 +1837,98 @@ extern "C"
         return result;
     }
 
+    const char *get_txs(const char *tx_query_json, ErrorBox *error)
+    {
+        char *result = nullptr;
+
+        if (!is_wallet_created(error))
+            return result;
+
+        std::string json_string = tx_query_json;
+
+        try
+        {
+            std::string result_value = m_wallet->get_txs(json_string);
+            result = strdup(result_value.c_str());
+        }
+        catch (std::exception& e)
+        {
+            error->code = -2;
+            error->message = strdup(e.what());
+        }
+
+        return result;
+    }
+
+    const char *get_outputs(const char *output_query_json, ErrorBox *error)
+    {
+        char *result = nullptr;
+
+        if (!is_wallet_created(error))
+            return result;
+
+        std::string json_string = output_query_json;
+
+        try
+        {
+            std::string result_value = m_wallet->get_outputs(json_string);
+            result = strdup(result_value.c_str());
+        }
+        catch (std::exception& e)
+        {
+            error->code = -2;
+            error->message = strdup(e.what());
+        }
+
+        return result;
+    }
+
+    const char *sweep_unlocked(const char *config_json, ErrorBox *error)
+    {
+        char *result = nullptr;
+
+        if (!is_wallet_created(error))
+            return result;
+
+        std::string json_string = config_json;
+
+        try
+        {
+            std::string result_value = m_wallet->sweep_unlocked(json_string);
+            result = strdup(result_value.c_str());
+        }
+        catch (std::exception& e)
+        {
+            error->code = -2;
+            error->message = strdup(e.what());
+        }
+
+        return result;
+    }
+
+    const char *describe_tx_set(const char *tx_set_json, ErrorBox *error)
+    {
+        char *result = nullptr;
+
+        if (!is_wallet_created(error))
+            return result;
+
+        std::string json_string = tx_set_json;
+
+        try
+        {
+            std::string result_value = m_wallet->describe_tx_set(tx_set_json);
+            result = strdup(result_value.c_str());
+        }
+        catch (std::exception& e)
+        {
+            error->code = -2;
+            error->message = strdup(e.what());
+        }
+
+        return result;
+    }
+
     const char *get_transfers(ErrorBox* error)
     {
         if (!is_wallet_created(error))

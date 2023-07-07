@@ -1305,6 +1305,78 @@ class MoneroApiBindings {
   late final _frozen = _frozenPtr.asFunction<
       bool Function(ffi.Pointer<ffi.Char>, ffi.Pointer<ErrorBox>)>();
 
+  ffi.Pointer<ffi.Char> get_txs(
+    ffi.Pointer<ffi.Char> tx_query_json,
+    ffi.Pointer<ErrorBox> error,
+  ) {
+    return _get_txs(
+      tx_query_json,
+      error,
+    );
+  }
+
+  late final _get_txsPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Pointer<ffi.Char> Function(
+              ffi.Pointer<ffi.Char>, ffi.Pointer<ErrorBox>)>>('get_txs');
+  late final _get_txs = _get_txsPtr.asFunction<
+      ffi.Pointer<ffi.Char> Function(
+          ffi.Pointer<ffi.Char>, ffi.Pointer<ErrorBox>)>();
+
+  ffi.Pointer<ffi.Char> get_outputs(
+    ffi.Pointer<ffi.Char> output_query_json,
+    ffi.Pointer<ErrorBox> error,
+  ) {
+    return _get_outputs(
+      output_query_json,
+      error,
+    );
+  }
+
+  late final _get_outputsPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Pointer<ffi.Char> Function(
+              ffi.Pointer<ffi.Char>, ffi.Pointer<ErrorBox>)>>('get_outputs');
+  late final _get_outputs = _get_outputsPtr.asFunction<
+      ffi.Pointer<ffi.Char> Function(
+          ffi.Pointer<ffi.Char>, ffi.Pointer<ErrorBox>)>();
+
+  ffi.Pointer<ffi.Char> sweep_unlocked(
+    ffi.Pointer<ffi.Char> config_json,
+    ffi.Pointer<ErrorBox> error,
+  ) {
+    return _sweep_unlocked(
+      config_json,
+      error,
+    );
+  }
+
+  late final _sweep_unlockedPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Pointer<ffi.Char> Function(
+              ffi.Pointer<ffi.Char>, ffi.Pointer<ErrorBox>)>>('sweep_unlocked');
+  late final _sweep_unlocked = _sweep_unlockedPtr.asFunction<
+      ffi.Pointer<ffi.Char> Function(
+          ffi.Pointer<ffi.Char>, ffi.Pointer<ErrorBox>)>();
+
+  ffi.Pointer<ffi.Char> describe_tx_set(
+    ffi.Pointer<ffi.Char> tx_set_json,
+    ffi.Pointer<ErrorBox> error,
+  ) {
+    return _describe_tx_set(
+      tx_set_json,
+      error,
+    );
+  }
+
+  late final _describe_tx_setPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Pointer<ffi.Char> Function(ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ErrorBox>)>>('describe_tx_set');
+  late final _describe_tx_set = _describe_tx_setPtr.asFunction<
+      ffi.Pointer<ffi.Char> Function(
+          ffi.Pointer<ffi.Char>, ffi.Pointer<ErrorBox>)>();
+
   ffi.Pointer<ffi.Char> get_transfers(
     ffi.Pointer<ErrorBox> error,
   ) {

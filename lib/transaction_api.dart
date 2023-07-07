@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:ffi';
 
 import 'package:ffi/ffi.dart';
@@ -332,8 +331,23 @@ String getTransactionKey(String transactionId) {
   final resultPointer =
       monero_flutter.bindings.get_tx_key(transactionIdPointer, errorBoxPointer);
 
-  final result = resultPointer.cast<Utf8>().toDartString();
-  calloc.free(resultPointer);
+  final result = monero_flutter.extractString(resultPointer);
+  final errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
+
+  if (0 != errorInfo.code) {
+    throw Exception(errorInfo.getErrorMessage());
+  }
+
+  return result!;
+}
+
+String getOutputs(String jsonRequest)
+{
+  final jsonRequestPointer = jsonRequest.toNativeUtf8().cast<Char>();
+  final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
+  final resultPointer = monero_flutter.bindings.get_outputs(jsonRequestPointer, errorBoxPointer);
+
+  final result = monero_flutter.extractString(resultPointer);
 
   final errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
 
@@ -341,7 +355,39 @@ String getTransactionKey(String transactionId) {
     throw Exception(errorInfo.getErrorMessage());
   }
 
-  return result;
+  return result!;
+}
+
+String getTxs(String jsonRequest) {
+  final jsonRequestPointer = jsonRequest.toNativeUtf8().cast<Char>();
+  final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
+  final resultPointer = monero_flutter.bindings.get_txs(jsonRequestPointer, errorBoxPointer);
+
+  final result = monero_flutter.extractString(resultPointer);
+
+  final errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
+
+  if (0 != errorInfo.code) {
+    throw Exception(errorInfo.getErrorMessage());
+  }
+
+  return result!;
+}
+
+String describeTxSet(String jsonRequest) {
+  final jsonRequestPointer = jsonRequest.toNativeUtf8().cast<Char>();
+  final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
+  final resultPointer = monero_flutter.bindings.describe_tx_set(jsonRequestPointer, errorBoxPointer);
+
+  final result = monero_flutter.extractString(resultPointer);
+
+  final errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
+
+  if (0 != errorInfo.code) {
+    throw Exception(errorInfo.getErrorMessage());
+  }
+
+  return result!;
 }
 
 /// Retrieves all transfers as JSON.

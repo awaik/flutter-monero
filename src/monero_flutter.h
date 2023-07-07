@@ -162,6 +162,11 @@ extern "C"
     void thaw(const char *key_image, ErrorBox *error);
     bool frozen(const char *key_image, ErrorBox *error);
 
+    const char *get_txs(const char *tx_query_json, ErrorBox *error);
+    const char *get_outputs(const char *output_query_json, ErrorBox *error);
+    const char *sweep_unlocked(const char *config_json, ErrorBox *error);
+    const char *describe_tx_set(const char *tx_set_json, ErrorBox *error);
+
     const char *get_transfers(ErrorBox* error);
 
     // **********************************************************************************************************************************

@@ -12,13 +12,13 @@ class WalletManagementPage extends StatelessWidget {
 
   WalletManagementPage({super.key});
 
-  Future<String> _getWalletPath({String name = "test6"}) async {
-    final root = await getApplicationDocumentsDirectory();
+  Future<String> _getWalletPath({String name = "wallet1"}) async {
+    // final root = await getApplicationDocumentsDirectory();
+    //
+    // final walletsDir = Directory('${root.path}/wallets3');
+    // final walletDir = Directory('${walletsDir.path}/wallet_v3');
 
-    final walletsDir = Directory('${root.path}/wallets3');
-    final walletDir = Directory('${walletsDir.path}/wallet_v3');
-
-    //final walletDir = Directory("/Users/test/Documents/TEMP");
+    final walletDir = Directory("/Users/dmytro/Documents/TEMP");
 
     if (!walletDir.existsSync()) {
       walletDir.createSync(recursive: true);

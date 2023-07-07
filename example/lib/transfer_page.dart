@@ -6,6 +6,34 @@ class TransferPage extends StatelessWidget {
 
   TransferPage({super.key});
 
+  void _getOutputs() {
+    try {
+      String jsonRequest = _resultController.text;
+      _resultController.text = api.getOutputs(jsonRequest);
+    } catch (e) {
+      _resultController.text = e.toString();
+    }
+  }
+
+  void _getTxs() {
+    try {
+      String jsonRequest = _resultController.text;
+      _resultController.text = api.getTxs(jsonRequest);
+    } catch (e) {
+      _resultController.text = e.toString();
+    }
+  }
+
+
+  void _describeTxSet() {
+    try {
+      String jsonRequest = _resultController.text;
+      _resultController.text = api.describeTxSet(jsonRequest);
+    } catch (e) {
+      _resultController.text = e.toString();
+    }
+  }
+
   void _getTransfers() {
     try {
       _resultController.text = api.getAllTransfersAsJson();
@@ -34,10 +62,51 @@ class TransferPage extends StatelessWidget {
             child: SingleChildScrollView(
               child: Column(
                 children: <Widget>[
+
                   Padding(
                     padding: const EdgeInsets.all(10),
                     child: ElevatedButton(
-                      child: Text("Get transfers", style: TextStyle(fontSize: 22)),
+                      child: Text("Get Outputs",
+                          style: TextStyle(fontSize: 22)),
+                      onPressed: _getOutputs,
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.all(10),
+                        minimumSize: Size(360, 60),
+                      ),
+                    ),
+                  ),
+
+                  Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: ElevatedButton(
+                      child: Text("Get Txs",
+                          style: TextStyle(fontSize: 22)),
+                      onPressed: _getTxs,
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.all(10),
+                        minimumSize: Size(360, 60),
+                      ),
+                    ),
+                  ),
+
+                  Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: ElevatedButton(
+                      child: Text("Describe TxSet",
+                          style: TextStyle(fontSize: 22)),
+                      onPressed: _describeTxSet,
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.all(10),
+                        minimumSize: Size(360, 60),
+                      ),
+                    ),
+                  ),
+
+                  Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: ElevatedButton(
+                      child:
+                          Text("Get transfers", style: TextStyle(fontSize: 22)),
                       onPressed: _getTransfers,
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.all(10),
