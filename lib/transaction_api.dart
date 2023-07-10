@@ -1,9 +1,12 @@
+import 'dart:convert';
 import 'dart:ffi';
 
 import 'package:ffi/ffi.dart';
 import 'package:flutter/foundation.dart';
+import 'package:monero_flutter/entities/outputs_response.dart';
 
 import 'entities/monero_output.dart';
+import 'entities/outputs_request.dart';
 import 'entities/pending_transaction.dart';
 import 'entities/transaction_info_row.dart';
 import 'exceptions/creation_transaction_exception.dart';
@@ -49,23 +52,19 @@ int transactionsCount() {
 /// as a list of [TransactionInfoRow] objects. Each [TransactionInfoRow] object represents
 /// a single transaction with its associated details such as amount, date, sender, and recipient.
 List<TransactionInfoRow> getAllTransactions() {
-  final errorBoxPointer1 = monero_flutter.buildErrorBoxPointer();
-  final size = monero_flutter.bindings.transactions_count(errorBoxPointer1);
-  final errorInfo1 = monero_flutter.extractErrorInfo(errorBoxPointer1);
+  final size = transactionsCount();
 
-  if (0 != errorInfo1.code) {
-    throw Exception(errorInfo1.getErrorMessage());
-  }
-
-  final errorBoxPointer2 = monero_flutter.buildErrorBoxPointer();
+  final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
   final transactionsPointer =
-      monero_flutter.bindings.transactions_get_all(errorBoxPointer2);
-  final transactionsAddresses = transactionsPointer.asTypedList(size);
-  final errorInfo2 = monero_flutter.extractErrorInfo(errorBoxPointer2);
+      monero_flutter.bindings.transactions_get_all(errorBoxPointer);
 
-  if (0 != errorInfo2.code) {
-    throw Exception(errorInfo2.getErrorMessage());
+  final errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
+
+  if (0 != errorInfo.code) {
+    throw Exception(errorInfo.getErrorMessage());
   }
+
+  final transactionsAddresses = transactionsPointer.asTypedList(size);
 
   var result = transactionsAddresses
       .map((addr) => Pointer<TransactionInfoRow>.fromAddress(addr).ref)
@@ -341,14 +340,20 @@ String getTransactionKey(String transactionId) {
   return result!;
 }
 
-// {}
-String getOutputs(String jsonRequest)
+OutputsResponse getUtxos()
 {
+  OutputsRequest request = OutputsRequest(isSpent: false, txQuery: TxQuery(isLocked: false, isConfirmed: false));
+  return getOutputs(request);
+}
+
+OutputsResponse getOutputs(OutputsRequest request)
+{
+  final jsonRequest = jsonEncode(request.toJson());
   final jsonRequestPointer = jsonRequest.toNativeUtf8().cast<Char>();
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
   final resultPointer = monero_flutter.bindings.get_outputs(jsonRequestPointer, errorBoxPointer);
 
-  final result = monero_flutter.extractString(resultPointer);
+  final jsonString = monero_flutter.extractString(resultPointer);
 
   final errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
 
@@ -356,7 +361,9 @@ String getOutputs(String jsonRequest)
     throw Exception(errorInfo.getErrorMessage());
   }
 
-  return result!;
+  final jsonData = jsonDecode(jsonString!);
+
+  return OutputsResponse.fromJson(jsonData);
 }
 
 // {

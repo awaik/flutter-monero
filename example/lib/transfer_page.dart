@@ -6,10 +6,10 @@ class TransferPage extends StatelessWidget {
 
   TransferPage({super.key});
 
-  void _getOutputs() {
+  void _getUtxos() {
     try {
       String jsonRequest = _resultController.text;
-      _resultController.text = api.getOutputs(jsonRequest);
+      _resultController.text = "hash=" + api.getUtxos().blocks[0].txs[0].hash + "; amount=" + api.getUtxos().blocks[0].txs[0].outputs[0].amount.toString();
     } catch (e) {
       _resultController.text = e.toString();
     }
@@ -100,9 +100,9 @@ class TransferPage extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.all(10),
                     child: ElevatedButton(
-                      child: Text("Get Outputs",
+                      child: Text("Get Utxos",
                           style: TextStyle(fontSize: 22)),
-                      onPressed: _getOutputs,
+                      onPressed: _getUtxos,
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.all(10),
                         minimumSize: Size(360, 60),
