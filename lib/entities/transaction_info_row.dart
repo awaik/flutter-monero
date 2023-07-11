@@ -1,7 +1,7 @@
 import 'dart:ffi';
 import 'package:ffi/ffi.dart';
 
-class TransactionInfoRow extends Struct {
+class ExternalTransactionInfoRow extends Struct {
   @Uint64()
   external int amount;
 
@@ -33,9 +33,55 @@ class TransactionInfoRow extends Struct {
   @Int64()
   external int datetime;
 
-  int getDatetime() => datetime;
-  int getAmount() => amount >= 0 ? amount : amount * -1;
-  bool getIsPending() => isPending != 0;
-  String getHash() => hash.toDartString();
-  String getPaymentId() => paymentId.toDartString();
+  TransactionInfoRow buildTransactionInfoRow() {
+    return TransactionInfoRow(amount >= 0 ? amount : amount * -1,
+        fee,
+        blockHeight,
+        confirmations,
+        subaddrAccount,
+        direction,
+        isPending != 0,
+        subaddrIndex,
+        hash.toDartString(),
+        paymentId.toDartString(),
+        datetime);
+  }
+}
+
+class TransactionInfoRow {
+  final int _amount;
+  final int _fee;
+  final int _blockHeight;
+  final int _confirmations;
+  final int _subaddrAccount;
+  final int _direction;
+  final bool _isPending;
+  final int _subaddrIndex;
+  final String _hash;
+  final String _paymentId;
+  final int _datetime;
+
+  int get amount {return _amount;}
+  int get fee {return _fee;}
+  int get blockHeight {return _blockHeight;}
+  int get confirmations {return _confirmations;}
+  int get subaddrAccount {return _subaddrAccount;}
+  int get direction {return _direction;}
+  bool get isPending {return _isPending;}
+  int get subaddrIndex {return _subaddrIndex;}
+  String get hash {return _hash;}
+  String get paymentId {return _paymentId;}
+  int get datetime {return _datetime;}
+
+  TransactionInfoRow(this._amount,
+      this._fee,
+      this._blockHeight,
+      this._confirmations,
+      this._subaddrAccount,
+      this._direction,
+      this._isPending,
+      this._subaddrIndex,
+      this._hash,
+      this._paymentId,
+      this._datetime);
 }

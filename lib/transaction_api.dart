@@ -60,6 +60,10 @@ int transactionsCount() {
 List<TransactionInfoRow> getAllTransactions() {
   final size = transactionsCount();
 
+  if (0 == size) {
+    return [];
+  }
+
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
   final transactionsPointer =
       monero_flutter.bindings.transactions_get_all(errorBoxPointer);
@@ -73,7 +77,7 @@ List<TransactionInfoRow> getAllTransactions() {
   final transactionsAddresses = transactionsPointer.asTypedList(size);
 
   var result = transactionsAddresses
-      .map((addr) => Pointer<TransactionInfoRow>.fromAddress(addr).ref)
+      .map((addr) => Pointer<ExternalTransactionInfoRow>.fromAddress(addr).ref.buildTransactionInfoRow())
       .toList();
 
   monero_flutter.bindings.free_block_of_transactions(transactionsPointer, size);
@@ -108,6 +112,7 @@ Future<PendingTransactionDescription> createTransaction(
     });
 
 PendingTransactionDescription _createTransactionSync(Map args) {
+
   final address = args['address'] as String;
   final paymentId = args['paymentId'] as String;
   final amount = args['amount'] as String?;
@@ -140,10 +145,11 @@ PendingTransactionDescription createTransactionSync(
     String paymentId = '',
     int priorityRaw = 1,
     int subaddrAccount = 0}) {
+
   final addressPointer = address.toNativeUtf8().cast<Char>();
   final amountPointer = null != amount
       ? amount.toNativeUtf8().cast<Char>()
-      : Pointer<Char>.fromAddress(nullptr.address);
+      : nullptr;
   final paymentIdPointer = paymentId.toNativeUtf8().cast<Char>();
   final pendingTransactionPointer = calloc<ExternPendingTransactionRaw>();
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
@@ -153,33 +159,27 @@ PendingTransactionDescription createTransactionSync(
       paymentIdPointer,
       amountPointer,
       priorityRaw,
-      subaddrAccount, // TODO - глянуть имя!
+      subaddrAccount,
       pendingTransactionPointer,
       errorBoxPointer);
 
   final errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
-  calloc.free(addressPointer);
-  calloc.free(paymentIdPointer);
 
-  if (amountPointer.address != nullptr.address) {
+  calloc.free(addressPointer);
+
+  if (amountPointer != nullptr) {
     calloc.free(amountPointer);
   }
+
+  calloc.free(paymentIdPointer);
 
   if (0 != errorInfo.code) {
     calloc.free(pendingTransactionPointer);
     throw CreationTransactionException(message: errorInfo.getErrorMessage());
   }
 
-  final pendingTransactionDescription = PendingTransactionDescription(
-      amount: pendingTransactionPointer.ref.amount,
-      fee: pendingTransactionPointer.ref.fee,
-      hash: pendingTransactionPointer.ref.hash.cast<Utf8>().toDartString(),
-      hex: pendingTransactionPointer.ref.hex.cast<Utf8>().toDartString(),
-      txKey: pendingTransactionPointer.ref.tx_key.cast<Utf8>().toDartString(),
-      multisigSignData: pendingTransactionPointer.ref.multisig_sign_data
-          .cast<Utf8>()
-          .toDartString(),
-      pointerAddress: pendingTransactionPointer.address);
+  final pendingTransactionDescription = _buildPendingTransactionDescription(
+      pendingTransactionPointer);
 
   return pendingTransactionDescription;
 }
@@ -235,6 +235,7 @@ PendingTransactionDescription createTransactionMultDestSync(
     required String paymentId,
     required int priorityRaw,
     int accountIndex = 0}) {
+
   final int size = outputs.length;
   final List<Pointer<Char>> addressesPointers = outputs
       .map((output) => output.address.toNativeUtf8().cast<Char>())
@@ -284,6 +285,13 @@ PendingTransactionDescription createTransactionMultDestSync(
     throw CreationTransactionException(message: errorInfo.getErrorMessage());
   }
 
+  final pendingTransactionDescription = _buildPendingTransactionDescription(
+      pendingTransactionPointer);
+
+  return pendingTransactionDescription;
+}
+
+PendingTransactionDescription _buildPendingTransactionDescription(Pointer<ExternPendingTransactionRaw> pendingTransactionPointer){
   final pendingTransactionDescription = PendingTransactionDescription(
       amount: pendingTransactionPointer.ref.amount,
       fee: pendingTransactionPointer.ref.fee,
@@ -294,6 +302,12 @@ PendingTransactionDescription createTransactionMultDestSync(
           .cast<Utf8>()
           .toDartString(),
       pointerAddress: pendingTransactionPointer.address);
+
+  calloc.free(pendingTransactionPointer.ref.hash);
+  calloc.free(pendingTransactionPointer.ref.hex);
+  calloc.free(pendingTransactionPointer.ref.tx_key);
+  calloc.free(pendingTransactionPointer.ref.multisig_sign_data);
+  calloc.free(pendingTransactionPointer);
 
   return pendingTransactionDescription;
 }

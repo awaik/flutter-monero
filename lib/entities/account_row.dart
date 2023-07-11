@@ -1,13 +1,23 @@
 import 'dart:ffi';
 import 'package:ffi/ffi.dart';
 
-class AccountRow extends Struct {
+class ExternalAccountRow extends Struct {
   @Int64()
   external int id;
 
   external Pointer<Char> label;
 
-  String getLabel() => label.cast<Utf8>().toDartString();
+  AccountRow buildAccountRow() {
+    return AccountRow(id, label.cast<Utf8>().toDartString());
+  }
+}
 
-  int getId() => id;
+class AccountRow {
+  final int _id;
+  final String _label;
+
+  int get id {return _id;}
+  String get label {return _label;}
+
+  AccountRow(this._id, this._label);
 }

@@ -45,9 +45,17 @@ class TransferPage extends StatelessWidget {
     }
   }
 
-  void _getTransfers() {
+  void _getTransfersAsJson() {
     try {
       _resultController.text = api.getAllTransfersAsJson();
+    } catch (e) {
+      _resultController.text = e.toString();
+    }
+  }
+
+  void _getTransfers() {
+    try {
+      _resultController.text = "amount=${api.getAllTransactions()[0].amount}";
     } catch (e) {
       _resultController.text = e.toString();
     }
@@ -156,7 +164,20 @@ class TransferPage extends StatelessWidget {
                     padding: const EdgeInsets.all(10),
                     child: ElevatedButton(
                       child:
-                          Text("Get transfers", style: TextStyle(fontSize: 22)),
+                          Text("Get transfers (JSON)", style: TextStyle(fontSize: 22)),
+                      onPressed: _getTransfersAsJson,
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.all(10),
+                        minimumSize: Size(360, 60),
+                      ),
+                    ),
+                  ),
+
+                  Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: ElevatedButton(
+                      child:
+                      Text("Get transfers", style: TextStyle(fontSize: 22)),
                       onPressed: _getTransfers,
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.all(10),

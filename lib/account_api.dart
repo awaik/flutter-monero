@@ -89,29 +89,24 @@ int getAccountCount() {
 /// Returns:
 ///   The total number of accounts as an integer.
 List<AccountRow> getAllAccount() {
-  final errorBoxPointer1 = monero_flutter.buildErrorBoxPointer();
-  final size = monero_flutter.bindings.account_size(errorBoxPointer1);
+  final size = getAccountCount();
 
-  final errorInfo1 = monero_flutter.extractErrorInfo(errorBoxPointer1);
-
-  if (0 != errorInfo1.code) {
-    throw Exception(errorInfo1.getErrorMessage());
+  if (0 == size) {
+    return [];
   }
 
-  final errorBoxPointer2 = monero_flutter.buildErrorBoxPointer();
+  final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
 
-  final errorInfo2 = monero_flutter.extractErrorInfo(errorBoxPointer2);
+  final accountAddressesPointer = monero_flutter.bindings.account_get_all(errorBoxPointer);
 
-  if (0 != errorInfo2.code) {
-    throw Exception(errorInfo2.getErrorMessage());
+  final errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
+
+  if (0 != errorInfo.code) {
+    throw Exception(errorInfo.getErrorMessage());
   }
-
-  final accountAddressesPointer = monero_flutter.bindings.account_get_all(errorBoxPointer2);
 
   final accountAddresses = accountAddressesPointer.asTypedList(size);
-
-  final result = accountAddresses.map((addr) => Pointer<AccountRow>.fromAddress(addr).ref).toList();
-
+  final result = accountAddresses.map((addr) => Pointer<ExternalAccountRow>.fromAddress(addr).ref.buildAccountRow()).toList();
   monero_flutter.bindings.free_block_of_accounts(accountAddressesPointer, size);
 
   return result;
@@ -143,30 +138,24 @@ int getSubaddressesCount() {
 /// `.createSubaddress()`, the length of this list tells us exactly the index of
 /// the next unused subaddress, since the list has only been updated on address use.
 List<SubaddressRow> getAllSubaddresses() {
-  final errorBoxPointer1 = monero_flutter.buildErrorBoxPointer();
+  final size = getSubaddressesCount();
 
-  final size = monero_flutter.bindings.subaddress_size(errorBoxPointer1);
-
-  final errorInfo1 = monero_flutter.extractErrorInfo(errorBoxPointer1);
-
-  if (0 != errorInfo1.code) {
-    throw Exception(errorInfo1.getErrorMessage());
+  if (0 == size) {
+    return [];
   }
 
-  final errorBoxPointer2 = monero_flutter.buildErrorBoxPointer();
+  final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
 
-  final subaddressAddressesPointer = monero_flutter.bindings.subaddress_get_all(errorBoxPointer2);
+  final subaddressAddressesPointer = monero_flutter.bindings.subaddress_get_all(errorBoxPointer);
 
-  final errorInfo2 = monero_flutter.extractErrorInfo(errorBoxPointer2);
+  final errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
 
-  if (0 != errorInfo2.code) {
-    throw Exception(errorInfo2.getErrorMessage());
+  if (0 != errorInfo.code) {
+    throw Exception(errorInfo.getErrorMessage());
   }
 
   final subaddressAddresses = subaddressAddressesPointer.asTypedList(size);
-
-  final result = subaddressAddresses.map((addr) => Pointer<SubaddressRow>.fromAddress(addr).ref).toList();
-
+  final result = subaddressAddresses.map((addr) => Pointer<ExternalSubaddressRow>.fromAddress(addr).ref.buildSubaddressRow()).toList();
   monero_flutter.bindings.free_block_of_subaddresses(subaddressAddressesPointer, size);
 
   return result;
