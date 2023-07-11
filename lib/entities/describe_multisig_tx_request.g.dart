@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'describe_multisig_txs_request.dart';
+part of 'describe_multisig_tx_request.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator

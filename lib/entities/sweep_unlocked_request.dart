@@ -3,7 +3,7 @@ part 'sweep_unlocked_request.g.dart';
 
 @JsonSerializable()
 class SweepUnlockedRequest {
-  List<Destination> destinations;
+  List<SweepUnlockedRequestDestination> destinations;
 
   SweepUnlockedRequest({
     required this.destinations,
@@ -14,13 +14,13 @@ class SweepUnlockedRequest {
 }
 
 @JsonSerializable()
-class Destination {
+class SweepUnlockedRequestDestination {
   String address;
 
-  Destination({
+  SweepUnlockedRequestDestination({
     required this.address,
   });
 
-  factory Destination.fromJson(Map<String, dynamic> json) => _$DestinationFromJson(json);
-  Map<String, dynamic> toJson() => _$DestinationToJson(this);
+  factory SweepUnlockedRequestDestination.fromJson(Map<String, dynamic> json) => _$SweepUnlockedRequestDestinationFromJson(json);
+  Map<String, dynamic> toJson() => _$SweepUnlockedRequestDestinationToJson(this);
 }

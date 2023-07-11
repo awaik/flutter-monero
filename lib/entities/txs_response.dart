@@ -1,36 +1,36 @@
 import 'package:json_annotation/json_annotation.dart';
-part 'get_tx_response.g.dart';
+part 'txs_response.g.dart';
 
 @JsonSerializable()
-class TxResponse {
-  List<Block> blocks;
+class TxsResponse {
+  List<TxResponseBlock> blocks;
 
-  TxResponse({
+  TxsResponse({
     required this.blocks,
   });
 
-  factory TxResponse.fromJson(Map<String, dynamic> json) => _$TxResponseFromJson(json);
-  Map<String, dynamic> toJson() => _$TxResponseToJson(this);
+  factory TxsResponse.fromJson(Map<String, dynamic> json) => _$TxsResponseFromJson(json);
+  Map<String, dynamic> toJson() => _$TxsResponseToJson(this);
 }
 
 @JsonSerializable()
-class Block {
+class TxResponseBlock {
   int height;
   int timestamp;
-  List<Transaction> txs;
+  List<TxResponseTransaction> txs;
 
-  Block({
+  TxResponseBlock({
     required this.height,
     required this.timestamp,
     required this.txs,
   });
 
-  factory Block.fromJson(Map<String, dynamic> json) => _$BlockFromJson(json);
-  Map<String, dynamic> toJson() => _$BlockToJson(this);
+  factory TxResponseBlock.fromJson(Map<String, dynamic> json) => _$TxResponseBlockFromJson(json);
+  Map<String, dynamic> toJson() => _$TxResponseBlockToJson(this);
 }
 
 @JsonSerializable()
-class Transaction {
+class TxResponseTransaction {
   int fee;
   int numConfirmations;
   int unlockHeight;
@@ -45,9 +45,9 @@ class Transaction {
   bool isIncoming;
   bool isOutgoing;
   bool isLocked;
-  List<IncomingTransfer> incomingTransfers;
+  List<TxResponseIncomingTransfer> incomingTransfers;
 
-  Transaction({
+  TxResponseTransaction({
     required this.fee,
     required this.numConfirmations,
     required this.unlockHeight,
@@ -65,19 +65,19 @@ class Transaction {
     required this.incomingTransfers,
   });
 
-  factory Transaction.fromJson(Map<String, dynamic> json) => _$TransactionFromJson(json);
-  Map<String, dynamic> toJson() => _$TransactionToJson(this);
+  factory TxResponseTransaction.fromJson(Map<String, dynamic> json) => _$TxResponseTransactionFromJson(json);
+  Map<String, dynamic> toJson() => _$TxResponseTransactionToJson(this);
 }
 
 @JsonSerializable()
-class IncomingTransfer {
+class TxResponseIncomingTransfer {
   int amount;
   int accountIndex;
   int subaddressIndex;
   int numSuggestedConfirmations;
   String address;
 
-  IncomingTransfer({
+  TxResponseIncomingTransfer({
     required this.amount,
     required this.accountIndex,
     required this.subaddressIndex,
@@ -85,6 +85,6 @@ class IncomingTransfer {
     required this.address,
   });
 
-  factory IncomingTransfer.fromJson(Map<String, dynamic> json) => _$IncomingTransferFromJson(json);
-  Map<String, dynamic> toJson() => _$IncomingTransferToJson(this);
+  factory TxResponseIncomingTransfer.fromJson(Map<String, dynamic> json) => _$TxResponseIncomingTransferFromJson(json);
+  Map<String, dynamic> toJson() => _$TxResponseIncomingTransferToJson(this);
 }

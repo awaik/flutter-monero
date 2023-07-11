@@ -2,19 +2,19 @@ import 'package:json_annotation/json_annotation.dart';
 part 'describe_tx_response.g.dart';
 
 @JsonSerializable()
-class TxSet {
-  List<Transaction> txs;
+class DescribeTxResponse {
+  List<DescribeTxResponseTransaction> txs;
 
-  TxSet({
+  DescribeTxResponse({
     required this.txs,
   });
 
-  factory TxSet.fromJson(Map<String, dynamic> json) => _$TxSetFromJson(json);
-  Map<String, dynamic> toJson() => _$TxSetToJson(this);
+  factory DescribeTxResponse.fromJson(Map<String, dynamic> json) => _$DescribeTxResponseFromJson(json);
+  Map<String, dynamic> toJson() => _$DescribeTxResponseToJson(this);
 }
 
 @JsonSerializable()
-class Transaction {
+class DescribeTxResponseTransaction {
   int fee;
   int ringSize;
   int unlockHeight;
@@ -24,9 +24,9 @@ class Transaction {
   int numDummyOutputs;
   String extraHex;
   bool isOutgoing;
-  OutgoingTransfer? outgoingTransfer;
+  DescribeTxResponseOutgoingTransfer? outgoingTransfer;
 
-  Transaction({
+  DescribeTxResponseTransaction({
     required this.fee,
     required this.ringSize,
     required this.unlockHeight,
@@ -39,32 +39,32 @@ class Transaction {
     this.outgoingTransfer,
   });
 
-  factory Transaction.fromJson(Map<String, dynamic> json) => _$TransactionFromJson(json);
-  Map<String, dynamic> toJson() => _$TransactionToJson(this);
+  factory DescribeTxResponseTransaction.fromJson(Map<String, dynamic> json) => _$DescribeTxResponseTransactionFromJson(json);
+  Map<String, dynamic> toJson() => _$DescribeTxResponseTransactionToJson(this);
 }
 
 @JsonSerializable()
-class OutgoingTransfer {
-  List<Destination> destinations;
+class DescribeTxResponseOutgoingTransfer {
+  List<DescribeTxResponseDestination> destinations;
 
-  OutgoingTransfer({
+  DescribeTxResponseOutgoingTransfer({
     required this.destinations,
   });
 
-  factory OutgoingTransfer.fromJson(Map<String, dynamic> json) => _$OutgoingTransferFromJson(json);
-  Map<String, dynamic> toJson() => _$OutgoingTransferToJson(this);
+  factory DescribeTxResponseOutgoingTransfer.fromJson(Map<String, dynamic> json) => _$DescribeTxResponseOutgoingTransferFromJson(json);
+  Map<String, dynamic> toJson() => _$DescribeTxResponseOutgoingTransferToJson(this);
 }
 
 @JsonSerializable()
-class Destination {
+class DescribeTxResponseDestination {
   int amount;
   String address;
 
-  Destination({
+  DescribeTxResponseDestination({
     required this.amount,
     required this.address,
   });
 
-  factory Destination.fromJson(Map<String, dynamic> json) => _$DestinationFromJson(json);
-  Map<String, dynamic> toJson() => _$DestinationToJson(this);
+  factory DescribeTxResponseDestination.fromJson(Map<String, dynamic> json) => _$DescribeTxResponseDestinationFromJson(json);
+  Map<String, dynamic> toJson() => _$DescribeTxResponseDestinationToJson(this);
 }

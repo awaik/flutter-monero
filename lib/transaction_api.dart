@@ -4,11 +4,17 @@ import 'dart:ffi';
 import 'package:ffi/ffi.dart';
 import 'package:flutter/foundation.dart';
 import 'package:monero_flutter/entities/outputs_response.dart';
+import 'package:monero_flutter/entities/txs_request.dart';
 
+import 'entities/describe_tx_request.dart';
+import 'entities/describe_tx_response.dart';
 import 'entities/monero_output.dart';
 import 'entities/outputs_request.dart';
 import 'entities/pending_transaction.dart';
+import 'entities/sweep_unlocked_request.dart';
+import 'entities/sweep_unlocked_response.dart';
 import 'entities/transaction_info_row.dart';
+import 'entities/txs_response.dart';
 import 'exceptions/creation_transaction_exception.dart';
 import 'monero_flutter.dart' as monero_flutter;
 import 'monero_flutter_bindings_generated.dart';
@@ -342,13 +348,21 @@ String getTransactionKey(String transactionId) {
 
 OutputsResponse getUtxos()
 {
-  OutputsRequest request = OutputsRequest(isSpent: false, txQuery: TxQuery(isLocked: false, isConfirmed: false));
+  OutputsRequest request = OutputsRequest(isSpent: false, txQuery: OutputsRequestTxQuery(isLocked: false, isConfirmed: false));
   return getOutputs(request);
 }
 
 OutputsResponse getOutputs(OutputsRequest request)
 {
   final jsonRequest = jsonEncode(request.toJson());
+  final jsonResponse = getOutputsAsJson(jsonRequest);
+  final jsonMapResponse = jsonDecode(jsonResponse);
+
+  return OutputsResponse.fromJson(jsonMapResponse);
+}
+
+String getOutputsAsJson(String jsonRequest)
+{
   final jsonRequestPointer = jsonRequest.toNativeUtf8().cast<Char>();
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
   final resultPointer = monero_flutter.bindings.get_outputs(jsonRequestPointer, errorBoxPointer);
@@ -361,15 +375,22 @@ OutputsResponse getOutputs(OutputsRequest request)
     throw Exception(errorInfo.getErrorMessage());
   }
 
-  final jsonData = jsonDecode(jsonString!);
+  return jsonString!;
+}
 
-  return OutputsResponse.fromJson(jsonData);
+TxsResponse getTxs(TxsRequest request)
+{
+  final jsonRequest = jsonEncode(request.toJson());
+  final jsonResponse = getTxsAsJson(jsonRequest);
+  final jsonMapResponse = jsonDecode(jsonResponse);
+
+  return TxsResponse.fromJson(jsonMapResponse);
 }
 
 // {
 // "txs": [{"hash":"28d0825270cd06364f04c32992e3d918ad3fa3aceba66efa7ad3d6d1cc7ab4b6"}]
 // }
-String getTxs(String jsonRequest) {
+String getTxsAsJson(String jsonRequest) {
   final jsonRequestPointer = jsonRequest.toNativeUtf8().cast<Char>();
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
   final resultPointer = monero_flutter.bindings.get_txs(jsonRequestPointer, errorBoxPointer);
@@ -385,6 +406,13 @@ String getTxs(String jsonRequest) {
   return result!;
 }
 
+DescribeTxResponse describeTxSet(DescribeTxRequest describeTxRequest) {
+  final jsonRequest = describeTxRequest.toJsonString();
+  final jsonResponse = describeTxSetAsJson(jsonRequest);
+  final jsonMapResponse = jsonDecode(jsonResponse);
+
+  return DescribeTxResponse.fromJson(jsonMapResponse);
+}
 
 // {
 // "unsignedTxHex": "28d0825270cd06364f04c32992e3d918ad3fa3aceba66efa7ad3d6d1cc7ab4b6"
@@ -393,8 +421,7 @@ String getTxs(String jsonRequest) {
 // {
 // "multisigTxHex": "28d0825270cd06364f04c32992e3d918ad3fa3aceba66efa7ad3d6d1cc7ab4b6"
 // }
-
-String describeTxSet(String jsonRequest) {
+String describeTxSetAsJson(String jsonRequest) {
   final jsonRequestPointer = jsonRequest.toNativeUtf8().cast<Char>();
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
   final resultPointer = monero_flutter.bindings.describe_tx_set(jsonRequestPointer, errorBoxPointer);
@@ -410,10 +437,19 @@ String describeTxSet(String jsonRequest) {
   return result!;
 }
 
+SweepUnlockedResponse sweepUnlocked(SweepUnlockedRequest request)
+{
+  final jsonRequest = jsonEncode(request.toJson());
+  final jsonResponse = sweepUnlockedAsJson(jsonRequest);
+  final jsonMapResponse = jsonDecode(jsonResponse);
+
+  return SweepUnlockedResponse.fromJson(jsonMapResponse);
+}
+
 // {
 // "destinations": [{"address":"86gwCboZti2hRP4m6pwFfVHwjtdptJVgFKhppuEQL6f2aJZZuJVaPzqK16NBfxWvPnFNDgKtAkptJPa1UCX1BnnUQsogxqA"}]
 // }
-String sweepUnlocked(String jsonRequest) {
+String sweepUnlockedAsJson(String jsonRequest) {
   final jsonRequestPointer = jsonRequest.toNativeUtf8().cast<Char>();
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
   final resultPointer = monero_flutter.bindings.sweep_unlocked(jsonRequestPointer, errorBoxPointer);

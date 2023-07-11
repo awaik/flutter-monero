@@ -1,8 +1,12 @@
+import 'dart:convert';
+
 import 'package:json_annotation/json_annotation.dart';
-part 'describe_multisig_txs_request.g.dart';
+
+import 'describe_tx_request.dart';
+part 'describe_multisig_tx_request.g.dart';
 
 @JsonSerializable()
-class DescribeMultisigTxRequest {
+class DescribeMultisigTxRequest extends DescribeTxRequest {
   String multisigTxHex;
 
   DescribeMultisigTxRequest({
@@ -11,4 +15,9 @@ class DescribeMultisigTxRequest {
 
   factory DescribeMultisigTxRequest.fromJson(Map<String, dynamic> json) => _$DescribeMultisigTxRequestFromJson(json);
   Map<String, dynamic> toJson() => _$DescribeMultisigTxRequestToJson(this);
+
+  @override
+  String toJsonString() {
+    return jsonEncode(toJson());
+  }
 }

@@ -2,33 +2,33 @@ import 'package:json_annotation/json_annotation.dart';
 part 'sweep_unlocked_response.g.dart';
 
 @JsonSerializable()
-class Data {
-  List<TxSet> txSets;
+class SweepUnlockedResponse {
+  List<SweepUnlockedResponseTxSet> txSets;
 
-  Data({
+  SweepUnlockedResponse({
     required this.txSets,
   });
 
-  factory Data.fromJson(Map<String, dynamic> json) => _$DataFromJson(json);
-  Map<String, dynamic> toJson() => _$DataToJson(this);
+  factory SweepUnlockedResponse.fromJson(Map<String, dynamic> json) => _$SweepUnlockedResponseFromJson(json);
+  Map<String, dynamic> toJson() => _$SweepUnlockedResponseToJson(this);
 }
 
 @JsonSerializable()
-class TxSet {
+class SweepUnlockedResponseTxSet {
   String multisigTxHex;
-  List<Transaction> txs;
+  List<SweepUnlockedResponseTransaction> txs;
 
-  TxSet({
+  SweepUnlockedResponseTxSet({
     required this.multisigTxHex,
     required this.txs,
   });
 
-  factory TxSet.fromJson(Map<String, dynamic> json) => _$TxSetFromJson(json);
-  Map<String, dynamic> toJson() => _$TxSetToJson(this);
+  factory SweepUnlockedResponseTxSet.fromJson(Map<String, dynamic> json) => _$SweepUnlockedResponseTxSetFromJson(json);
+  Map<String, dynamic> toJson() => _$SweepUnlockedResponseTxSetToJson(this);
 }
 
 @JsonSerializable()
-class Transaction {
+class SweepUnlockedResponseTransaction {
   int fee;
   int ringSize;
   int numConfirmations;
@@ -44,12 +44,12 @@ class Transaction {
   bool isConfirmed;
   bool inTxPool;
   bool isFailed;
-  List<Input> inputs;
+  List<SweepUnlockedResponseInput> inputs;
   bool isOutgoing;
   bool isLocked;
-  OutgoingTransfer? outgoingTransfer;
+  SweepUnlockedResponseOutgoingTransfer? outgoingTransfer;
 
-  Transaction({
+  SweepUnlockedResponseTransaction({
     required this.fee,
     required this.ringSize,
     required this.numConfirmations,
@@ -71,62 +71,62 @@ class Transaction {
     this.outgoingTransfer,
   });
 
-  factory Transaction.fromJson(Map<String, dynamic> json) => _$TransactionFromJson(json);
-  Map<String, dynamic> toJson() => _$TransactionToJson(this);
+  factory SweepUnlockedResponseTransaction.fromJson(Map<String, dynamic> json) => _$SweepUnlockedResponseTransactionFromJson(json);
+  Map<String, dynamic> toJson() => _$SweepUnlockedResponseTransactionToJson(this);
 }
 
 @JsonSerializable()
-class Input {
-  KeyImage keyImage;
+class SweepUnlockedResponseInput {
+  SweepUnlockedResponseKeyImage keyImage;
 
-  Input({
+  SweepUnlockedResponseInput({
     required this.keyImage,
   });
 
-  factory Input.fromJson(Map<String, dynamic> json) => _$InputFromJson(json);
-  Map<String, dynamic> toJson() => _$InputToJson(this);
+  factory SweepUnlockedResponseInput.fromJson(Map<String, dynamic> json) => _$SweepUnlockedResponseInputFromJson(json);
+  Map<String, dynamic> toJson() => _$SweepUnlockedResponseInputToJson(this);
 }
 
 @JsonSerializable()
-class KeyImage {
+class SweepUnlockedResponseKeyImage {
   String hex;
 
-  KeyImage({
+  SweepUnlockedResponseKeyImage({
     required this.hex,
   });
 
-  factory KeyImage.fromJson(Map<String, dynamic> json) => _$KeyImageFromJson(json);
-  Map<String, dynamic> toJson() => _$KeyImageToJson(this);
+  factory SweepUnlockedResponseKeyImage.fromJson(Map<String, dynamic> json) => _$SweepUnlockedResponseKeyImageFromJson(json);
+  Map<String, dynamic> toJson() => _$SweepUnlockedResponseKeyImageToJson(this);
 }
 
 @JsonSerializable()
-class OutgoingTransfer {
+class SweepUnlockedResponseOutgoingTransfer {
   int amount;
   int accountIndex;
   List<int> subaddressIndices;
-  List<Destination> destinations;
+  List<SweepUnlockedResponseDestination> destinations;
 
-  OutgoingTransfer({
+  SweepUnlockedResponseOutgoingTransfer({
     required this.amount,
     required this.accountIndex,
     required this.subaddressIndices,
     required this.destinations,
   });
 
-  factory OutgoingTransfer.fromJson(Map<String, dynamic> json) => _$OutgoingTransferFromJson(json);
-  Map<String, dynamic> toJson() => _$OutgoingTransferToJson(this);
+  factory SweepUnlockedResponseOutgoingTransfer.fromJson(Map<String, dynamic> json) => _$SweepUnlockedResponseOutgoingTransferFromJson(json);
+  Map<String, dynamic> toJson() => _$SweepUnlockedResponseOutgoingTransferToJson(this);
 }
 
 @JsonSerializable()
-class Destination {
+class SweepUnlockedResponseDestination {
   int amount;
   String address;
 
-  Destination({
+  SweepUnlockedResponseDestination({
     required this.amount,
     required this.address,
   });
 
-  factory Destination.fromJson(Map<String, dynamic> json) => _$DestinationFromJson(json);
-  Map<String, dynamic> toJson() => _$DestinationToJson(this);
+  factory SweepUnlockedResponseDestination.fromJson(Map<String, dynamic> json) => _$SweepUnlockedResponseDestinationFromJson(json);
+  Map<String, dynamic> toJson() => _$SweepUnlockedResponseDestinationToJson(this);
 }

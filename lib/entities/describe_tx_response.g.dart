@@ -6,17 +6,22 @@ part of 'describe_tx_response.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-TxSet _$TxSetFromJson(Map<String, dynamic> json) => TxSet(
+DescribeTxResponse _$DescribeTxResponseFromJson(Map<String, dynamic> json) =>
+    DescribeTxResponse(
       txs: (json['txs'] as List<dynamic>)
-          .map((e) => Transaction.fromJson(e as Map<String, dynamic>))
+          .map((e) =>
+              DescribeTxResponseTransaction.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
 
-Map<String, dynamic> _$TxSetToJson(TxSet instance) => <String, dynamic>{
+Map<String, dynamic> _$DescribeTxResponseToJson(DescribeTxResponse instance) =>
+    <String, dynamic>{
       'txs': instance.txs,
     };
 
-Transaction _$TransactionFromJson(Map<String, dynamic> json) => Transaction(
+DescribeTxResponseTransaction _$DescribeTxResponseTransactionFromJson(
+        Map<String, dynamic> json) =>
+    DescribeTxResponseTransaction(
       fee: json['fee'] as int,
       ringSize: json['ringSize'] as int,
       unlockHeight: json['unlockHeight'] as int,
@@ -28,11 +33,12 @@ Transaction _$TransactionFromJson(Map<String, dynamic> json) => Transaction(
       isOutgoing: json['isOutgoing'] as bool,
       outgoingTransfer: json['outgoingTransfer'] == null
           ? null
-          : OutgoingTransfer.fromJson(
+          : DescribeTxResponseOutgoingTransfer.fromJson(
               json['outgoingTransfer'] as Map<String, dynamic>),
     );
 
-Map<String, dynamic> _$TransactionToJson(Transaction instance) =>
+Map<String, dynamic> _$DescribeTxResponseTransactionToJson(
+        DescribeTxResponseTransaction instance) =>
     <String, dynamic>{
       'fee': instance.fee,
       'ringSize': instance.ringSize,
@@ -46,24 +52,30 @@ Map<String, dynamic> _$TransactionToJson(Transaction instance) =>
       'outgoingTransfer': instance.outgoingTransfer,
     };
 
-OutgoingTransfer _$OutgoingTransferFromJson(Map<String, dynamic> json) =>
-    OutgoingTransfer(
+DescribeTxResponseOutgoingTransfer _$DescribeTxResponseOutgoingTransferFromJson(
+        Map<String, dynamic> json) =>
+    DescribeTxResponseOutgoingTransfer(
       destinations: (json['destinations'] as List<dynamic>)
-          .map((e) => Destination.fromJson(e as Map<String, dynamic>))
+          .map((e) =>
+              DescribeTxResponseDestination.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
 
-Map<String, dynamic> _$OutgoingTransferToJson(OutgoingTransfer instance) =>
+Map<String, dynamic> _$DescribeTxResponseOutgoingTransferToJson(
+        DescribeTxResponseOutgoingTransfer instance) =>
     <String, dynamic>{
       'destinations': instance.destinations,
     };
 
-Destination _$DestinationFromJson(Map<String, dynamic> json) => Destination(
+DescribeTxResponseDestination _$DescribeTxResponseDestinationFromJson(
+        Map<String, dynamic> json) =>
+    DescribeTxResponseDestination(
       amount: json['amount'] as int,
       address: json['address'] as String,
     );
 
-Map<String, dynamic> _$DestinationToJson(Destination instance) =>
+Map<String, dynamic> _$DescribeTxResponseDestinationToJson(
+        DescribeTxResponseDestination instance) =>
     <String, dynamic>{
       'amount': instance.amount,
       'address': instance.address,

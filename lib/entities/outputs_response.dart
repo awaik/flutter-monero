@@ -3,7 +3,7 @@ part 'outputs_response.g.dart';
 
 @JsonSerializable()
 class OutputsResponse {
-  List<Block> blocks;
+  List<OutputsResponseBlock> blocks;
 
   OutputsResponse({
     required this.blocks,
@@ -14,21 +14,21 @@ class OutputsResponse {
 }
 
 @JsonSerializable()
-class Block {
+class OutputsResponseBlock {
   int height;
-  List<Transaction> txs;
+  List<OutputsResponseTransaction> txs;
 
-  Block({
+  OutputsResponseBlock({
     required this.height,
     required this.txs,
   });
 
-  factory Block.fromJson(Map<String, dynamic> json) => _$BlockFromJson(json);
-  Map<String, dynamic> toJson() => _$BlockToJson(this);
+  factory OutputsResponseBlock.fromJson(Map<String, dynamic> json) => _$OutputsResponseBlockFromJson(json);
+  Map<String, dynamic> toJson() => _$OutputsResponseBlockToJson(this);
 }
 
 @JsonSerializable()
-class Transaction {
+class OutputsResponseTransaction {
   String hash;
   bool relay;
   bool isRelayed;
@@ -36,10 +36,10 @@ class Transaction {
   bool inTxPool;
   bool isDoubleSpendSeen;
   bool isFailed;
-  List<Output> outputs;
+  List<OutputsResponseOutput> outputs;
   bool isLocked;
 
-  Transaction({
+  OutputsResponseTransaction({
     required this.hash,
     required this.relay,
     required this.isRelayed,
@@ -51,22 +51,22 @@ class Transaction {
     required this.isLocked,
   });
 
-  factory Transaction.fromJson(Map<String, dynamic> json) => _$TransactionFromJson(json);
-  Map<String, dynamic> toJson() => _$TransactionToJson(this);
+  factory OutputsResponseTransaction.fromJson(Map<String, dynamic> json) => _$OutputsResponseTransactionFromJson(json);
+  Map<String, dynamic> toJson() => _$OutputsResponseTransactionToJson(this);
 }
 
 @JsonSerializable()
-class Output {
+class OutputsResponseOutput {
   int amount;
   int index;
   String stealthPublicKey;
-  KeyImage keyImage;
+  OutputsResponseKeyImage keyImage;
   int accountIndex;
   int subaddressIndex;
   bool isSpent;
   bool isFrozen;
 
-  Output({
+  OutputsResponseOutput({
     required this.amount,
     required this.index,
     required this.stealthPublicKey,
@@ -77,18 +77,18 @@ class Output {
     required this.isFrozen,
   });
 
-  factory Output.fromJson(Map<String, dynamic> json) => _$OutputFromJson(json);
-  Map<String, dynamic> toJson() => _$OutputToJson(this);
+  factory OutputsResponseOutput.fromJson(Map<String, dynamic> json) => _$OutputsResponseOutputFromJson(json);
+  Map<String, dynamic> toJson() => _$OutputsResponseOutputToJson(this);
 }
 
 @JsonSerializable()
-class KeyImage {
+class OutputsResponseKeyImage {
   String hex;
 
-  KeyImage({
+  OutputsResponseKeyImage({
     required this.hex,
   });
 
-  factory KeyImage.fromJson(Map<String, dynamic> json) => _$KeyImageFromJson(json);
-  Map<String, dynamic> toJson() => _$KeyImageToJson(this);
+  factory OutputsResponseKeyImage.fromJson(Map<String, dynamic> json) => _$OutputsResponseKeyImageFromJson(json);
+  Map<String, dynamic> toJson() => _$OutputsResponseKeyImageToJson(this);
 }

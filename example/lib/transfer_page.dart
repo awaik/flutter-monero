@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:monero_flutter/entities/describe_multisig_tx_request.dart';
+import 'package:monero_flutter/entities/sweep_unlocked_request.dart';
+import 'package:monero_flutter/entities/txs_request.dart';
 import 'package:monero_flutter/transaction_api.dart' as api;
 
 class TransferPage extends StatelessWidget {
@@ -8,8 +11,7 @@ class TransferPage extends StatelessWidget {
 
   void _getUtxos() {
     try {
-      String jsonRequest = _resultController.text;
-      _resultController.text = "hash=" + api.getUtxos().blocks[0].txs[0].hash + "; amount=" + api.getUtxos().blocks[0].txs[0].outputs[0].amount.toString();
+      _resultController.text = "hash=${api.getUtxos().blocks[0].txs[0].hash}; amount=${api.getUtxos().blocks[0].txs[0].outputs[0].amount}";
     } catch (e) {
       _resultController.text = e.toString();
     }
@@ -17,8 +19,8 @@ class TransferPage extends StatelessWidget {
 
   void _getTxs() {
     try {
-      String jsonRequest = _resultController.text;
-      _resultController.text = api.getTxs(jsonRequest);
+      final hash = _resultController.text;
+      _resultController.text = "numConfirmations=${api.getTxs(TxsRequest(txs: [TxsRequestBody(hash: hash)])).blocks[0].txs[0].numConfirmations}";
     } catch (e) {
       _resultController.text = e.toString();
     }
@@ -26,8 +28,8 @@ class TransferPage extends StatelessWidget {
 
   void _describeTxSet() {
     try {
-      String jsonRequest = _resultController.text;
-      _resultController.text = api.describeTxSet(jsonRequest);
+      final request = DescribeMultisigTxRequest(multisigTxHex: _resultController.text);
+      _resultController.text = "outputSum=${api.describeTxSet(request).txs[0].outputSum}";
     } catch (e) {
       _resultController.text = e.toString();
     }
@@ -35,8 +37,9 @@ class TransferPage extends StatelessWidget {
 
   void _sweepUnlocked() {
     try {
-      String jsonRequest = _resultController.text;
-      _resultController.text = api.sweepUnlocked(jsonRequest);
+      final address = _resultController.text;
+      final request = SweepUnlockedRequest(destinations: [SweepUnlockedRequestDestination(address: address)]);
+      _resultController.text = "hash=${api.sweepUnlocked(request).txSets[0].txs[0].hash}";
     } catch (e) {
       _resultController.text = e.toString();
     }

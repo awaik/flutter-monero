@@ -10,7 +10,8 @@ SweepUnlockedRequest _$SweepUnlockedRequestFromJson(
         Map<String, dynamic> json) =>
     SweepUnlockedRequest(
       destinations: (json['destinations'] as List<dynamic>)
-          .map((e) => Destination.fromJson(e as Map<String, dynamic>))
+          .map((e) => SweepUnlockedRequestDestination.fromJson(
+              e as Map<String, dynamic>))
           .toList(),
     );
 
@@ -20,11 +21,14 @@ Map<String, dynamic> _$SweepUnlockedRequestToJson(
       'destinations': instance.destinations,
     };
 
-Destination _$DestinationFromJson(Map<String, dynamic> json) => Destination(
+SweepUnlockedRequestDestination _$SweepUnlockedRequestDestinationFromJson(
+        Map<String, dynamic> json) =>
+    SweepUnlockedRequestDestination(
       address: json['address'] as String,
     );
 
-Map<String, dynamic> _$DestinationToJson(Destination instance) =>
+Map<String, dynamic> _$SweepUnlockedRequestDestinationToJson(
+        SweepUnlockedRequestDestination instance) =>
     <String, dynamic>{
       'address': instance.address,
     };

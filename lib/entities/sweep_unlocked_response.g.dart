@@ -6,29 +6,41 @@ part of 'sweep_unlocked_response.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-Data _$DataFromJson(Map<String, dynamic> json) => Data(
+SweepUnlockedResponse _$SweepUnlockedResponseFromJson(
+        Map<String, dynamic> json) =>
+    SweepUnlockedResponse(
       txSets: (json['txSets'] as List<dynamic>)
-          .map((e) => TxSet.fromJson(e as Map<String, dynamic>))
+          .map((e) =>
+              SweepUnlockedResponseTxSet.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
 
-Map<String, dynamic> _$DataToJson(Data instance) => <String, dynamic>{
+Map<String, dynamic> _$SweepUnlockedResponseToJson(
+        SweepUnlockedResponse instance) =>
+    <String, dynamic>{
       'txSets': instance.txSets,
     };
 
-TxSet _$TxSetFromJson(Map<String, dynamic> json) => TxSet(
+SweepUnlockedResponseTxSet _$SweepUnlockedResponseTxSetFromJson(
+        Map<String, dynamic> json) =>
+    SweepUnlockedResponseTxSet(
       multisigTxHex: json['multisigTxHex'] as String,
       txs: (json['txs'] as List<dynamic>)
-          .map((e) => Transaction.fromJson(e as Map<String, dynamic>))
+          .map((e) => SweepUnlockedResponseTransaction.fromJson(
+              e as Map<String, dynamic>))
           .toList(),
     );
 
-Map<String, dynamic> _$TxSetToJson(TxSet instance) => <String, dynamic>{
+Map<String, dynamic> _$SweepUnlockedResponseTxSetToJson(
+        SweepUnlockedResponseTxSet instance) =>
+    <String, dynamic>{
       'multisigTxHex': instance.multisigTxHex,
       'txs': instance.txs,
     };
 
-Transaction _$TransactionFromJson(Map<String, dynamic> json) => Transaction(
+SweepUnlockedResponseTransaction _$SweepUnlockedResponseTransactionFromJson(
+        Map<String, dynamic> json) =>
+    SweepUnlockedResponseTransaction(
       fee: json['fee'] as int,
       ringSize: json['ringSize'] as int,
       numConfirmations: json['numConfirmations'] as int,
@@ -45,17 +57,19 @@ Transaction _$TransactionFromJson(Map<String, dynamic> json) => Transaction(
       inTxPool: json['inTxPool'] as bool,
       isFailed: json['isFailed'] as bool,
       inputs: (json['inputs'] as List<dynamic>)
-          .map((e) => Input.fromJson(e as Map<String, dynamic>))
+          .map((e) =>
+              SweepUnlockedResponseInput.fromJson(e as Map<String, dynamic>))
           .toList(),
       isOutgoing: json['isOutgoing'] as bool,
       isLocked: json['isLocked'] as bool,
       outgoingTransfer: json['outgoingTransfer'] == null
           ? null
-          : OutgoingTransfer.fromJson(
+          : SweepUnlockedResponseOutgoingTransfer.fromJson(
               json['outgoingTransfer'] as Map<String, dynamic>),
     );
 
-Map<String, dynamic> _$TransactionToJson(Transaction instance) =>
+Map<String, dynamic> _$SweepUnlockedResponseTransactionToJson(
+        SweepUnlockedResponseTransaction instance) =>
     <String, dynamic>{
       'fee': instance.fee,
       'ringSize': instance.ringSize,
@@ -78,35 +92,48 @@ Map<String, dynamic> _$TransactionToJson(Transaction instance) =>
       'outgoingTransfer': instance.outgoingTransfer,
     };
 
-Input _$InputFromJson(Map<String, dynamic> json) => Input(
-      keyImage: KeyImage.fromJson(json['keyImage'] as Map<String, dynamic>),
+SweepUnlockedResponseInput _$SweepUnlockedResponseInputFromJson(
+        Map<String, dynamic> json) =>
+    SweepUnlockedResponseInput(
+      keyImage: SweepUnlockedResponseKeyImage.fromJson(
+          json['keyImage'] as Map<String, dynamic>),
     );
 
-Map<String, dynamic> _$InputToJson(Input instance) => <String, dynamic>{
+Map<String, dynamic> _$SweepUnlockedResponseInputToJson(
+        SweepUnlockedResponseInput instance) =>
+    <String, dynamic>{
       'keyImage': instance.keyImage,
     };
 
-KeyImage _$KeyImageFromJson(Map<String, dynamic> json) => KeyImage(
+SweepUnlockedResponseKeyImage _$SweepUnlockedResponseKeyImageFromJson(
+        Map<String, dynamic> json) =>
+    SweepUnlockedResponseKeyImage(
       hex: json['hex'] as String,
     );
 
-Map<String, dynamic> _$KeyImageToJson(KeyImage instance) => <String, dynamic>{
+Map<String, dynamic> _$SweepUnlockedResponseKeyImageToJson(
+        SweepUnlockedResponseKeyImage instance) =>
+    <String, dynamic>{
       'hex': instance.hex,
     };
 
-OutgoingTransfer _$OutgoingTransferFromJson(Map<String, dynamic> json) =>
-    OutgoingTransfer(
-      amount: json['amount'] as int,
-      accountIndex: json['accountIndex'] as int,
-      subaddressIndices: (json['subaddressIndices'] as List<dynamic>)
-          .map((e) => e as int)
-          .toList(),
-      destinations: (json['destinations'] as List<dynamic>)
-          .map((e) => Destination.fromJson(e as Map<String, dynamic>))
-          .toList(),
-    );
+SweepUnlockedResponseOutgoingTransfer
+    _$SweepUnlockedResponseOutgoingTransferFromJson(
+            Map<String, dynamic> json) =>
+        SweepUnlockedResponseOutgoingTransfer(
+          amount: json['amount'] as int,
+          accountIndex: json['accountIndex'] as int,
+          subaddressIndices: (json['subaddressIndices'] as List<dynamic>)
+              .map((e) => e as int)
+              .toList(),
+          destinations: (json['destinations'] as List<dynamic>)
+              .map((e) => SweepUnlockedResponseDestination.fromJson(
+                  e as Map<String, dynamic>))
+              .toList(),
+        );
 
-Map<String, dynamic> _$OutgoingTransferToJson(OutgoingTransfer instance) =>
+Map<String, dynamic> _$SweepUnlockedResponseOutgoingTransferToJson(
+        SweepUnlockedResponseOutgoingTransfer instance) =>
     <String, dynamic>{
       'amount': instance.amount,
       'accountIndex': instance.accountIndex,
@@ -114,12 +141,15 @@ Map<String, dynamic> _$OutgoingTransferToJson(OutgoingTransfer instance) =>
       'destinations': instance.destinations,
     };
 
-Destination _$DestinationFromJson(Map<String, dynamic> json) => Destination(
+SweepUnlockedResponseDestination _$SweepUnlockedResponseDestinationFromJson(
+        Map<String, dynamic> json) =>
+    SweepUnlockedResponseDestination(
       amount: json['amount'] as int,
       address: json['address'] as String,
     );
 
-Map<String, dynamic> _$DestinationToJson(Destination instance) =>
+Map<String, dynamic> _$SweepUnlockedResponseDestinationToJson(
+        SweepUnlockedResponseDestination instance) =>
     <String, dynamic>{
       'amount': instance.amount,
       'address': instance.address,

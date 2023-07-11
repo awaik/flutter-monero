@@ -1,37 +1,41 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'get_tx_response.dart';
+part of 'txs_response.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-TxResponse _$TxResponseFromJson(Map<String, dynamic> json) => TxResponse(
+TxsResponse _$TxsResponseFromJson(Map<String, dynamic> json) => TxsResponse(
       blocks: (json['blocks'] as List<dynamic>)
-          .map((e) => Block.fromJson(e as Map<String, dynamic>))
+          .map((e) => TxResponseBlock.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
 
-Map<String, dynamic> _$TxResponseToJson(TxResponse instance) =>
+Map<String, dynamic> _$TxsResponseToJson(TxsResponse instance) =>
     <String, dynamic>{
       'blocks': instance.blocks,
     };
 
-Block _$BlockFromJson(Map<String, dynamic> json) => Block(
+TxResponseBlock _$TxResponseBlockFromJson(Map<String, dynamic> json) =>
+    TxResponseBlock(
       height: json['height'] as int,
       timestamp: json['timestamp'] as int,
       txs: (json['txs'] as List<dynamic>)
-          .map((e) => Transaction.fromJson(e as Map<String, dynamic>))
+          .map((e) => TxResponseTransaction.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
 
-Map<String, dynamic> _$BlockToJson(Block instance) => <String, dynamic>{
+Map<String, dynamic> _$TxResponseBlockToJson(TxResponseBlock instance) =>
+    <String, dynamic>{
       'height': instance.height,
       'timestamp': instance.timestamp,
       'txs': instance.txs,
     };
 
-Transaction _$TransactionFromJson(Map<String, dynamic> json) => Transaction(
+TxResponseTransaction _$TxResponseTransactionFromJson(
+        Map<String, dynamic> json) =>
+    TxResponseTransaction(
       fee: json['fee'] as int,
       numConfirmations: json['numConfirmations'] as int,
       unlockHeight: json['unlockHeight'] as int,
@@ -47,11 +51,13 @@ Transaction _$TransactionFromJson(Map<String, dynamic> json) => Transaction(
       isOutgoing: json['isOutgoing'] as bool,
       isLocked: json['isLocked'] as bool,
       incomingTransfers: (json['incomingTransfers'] as List<dynamic>)
-          .map((e) => IncomingTransfer.fromJson(e as Map<String, dynamic>))
+          .map((e) =>
+              TxResponseIncomingTransfer.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
 
-Map<String, dynamic> _$TransactionToJson(Transaction instance) =>
+Map<String, dynamic> _$TxResponseTransactionToJson(
+        TxResponseTransaction instance) =>
     <String, dynamic>{
       'fee': instance.fee,
       'numConfirmations': instance.numConfirmations,
@@ -70,8 +76,9 @@ Map<String, dynamic> _$TransactionToJson(Transaction instance) =>
       'incomingTransfers': instance.incomingTransfers,
     };
 
-IncomingTransfer _$IncomingTransferFromJson(Map<String, dynamic> json) =>
-    IncomingTransfer(
+TxResponseIncomingTransfer _$TxResponseIncomingTransferFromJson(
+        Map<String, dynamic> json) =>
+    TxResponseIncomingTransfer(
       amount: json['amount'] as int,
       accountIndex: json['accountIndex'] as int,
       subaddressIndex: json['subaddressIndex'] as int,
@@ -79,7 +86,8 @@ IncomingTransfer _$IncomingTransferFromJson(Map<String, dynamic> json) =>
       address: json['address'] as String,
     );
 
-Map<String, dynamic> _$IncomingTransferToJson(IncomingTransfer instance) =>
+Map<String, dynamic> _$TxResponseIncomingTransferToJson(
+        TxResponseIncomingTransfer instance) =>
     <String, dynamic>{
       'amount': instance.amount,
       'accountIndex': instance.accountIndex,
