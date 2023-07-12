@@ -30,14 +30,14 @@ class SyncListener {
     _initialSyncHeight = 0;
     _updateSyncInfoTimer ??=
         Timer.periodic(const Duration(milliseconds: 1200), (_) async {
-      if (wallet_sync_api.isNewTransactionExist()) {
+      if (wallet_sync_api.isNewTransactionExistSync()) {
         onNewTransaction();
       }
 
-      var syncHeight = wallet_sync_api.getSyncingHeight();
+      var syncHeight = wallet_sync_api.getSyncingHeightSync();
 
       if (syncHeight <= 0) {
-        syncHeight = wallet_sync_api.getCurrentHeight();
+        syncHeight = wallet_sync_api.getCurrentHeightSync();
       }
 
       if (_initialSyncHeight <= 0) {

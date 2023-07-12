@@ -2,7 +2,6 @@ import 'dart:ffi';
 import 'package:ffi/ffi.dart';
 import 'package:flutter/foundation.dart';
 import 'dart:async';
-import 'dart:convert';
 
 import 'exceptions/wallet_creation_exception.dart';
 import 'exceptions/wallet_restore_from_keys_exception.dart';
@@ -256,6 +255,14 @@ void restoreWalletFromKeysSync({
   }
 }
 
+Future<bool> isWalletExist({required String path}) =>
+    compute(_isWalletExistSync, {'path': path});
+
+bool _isWalletExistSync(Map args) {
+  final path = args['path'] as String;
+  return isWalletExistSync(path: path);
+}
+
 /// Checks if a Monero wallet exists at the specified path.
 ///
 /// Determines whether a Monero wallet exists at the given [path].
@@ -265,7 +272,7 @@ void restoreWalletFromKeysSync({
 ///
 /// Returns:
 ///   A boolean value indicating whether the wallet exists.
-bool isWalletExist({required String path}) {
+bool isWalletExistSync({required String path}) {
   final pathPointer = path.toNativeUtf8().cast<Char>();
   final isExist = monero_flutter.bindings.is_wallet_exist(pathPointer);
 
@@ -321,11 +328,18 @@ void loadWalletSync(
   }
 }
 
+Future closeCurrentWallet() =>
+    compute(_closeCurrentWalletSync, {});
+
+void _closeCurrentWalletSync(Map args) {
+  closeCurrentWalletSync();
+}
+
 /// Closes the currently opened Monero wallet.
 ///
 /// Closes the currently opened Monero wallet, if any.
 /// After calling this function, the wallet is no longer available in memory.
-void closeCurrentWallet() {
+void closeCurrentWalletSync() {
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
   monero_flutter.bindings.close_current_wallet(errorBoxPointer);
   final errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
@@ -335,11 +349,18 @@ void closeCurrentWallet() {
   }
 }
 
+Future<String> getSecretViewKey() =>
+    compute(_getSecretViewKeySync, {});
+
+String _getSecretViewKeySync(Map args) {
+  return getSecretViewKeySync();
+}
+
 /// Retrieves the secret view key of the currently opened Monero wallet.
 ///
 /// Returns:
 ///   The secret view key of the wallet as a string.
-String getSecretViewKey() {
+String getSecretViewKeySync() {
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
   final secretViewKeyPointer =
       monero_flutter.bindings.secret_view_key(errorBoxPointer);
@@ -355,11 +376,18 @@ String getSecretViewKey() {
   return secretViewKey;
 }
 
+Future<String> getPublicViewKey() =>
+    compute(_getPublicViewKeySync, {});
+
+String _getPublicViewKeySync(Map args) {
+  return getPublicViewKeySync();
+}
+
 /// Returns the public view key of the currently opened Monero wallet as a string.
 ///
 /// Returns:
 ///   The public view key of the wallet as a string.
-String getPublicViewKey() {
+String getPublicViewKeySync() {
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
   final viewKeyPointer =
       monero_flutter.bindings.public_view_key(errorBoxPointer);
@@ -375,11 +403,18 @@ String getPublicViewKey() {
   return viewKey;
 }
 
+Future<String> getSecretSpendKey() =>
+    compute(_getSecretSpendKeySync, {});
+
+String _getSecretSpendKeySync(Map args) {
+  return getSecretSpendKeySync();
+}
+
 /// Returns the secret spend key of the currently opened Monero wallet as a string.
 ///
 /// Returns:
 ///   The secret spend key of the wallet as a string.
-String getSecretSpendKey() {
+String getSecretSpendKeySync() {
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
   final secretSpendKeyPointer =
       monero_flutter.bindings.secret_spend_key(errorBoxPointer);
@@ -395,11 +430,18 @@ String getSecretSpendKey() {
   return secretSpendKey;
 }
 
+Future<String> getPublicSpendKey() =>
+    compute(_getPublicSpendKeySync, {});
+
+String _getPublicSpendKeySync(Map args) {
+  return getPublicSpendKeySync();
+}
+
 /// Returns the public spend key of the currently opened Monero wallet as a string.
 ///
 /// Returns:
 ///   The public spend key of the wallet as a string.
-String getPublicSpendKey() {
+String getPublicSpendKeySync() {
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
   final spendKeyPointer =
       monero_flutter.bindings.public_spend_key(errorBoxPointer);
@@ -415,12 +457,21 @@ String getPublicSpendKey() {
   return spendKey;
 }
 
+@Deprecated('Use [getMnemonic] instead')
+Future<String?> getSeed() =>
+    compute(_getSeedSync, {});
+
+@Deprecated('Use [_getMnemonicSync] instead')
+String? _getSeedSync(Map args) {
+  return getSeedSync();
+}
+
 /// Returns the mnemonic seed of the currently opened Monero wallet as a string.
 ///
 /// Returns:
 ///   The mnemonic seed of the wallet as a string.
-@Deprecated('Use [getMnemonic] instead')
-String? getSeed() {
+@Deprecated('Use [getMnemonicSync] instead')
+String? getSeedSync() {
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
   final seedPointer = monero_flutter.bindings.seed(errorBoxPointer);
   final seed = monero_flutter.extractString(seedPointer);
@@ -434,11 +485,18 @@ String? getSeed() {
   return seed;
 }
 
+Future<String?> getMnemonic() =>
+    compute(_getMnemonicSync, {});
+
+String? _getMnemonicSync(Map args) {
+  return getMnemonicSync();
+}
+
 /// Returns the wallet's mnemonic phrase. If the wallet is in multisig mode, it returns a hexadecimal string.
 ///
 /// Returns:
 /// The mnemonic phrase of the wallet as a string.
-String? getMnemonic() {
+String? getMnemonicSync() {
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
   final mnemonicPointer = monero_flutter.bindings.get_mnemonic(errorBoxPointer);
   final mnemonic = monero_flutter.extractString(mnemonicPointer);
@@ -452,11 +510,18 @@ String? getMnemonic() {
   return mnemonic;
 }
 
+Future<String> getFilename() =>
+    compute(_getFilenameSync, {});
+
+String _getFilenameSync(Map args) {
+  return getFilenameSync();
+}
+
 /// Returns the filename of the currently opened Monero wallet as a string.
 ///
 /// Returns:
 ///   The filename of the wallet as a string.
-String getFilename() {
+String getFilenameSync() {
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
   final filenamePointer = monero_flutter.bindings.get_filename(errorBoxPointer);
   final filename = filenamePointer.cast<Utf8>().toDartString();
@@ -471,11 +536,19 @@ String getFilename() {
   return filename;
 }
 
+Future setPassword({required String password}) =>
+    compute(_setPasswordSync, {'password': password});
+
+void _setPasswordSync(Map args) {
+  final password = args['password'] as String;
+  setPasswordSync(password: password);
+}
+
 /// Sets a new [password] for the currently opened Monero wallet.
 ///
 /// Parameters:
 ///   [password] - The new password for the wallet.
-void setPassword({required String password}) {
+void setPasswordSync({required String password}) {
   final passwordPointer = password.toNativeUtf8().cast<Char>();
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
 
@@ -489,11 +562,19 @@ void setPassword({required String password}) {
   }
 }
 
+Future store({required String path}) =>
+    compute(_storeSync, {'path': path});
+
+void _storeSync(Map args) {
+  final path = args['path'] as String;
+  storeSync(path: path);
+}
+
 /// Stores the currently opened Monero wallet at the specified [path].
 ///
 /// Parameters:
 ///   [path] - The path to store the wallet file.
-void store({required String path}) {
+void storeSync({required String path}) {
   final pathPointer = path.toNativeUtf8().cast<Char>();
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
   monero_flutter.bindings.store(pathPointer, errorBoxPointer);
@@ -507,12 +588,20 @@ void store({required String path}) {
   }
 }
 
+Future setRecoveringFromSeed({required bool isRecovery}) =>
+    compute(_setRecoveringFromSeedSync, {'isRecovery': isRecovery});
+
+void _setRecoveringFromSeedSync(Map args) {
+  final isRecovery = args['isRecovery'] as bool;
+  setRecoveringFromSeedSync(isRecovery: isRecovery);
+}
+
 /// Sets the flag indicating whether the currently opened Monero wallet is in recovery mode
 /// from a seed.
 ///
 /// Parameters:
 ///   [isRecovery] - A boolean value indicating whether the wallet is in recovery mode.
-void setRecoveringFromSeed({required bool isRecovery}) {
+void setRecoveringFromSeedSync({required bool isRecovery}) {
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
   monero_flutter.bindings.set_recovering_from_seed(isRecovery, errorBoxPointer);
   final errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);

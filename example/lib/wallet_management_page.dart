@@ -5,7 +5,6 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:monero_flutter/exceptions/wallet_restore_from_keys_exception.dart';
 import 'package:monero_flutter/wallet_manager_api.dart' as api;
-import 'package:path_provider/path_provider.dart';
 
 class WalletManagementPage extends StatelessWidget {
   final TextEditingController _resultController = TextEditingController();
@@ -36,7 +35,7 @@ class WalletManagementPage extends StatelessWidget {
     String testResult;
 
     try {
-      isWalletExist = api.isWalletExist(path: walletPath);
+      isWalletExist = await api.isWalletExist(path: walletPath);
     } catch (e) {
       testResult = e.toString();
 
@@ -63,7 +62,7 @@ class WalletManagementPage extends StatelessWidget {
     String testResult;
 
     try {
-      isWalletExist = api.isWalletExist(path: walletPath);
+      isWalletExist = await api.isWalletExist(path: walletPath);
     } catch (e) {
       testResult = e.toString();
 
@@ -99,7 +98,7 @@ class WalletManagementPage extends StatelessWidget {
     String testResult;
 
     try {
-      isWalletExist = api.isWalletExist(path: walletPath);
+      isWalletExist = await api.isWalletExist(path: walletPath);
     } catch (e) {
       testResult = e.toString();
 
@@ -179,7 +178,7 @@ class WalletManagementPage extends StatelessWidget {
     String testResult;
 
     try {
-      isWalletExist = api.isWalletExist(path: walletPath);
+      isWalletExist = await api.isWalletExist(path: walletPath);
     } catch (e) {
       testResult = e.toString();
 
@@ -197,8 +196,7 @@ class WalletManagementPage extends StatelessWidget {
         testResult = "Wallet opened successfully!";
       } catch (e) {
         WalletRestoreFromKeysException rwk = e as WalletRestoreFromKeysException;
-
-        testResult = e.message;
+        testResult = rwk.message;
       }
     }
 
@@ -212,7 +210,7 @@ class WalletManagementPage extends StatelessWidget {
     String testResult;
 
     try {
-      isWalletExist = api.isWalletExist(path: walletPath);
+      isWalletExist = await api.isWalletExist(path: walletPath);
     } catch (e) {
       testResult = e.toString();
 
@@ -225,7 +223,7 @@ class WalletManagementPage extends StatelessWidget {
       testResult = "Error: wallet wasn't created!";
     } else {
       try {
-        api.closeCurrentWallet();
+        await api.closeCurrentWallet();
         testResult = "Wallet have closed!";
       } catch (e) {
         testResult = e.toString();
@@ -241,7 +239,7 @@ class WalletManagementPage extends StatelessWidget {
     String testResult;
 
     try {
-      testResult = "SecretViewKey=" + api.getSecretViewKey() + " | SecretSpendKey=" + api.getSecretSpendKey();
+      testResult = "SecretViewKey=" + (await api.getSecretViewKey()) + " | SecretSpendKey=" + (await api.getSecretSpendKey());
     } catch (e) {
       testResult = e.toString();
     }
@@ -255,7 +253,7 @@ class WalletManagementPage extends StatelessWidget {
     String testResult;
 
     try {
-      testResult = "PublicViewKey=${api.getPublicViewKey()} | PublicSpendKey=${api.getPublicSpendKey()}";
+      testResult = "PublicViewKey=${await api.getPublicViewKey()} | PublicSpendKey=${await api.getPublicSpendKey()}";
     } catch (e) {
       testResult = e.toString();
     }
@@ -269,7 +267,7 @@ class WalletManagementPage extends StatelessWidget {
     String testResult;
 
     try {
-      testResult = api.getSeed() ?? "empty";
+      testResult = (await api.getMnemonic()) ?? "empty";
     } catch (e) {
       testResult = e.toString();
     }
@@ -283,7 +281,7 @@ class WalletManagementPage extends StatelessWidget {
     String testResult;
 
     try {
-      testResult = api.getMnemonic() ?? "empty";
+      testResult = (await api.getMnemonic()) ?? "empty";
     } catch (e) {
       testResult = e.toString();
     }
@@ -312,7 +310,7 @@ class WalletManagementPage extends StatelessWidget {
     String testResult;
 
     try {
-      testResult = api.getFilename() + "\n";
+      testResult = (await api.getFilename()) + "\n";
     } catch (e) {
       testResult = e.toString();
     }

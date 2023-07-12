@@ -9,79 +9,79 @@ class TransferPage extends StatelessWidget {
 
   TransferPage({super.key});
 
-  void _getUtxos() {
+  void _getUtxos() async {
     try {
-      _resultController.text = "hash=${api.getUtxos().blocks[0].txs[0].hash}; amount=${api.getUtxos().blocks[0].txs[0].outputs[0].amount}";
+      _resultController.text = "hash=${(await api.getUtxos()).blocks[0].txs[0].hash}; amount=${(await api.getUtxos()).blocks[0].txs[0].outputs[0].amount}";
     } catch (e) {
       _resultController.text = e.toString();
     }
   }
 
-  void _getTxs() {
+  void _getTxs() async {
     try {
       final hash = _resultController.text;
-      _resultController.text = "numConfirmations=${api.getTxs(TxsRequest(txs: [TxsRequestBody(hash: hash)])).blocks[0].txs[0].numConfirmations}";
+      _resultController.text = "numConfirmations=${(await api.getTxs(TxsRequest(txs: [TxsRequestBody(hash: hash)]))).blocks[0].txs[0].numConfirmations}";
     } catch (e) {
       _resultController.text = e.toString();
     }
   }
 
-  void _describeTxSet() {
+  void _describeTxSet() async {
     try {
       final request = DescribeMultisigTxRequest(multisigTxHex: _resultController.text);
-      _resultController.text = "outputSum=${api.describeTxSet(request).txs[0].outputSum}";
+      _resultController.text = "outputSum=${(await api.describeTxSet(request)).txs[0].outputSum}";
     } catch (e) {
       _resultController.text = e.toString();
     }
   }
 
-  void _sweepUnlocked() {
+  void _sweepUnlocked() async {
     try {
       final address = _resultController.text;
       final request = SweepUnlockedRequest(destinations: [SweepUnlockedRequestDestination(address: address)]);
-      _resultController.text = "hash=${api.sweepUnlocked(request).txSets[0].txs[0].hash}";
+      _resultController.text = "hash=${(await api.sweepUnlocked(request)).txSets[0].txs[0].hash}";
     } catch (e) {
       _resultController.text = e.toString();
     }
   }
 
-  void _getTransfersAsJson() {
+  void _getTransfersAsJson() async {
     try {
-      _resultController.text = api.getAllTransfersAsJson();
+      _resultController.text = await api.getAllTransfersAsJson();
     } catch (e) {
       _resultController.text = e.toString();
     }
   }
 
-  void _getTransfers() {
+  void _getTransfers() async {
     try {
-      _resultController.text = "amount=${api.getAllTransactions()[0].amount}";
+      _resultController.text = "amount=${(await api.getAllTransactions())[0].amount}";
     } catch (e) {
       _resultController.text = e.toString();
     }
   }
 
-  void _thaw() {
+  void _thaw() async {
     try {
-      api.thaw(_resultController.text);
+      await api.thaw(_resultController.text);
       _resultController.text = "ok";
     } catch (e) {
       _resultController.text = e.toString();
     }
   }
 
-  void _freeze() {
+  void _freeze() async {
     try {
-      api.freeze(_resultController.text);
+      await api.freeze(_resultController.text);
       _resultController.text = "ok";
     } catch (e) {
       _resultController.text = e.toString();
     }
   }
 
-  void _isFrozen() {
+  void _isFrozen() async {
     try {
-      _resultController.text = api.isFrozen(_resultController.text).toString();
+      _resultController.text = await api.isFrozen(_resultController.text).toString();
     } catch (e) {
       _resultController.text = e.toString();
     }

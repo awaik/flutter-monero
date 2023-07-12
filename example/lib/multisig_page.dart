@@ -15,26 +15,26 @@ class MultisigPage extends StatelessWidget {
     }
   }
 
-  void _prepareMultisig() {
+  Future<void> _prepareMultisig() async {
     try {
-      _resultController.text = api.prepareMultisig();
+      _resultController.text = await api.prepareMultisig();
     } catch (e) {
       _resultController.text = e.toString();
     }
   }
 
-  void _getMultisigInfo() {
+  Future<void> _getMultisigInfo() async {
     try {
-      _resultController.text = api.getMultisigInfo();
+      _resultController.text = await api.getMultisigInfo();
     } catch (e) {
       _resultController.text = e.toString();
     }
   }
 
-  void _exchangeMultisigKeys() {
+  Future<void> _exchangeMultisigKeys() async {
     try {
       List<String> list = _resultController.text.split(" ");
-      _resultController.text = api.exchangeMultisigKeys(infoList: list);
+      _resultController.text = await api.exchangeMultisigKeys(infoList: list);
     } catch (e) {
       _resultController.text = e.toString();
     }
@@ -48,10 +48,10 @@ class MultisigPage extends StatelessWidget {
     }
   }
 
-  void _makeMultisig() {
+  Future<void> _makeMultisig() async {
     try {
       List<String> list = [_resultController.text];
-      _resultController.text = api.makeMultisig(infoList: list,threshold: 2);
+      _resultController.text = await api.makeMultisig(infoList: list,threshold: 2);
     } catch (e) {
       _resultController.text = e.toString();
     }
@@ -66,9 +66,9 @@ class MultisigPage extends StatelessWidget {
     }
   }
 
-  void _exportMultisigImages() {
+  Future<void> _exportMultisigImages() async {
     try {
-      _resultController.text = api.exportMultisigImages();
+      _resultController.text = await api.exportMultisigImages();
     } catch (e) {
       _resultController.text = e.toString();
     }
@@ -85,18 +85,18 @@ class MultisigPage extends StatelessWidget {
     }
   }
 
-  void _signMultisigTxHex() {
+  Future<void> _signMultisigTxHex() async {
     try {
-      final result = api.signMultisigTxHex(_resultController.text);
+      final result =  await api.signMultisigTxHex(_resultController.text);
       _resultController.text = result;
     } catch (e) {
       _resultController.text = e.toString();
     }
   }
 
-  void _submitMultisigTxHex() {
+  Future<void> _submitMultisigTxHex() async {
     try {
-      final result = api.submitMultisigTxHex(_resultController.text);
+      final result =  await api.submitMultisigTxHex(_resultController.text);
       _resultController.text = result[0];
     } catch (e) {
       _resultController.text = e.toString();

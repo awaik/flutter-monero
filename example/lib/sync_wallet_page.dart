@@ -15,7 +15,7 @@ class SyncWalletPage extends StatelessWidget {
   }
 
   void _setListener() {
-    api.setListeners((p0, p1, p2) {}, () {});
+    api.setListenersSync((p0, p1, p2) {}, () {});
   }
 
   void _isConnectedToNode() async {

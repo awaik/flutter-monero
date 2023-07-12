@@ -7,7 +7,13 @@ import 'package:monero_flutter/sync_listener.dart';
 import 'exceptions/setup_wallet_exception.dart';
 import 'monero_flutter.dart' as monero_flutter;
 
-void onStartup() {
+Future onStartup() => compute(_onStartupSync, {});
+
+void _onStartupSync(Map args) {
+  onStartupSync();
+}
+
+void onStartupSync() {
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
   monero_flutter.bindings.on_startup(errorBoxPointer);
   final errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
@@ -31,9 +37,18 @@ void onStartup() {
 /// Returns:
 ///   A [Future] that completes with no result.
 Future setupNode(
-        {required String address, String? login, String? password, bool useSSL = false, bool isLightWallet = false}) =>
-    compute<Map<String, Object?>, void>(_setupNodeSync,
-        {'address': address, 'login': login, 'password': password, 'useSSL': useSSL, 'isLightWallet': isLightWallet});
+        {required String address,
+        String? login,
+        String? password,
+        bool useSSL = false,
+        bool isLightWallet = false}) =>
+    compute<Map<String, Object?>, void>(_setupNodeSync, {
+      'address': address,
+      'login': login,
+      'password': password,
+      'useSSL': useSSL,
+      'isLightWallet': isLightWallet
+    });
 
 bool _setupNodeSync(Map<String, Object?> args) {
   final address = args['address'] as String;
@@ -43,7 +58,11 @@ bool _setupNodeSync(Map<String, Object?> args) {
   final isLightWallet = args['isLightWallet'] as bool;
 
   return setupNodeSync(
-      address: address, login: login, password: password, useSSL: useSSL, isLightWallet: isLightWallet);
+      address: address,
+      login: login,
+      password: password,
+      useSSL: useSSL,
+      isLightWallet: isLightWallet);
 }
 
 /// Sets up the connection to a Monero node for wallet synchronization synchronously (sync version).
@@ -62,16 +81,22 @@ bool _setupNodeSync(Map<String, Object?> args) {
 /// Returns:
 ///   A boolean value indicating if the setup was successful.
 bool setupNodeSync(
-    {required String address, String? login, String? password, bool useSSL = false, bool isLightWallet = false}) {
+    {required String address,
+    String? login,
+    String? password,
+    bool useSSL = false,
+    bool isLightWallet = false}) {
   final addressPointer = address.toNativeUtf8().cast<Char>();
-  Pointer<Char> loginPointer =
-      (login != null) ? login.toNativeUtf8().cast<Char>() : Pointer<Char>.fromAddress(nullptr.address);
-  Pointer<Char> passwordPointer =
-      (password != null) ? password.toNativeUtf8().cast<Char>() : Pointer<Char>.fromAddress(nullptr.address);
+  Pointer<Char> loginPointer = (login != null)
+      ? login.toNativeUtf8().cast<Char>()
+      : Pointer<Char>.fromAddress(nullptr.address);
+  Pointer<Char> passwordPointer = (password != null)
+      ? password.toNativeUtf8().cast<Char>()
+      : Pointer<Char>.fromAddress(nullptr.address);
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
 
-  monero_flutter.bindings
-      .setup_node(addressPointer, loginPointer, passwordPointer, useSSL, isLightWallet, errorBoxPointer);
+  monero_flutter.bindings.setup_node(addressPointer, loginPointer,
+      passwordPointer, useSSL, isLightWallet, errorBoxPointer);
   final errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
 
   calloc.free(addressPointer);
@@ -131,7 +156,8 @@ int getNodeHeightSync() {
 /// This function will be called when a new transaction is received during synchronization.
 ///
 /// Returns a [SyncListener] object.
-SyncListener setListeners(void Function(int, int, double) onNewBlock, void Function() onNewTransaction) {
+SyncListener setListenersSync(void Function(int, int, double) onNewBlock,
+    void Function() onNewTransaction) {
   final listener = SyncListener(onNewBlock, onNewTransaction);
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
   monero_flutter.bindings.set_listener(errorBoxPointer);
@@ -144,12 +170,18 @@ SyncListener setListeners(void Function(int, int, double) onNewBlock, void Funct
   return listener;
 }
 
+Future connectToNode() => compute(_connectToNodeSync, {});
+
+void _connectToNodeSync(Map args) {
+  connectToNodeSync();
+}
+
 /// Connects to the Monero blockchain node.
 ///
 /// This function establishes a connection to a Monero blockchain node
 /// in order to interact with the Monero network. Once connected, you can
 /// perform various operations such as retrieving information or sending transactions.
-void connectToNode() {
+void connectToNodeSync() {
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
 
   monero_flutter.bindings.connect_to_node(errorBoxPointer);
@@ -191,6 +223,12 @@ bool isConnectedSync() {
   return result;
 }
 
+Future<bool> isNeededToRefresh() => compute(_isNeededToRefreshSync, {});
+
+bool _isNeededToRefreshSync(Map args) {
+  return isNeededToRefreshSync();
+}
+
 /// Checks if the wallet needs to be refreshed.
 ///
 /// This function checks whether the wallet requires a refresh. A refresh is typically
@@ -198,7 +236,7 @@ bool isConnectedSync() {
 /// and balances. It returns a boolean value indicating whether a refresh is needed.
 ///
 /// Returns true if the wallet needs to be refreshed, false otherwise.
-bool isNeededToRefresh() {
+bool isNeededToRefreshSync() {
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
   var result = monero_flutter.bindings.is_needed_to_refresh(errorBoxPointer);
   final errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
@@ -210,12 +248,18 @@ bool isNeededToRefresh() {
   return result;
 }
 
+Future startRefresh() => compute(_startRefreshSync, {});
+
+void _startRefreshSync(Map args) {
+  startRefreshSync();
+}
+
 /// Starts the wallet refresh process.
 ///
 /// This function initiates the wallet refresh process, which synchronizes the wallet's state
 /// with the latest blockchain transactions and balances. It is necessary to call this function
 /// to update the wallet's information after transactions have been made.
-void startRefresh() {
+void startRefreshSync() {
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
   monero_flutter.bindings.start_refresh(errorBoxPointer);
 
@@ -226,13 +270,19 @@ void startRefresh() {
   }
 }
 
+Future pauseRefresh() => compute(_pauseRefreshSync, {});
+
+void _pauseRefreshSync(Map args) {
+  pauseRefreshSync();
+}
+
 /// Pauses the wallet refresh process.
 ///
 /// This function pauses the wallet refresh process, which temporarily halts the synchronization
 /// of the wallet's state with the latest blockchain transactions and balances. Pausing the refresh
 /// process can be useful in situations where you want to conserve system resources or perform
 /// other tasks without interruption.
-void pauseRefresh() {
+void pauseRefreshSync() {
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
   monero_flutter.bindings.pause_refresh(errorBoxPointer);
 
@@ -243,20 +293,35 @@ void pauseRefresh() {
   }
 }
 
+Future setRefreshFromBlockHeight({required int height}) =>
+    compute(_setRefreshFromBlockHeightSync, {'height': height});
+
+void _setRefreshFromBlockHeightSync(Map args) {
+  final height = args['height'] as int;
+  setRefreshFromBlockHeightSync(height: height);
+}
+
 /// Sets the refresh starting block height for the wallet.
 ///
 /// This function sets the block height from which the wallet should start the refresh process.
 /// By specifying the height, the wallet will synchronize its state with the blockchain transactions
 /// starting from the specified block. This can be useful in situations where you want to refresh
 /// the wallet from a specific point in the blockchain.
-void setRefreshFromBlockHeight({required int height}) {
+void setRefreshFromBlockHeightSync({required int height}) {
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
-  monero_flutter.bindings.set_refresh_from_block_height(height, errorBoxPointer);
+  monero_flutter.bindings
+      .set_refresh_from_block_height(height, errorBoxPointer);
   final errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
 
   if (0 != errorInfo.code) {
     throw Exception(errorInfo.getErrorMessage());
   }
+}
+
+Future rescanBlockchain() => compute(_rescanBlockchainSync, {});
+
+void _rescanBlockchainSync(Map args) {
+  rescanBlockchainSync();
 }
 
 /// Initiates a blockchain rescan for the wallet.
@@ -265,7 +330,7 @@ void setRefreshFromBlockHeight({required int height}) {
 /// the wallet's state by scanning all blockchain transactions. This can be useful in situations
 /// where you suspect that some transactions might have been missed or the wallet's state is not
 /// up to date.
-void rescanBlockchain() {
+void rescanBlockchainSync() {
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
   monero_flutter.bindings.rescan_blockchain(errorBoxPointer);
 
@@ -276,12 +341,19 @@ void rescanBlockchain() {
   }
 }
 
+Future setTrustedDaemon(bool arg) => compute(_setTrustedDaemonSync, {'arg': arg});
+
+void _setTrustedDaemonSync(Map args) {
+  final arg = args['arg'] as bool;
+  setTrustedDaemonSync(arg);
+}
+
 /// Sets the trusted daemon status for the wallet.
 ///
 /// This function sets the trusted daemon status for the wallet. When the trusted daemon is enabled,
 /// the wallet will only connect to specified trusted nodes for blockchain synchronization. This can
 /// provide an additional layer of security by avoiding connections to potentially malicious nodes.
-void setTrustedDaemon(bool arg) {
+void setTrustedDaemonSync(bool arg) {
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
   monero_flutter.bindings.set_trusted_daemon(arg, errorBoxPointer);
 
@@ -292,10 +364,16 @@ void setTrustedDaemon(bool arg) {
   }
 }
 
+Future<bool> trustedDaemon() => compute(_trustedDaemonSync, {});
+
+bool _trustedDaemonSync(Map args) {
+  return trustedDaemonSync();
+}
+
 /// Returns the trusted daemon status for the wallet.
 ///
 /// Returns true if the wallet is set to use a trusted daemon, false otherwise.
-bool trustedDaemon() {
+bool trustedDaemonSync() {
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
   final result = monero_flutter.bindings.trusted_daemon(errorBoxPointer);
 
@@ -308,6 +386,12 @@ bool trustedDaemon() {
   return result;
 }
 
+Future<bool> isNewTransactionExist() => compute(_isNewTransactionExistSync, {});
+
+bool _isNewTransactionExistSync(Map args) {
+  return isNewTransactionExistSync();
+}
+
 /// Checks if there are new transactions for the wallet.
 ///
 /// This function checks whether there are any new transactions for the wallet
@@ -315,9 +399,10 @@ bool trustedDaemon() {
 /// new transactions exist.
 ///
 /// Returns true if new transactions exist, false otherwise.
-bool isNewTransactionExist() {
+bool isNewTransactionExistSync() {
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
-  final result = monero_flutter.bindings.is_new_transaction_exist(errorBoxPointer);
+  final result =
+      monero_flutter.bindings.is_new_transaction_exist(errorBoxPointer);
 
   final errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
 
@@ -328,6 +413,12 @@ bool isNewTransactionExist() {
   return result;
 }
 
+Future<int> getSyncingHeight() => compute(_getSyncingHeightSync, {});
+
+int _getSyncingHeightSync(Map args) {
+  return getSyncingHeightSync();
+}
+
 /// Returns the current syncing height of the wallet.
 ///
 /// This function retrieves the height of the blockchain that the wallet is currently syncing to.
@@ -335,7 +426,7 @@ bool isNewTransactionExist() {
 /// It returns an integer value representing the current syncing height.
 ///
 /// Throws an exception if there is an error while retrieving the syncing height.
-int getSyncingHeight() {
+int getSyncingHeightSync() {
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
   final result = monero_flutter.bindings.get_syncing_height(errorBoxPointer);
 
@@ -348,6 +439,12 @@ int getSyncingHeight() {
   return result;
 }
 
+Future<int> getCurrentHeight() => compute(_getCurrentHeightSync, {});
+
+int _getCurrentHeightSync(Map args) {
+  return getCurrentHeightSync();
+}
+
 /// Returns the current height of the wallet.
 ///
 /// This function retrieves the current height of the blockchain that the wallet has reached.
@@ -355,7 +452,7 @@ int getSyncingHeight() {
 /// synchronization with the network. It returns an integer value representing the current height.
 ///
 /// Throws an exception if there is an error while retrieving the current height.
-int getCurrentHeight() {
+int getCurrentHeightSync() {
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
   final result = monero_flutter.bindings.get_current_height(errorBoxPointer);
 

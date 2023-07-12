@@ -6,25 +6,25 @@ class WalletAccountsPage extends StatelessWidget {
 
   WalletAccountsPage({super.key});
 
-  void _getAddress() {
+  void _getAddress() async {
     try {
-      _resultController.text = api.getAddress().toString();
+      _resultController.text = (await api.getAddress()).toString();
     } catch (e) {
       _resultController.text = e.toString();
     }
   }
 
-  void _getReceiveAddress() {
+  void _getReceiveAddress() async {
     try {
-      _resultController.text = api.getReceiveAddress();
+      _resultController.text = await api.getReceiveAddress();
     } catch (e) {
       _resultController.text = e.toString();
     }
   }
 
-  void _getBalance() {
+  void _getBalance() async {
     try {
-      _resultController.text = api.getFullBalance().toString();
+      _resultController.text = (await api.getFullBalance()).toString();
     } catch (e) {
       _resultController.text = e.toString();
     }
