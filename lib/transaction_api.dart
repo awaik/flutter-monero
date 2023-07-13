@@ -424,12 +424,20 @@ String getTransactionKeySync(String transactionId) {
   return result!;
 }
 
+/// Retrieves a list of all unspent transaction outputs (UTXOs). Async version of method.
+///
+/// Returns:
+///   A [Future] that completes with the response containing the unspent transaction outputs.
 Future<OutputsResponse> getUtxos() => compute(_getUtxosSync, {});
 
 OutputsResponse _getUtxosSync(Map args) {
   return getUtxosSync();
 }
 
+/// Retrieves a list of all unspent transaction outputs (UTXOs). Sync version of method.
+///
+/// Returns:
+///   The unspent transaction outputs.
 OutputsResponse getUtxosSync() {
   OutputsRequest request = OutputsRequest(
       isSpent: false,
@@ -437,6 +445,17 @@ OutputsResponse getUtxosSync() {
   return getOutputsSync(request);
 }
 
+/// Get outputs which meet the criteria defined in a query object (async version).
+///
+/// Outputs must meet every criteria defined in the query in order to be
+/// returned.  All criteria are optional and no filtering is applied when not
+/// defined.
+///
+/// All supported query criteria:
+/// - isSpent: get outputs that are spent or not (optional).
+/// - txQuery: get outputs whose transaction meets this filter (optional).
+///
+/// Returns the queried outputs.
 Future<OutputsResponse> getOutputs(OutputsRequest request) =>
     compute(_getOutputsSync, {'request': request});
 
@@ -445,6 +464,17 @@ OutputsResponse _getOutputsSync(Map args) {
   return getOutputsSync(request);
 }
 
+/// Get outputs which meet the criteria defined in a query object (sync version).
+///
+/// Outputs must meet every criteria defined in the query in order to be
+/// returned.  All criteria are optional and no filtering is applied when not
+/// defined.
+///
+/// All supported query criteria:
+/// - isSpent: get outputs that are spent or not (optional).
+/// - txQuery: get outputs whose transaction meets this filter (optional).
+///
+/// Returns the queried outputs.
 OutputsResponse getOutputsSync(OutputsRequest request) {
   final jsonRequest = jsonEncode(request.toJson());
   final jsonResponse = getOutputsAsJsonSync(jsonRequest);
@@ -453,6 +483,17 @@ OutputsResponse getOutputsSync(OutputsRequest request) {
   return OutputsResponse.fromJson(jsonMapResponse);
 }
 
+/// Get outputs in JSON-form, which meet the criteria defined in a JSON-query (async version).
+///
+/// Outputs must meet every criteria defined in the query in order to be
+/// returned.  All criteria are optional and no filtering is applied when not
+/// defined.
+///
+/// All supported query criteria:
+/// - isSpent: get outputs that are spent or not (optional).
+/// - txQuery: get outputs whose transaction meets this filter (optional).
+///
+/// Returns the queried outputs in JSON-form.
 Future<String> getOutputsAsJson(String jsonRequest) =>
     compute(_getOutputsAsJsonSync, {'jsonRequest': jsonRequest});
 
@@ -461,6 +502,17 @@ String _getOutputsAsJsonSync(Map args) {
   return getOutputsAsJsonSync(jsonRequest);
 }
 
+/// Get outputs in JSON-form, which meet the criteria defined in a JSON-query (sync version).
+///
+/// Outputs must meet every criteria defined in the query in order to be
+/// returned.  All criteria are optional and no filtering is applied when not
+/// defined.
+///
+/// All supported query criteria:
+/// - isSpent: get outputs that are spent or not (optional).
+/// - txQuery: get outputs whose transaction meets this filter (optional).
+///
+/// Returns the queried outputs in JSON-form.
 String getOutputsAsJsonSync(String jsonRequest) {
   final jsonRequestPointer = jsonRequest.toNativeUtf8().cast<Char>();
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
@@ -478,6 +530,12 @@ String getOutputsAsJsonSync(String jsonRequest) {
   return jsonString!;
 }
 
+/// Get wallet transactions by hash (async version).
+///
+/// Parameters:
+///   [request] - The object contains are hashes of transactions to get.
+///
+/// Returns a [Future] that completes with the identified transactions or throw if a transaction is not found.
 Future<TxsResponse> getTxs(TxsRequest request) =>
     compute(_getTxsSync, {'request': request});
 
@@ -486,6 +544,12 @@ TxsResponse _getTxsSync(Map args) {
   return getTxsSync(request);
 }
 
+/// Get wallet transactions by hash (sync version).
+///
+/// Parameters:
+///   [request] - The object contains are hashes of transactions to get.
+///
+/// Returns the identified transactions or throw if a transaction is not found.
 TxsResponse getTxsSync(TxsRequest request) {
   final jsonRequest = jsonEncode(request.toJson());
   final jsonResponse = getTxsAsJsonSync(jsonRequest);
@@ -494,6 +558,14 @@ TxsResponse getTxsSync(TxsRequest request) {
   return TxsResponse.fromJson(jsonMapResponse);
 }
 
+/// Get wallet transactions in JSON-format by hash (async version).
+///
+/// Parameters:
+///   [request] - JSON string contains are hashes of transactions to get.
+///     Example: { "txs": [{"hash":"28d0825270cd06364f04c32992e3d918ad3fa3aceba66efa7ad3d6d1cc7ab4b6"}] }
+///
+/// Returns a [Future] that completes with the identified transactions in JSON-format or throw if
+/// a transaction is not found.
 Future<String> getTxsAsJson(String jsonRequest) =>
     compute(_getTxsAsJsonSync, {'jsonRequest': jsonRequest});
 
@@ -502,9 +574,13 @@ String _getTxsAsJsonSync(Map args) {
   return getTxsAsJsonSync(jsonRequest);
 }
 
-// {
-// "txs": [{"hash":"28d0825270cd06364f04c32992e3d918ad3fa3aceba66efa7ad3d6d1cc7ab4b6"}]
-// }
+/// Get wallet transactions in JSON-format by hash (sync version).
+///
+/// Parameters:
+///   [request] - JSON string contains are hashes of transactions to get.
+///     Example: { "txs": [{"hash":"28d0825270cd06364f04c32992e3d918ad3fa3aceba66efa7ad3d6d1cc7ab4b6"}] }
+///
+/// Returns the identified transactions in JSON-format or throw if a transaction is not found.
 String getTxsAsJsonSync(String jsonRequest) {
   final jsonRequestPointer = jsonRequest.toNativeUtf8().cast<Char>();
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
@@ -522,6 +598,12 @@ String getTxsAsJsonSync(String jsonRequest) {
   return result!;
 }
 
+/// Describe a tx set from multisig or unsigned tx hex (async version).
+///
+/// Parameters:
+///   [describeTxRequest] - [DescribeMultisigTxRequest] or [DescribeUnsignedTxRequest] object.
+///
+/// Returns a [Future] that completes with the the tx set, containing structured transactions.
 Future<DescribeTxResponse> describeTxSet(DescribeTxRequest describeTxRequest) =>
     compute(_describeTxSetSync, {'describeTxRequest': describeTxRequest});
 
@@ -530,6 +612,12 @@ DescribeTxResponse _describeTxSetSync(Map args) {
   return describeTxSetSync(describeTxRequest);
 }
 
+/// Describe a tx set from multisig or unsigned tx hex (sync version).
+///
+/// Parameters:
+///   [describeTxRequest] - [DescribeMultisigTxRequest] or [DescribeUnsignedTxRequest] object.
+///
+/// Returns the tx set containing structured transactions.
 DescribeTxResponse describeTxSetSync(DescribeTxRequest describeTxRequest) {
   final jsonRequest = describeTxRequest.toJsonString();
   final jsonResponse = describeTxSetAsJsonSync(jsonRequest);
@@ -538,6 +626,14 @@ DescribeTxResponse describeTxSetSync(DescribeTxRequest describeTxRequest) {
   return DescribeTxResponse.fromJson(jsonMapResponse);
 }
 
+/// Describe a tx set from multisig or unsigned tx hex in JSON-format (async version).
+///
+/// Parameters:
+///   [jsonRequest] - multisig or unsigned tx hex in JSON-format.
+///     Example of unsigned tx hex in JSON-format: { "unsignedTxHex": "28d0825270cd06364f04c32992e3d918ad3fa3aceba66efa7ad3d6d1cc7ab4b6"}
+///     Example of multisig tx hex in JSON-format: { "multisigTxHex": "28d0825270cd06364f04c32992e3d918ad3fa3aceba66efa7ad3d6d1cc7ab4b6"}
+///
+/// Returns a [Future] that completes with the the tx set in JSON-format, containing structured transactions.
 Future<String> describeTxSetAsJson(String jsonRequest) =>
     compute(_describeTxSetAsJsonSync, {'jsonRequest': jsonRequest});
 
@@ -546,13 +642,14 @@ String _describeTxSetAsJsonSync(Map args) {
   return describeTxSetAsJsonSync(jsonRequest);
 }
 
-// {
-// "unsignedTxHex": "28d0825270cd06364f04c32992e3d918ad3fa3aceba66efa7ad3d6d1cc7ab4b6"
-// }
-// =================
-// {
-// "multisigTxHex": "28d0825270cd06364f04c32992e3d918ad3fa3aceba66efa7ad3d6d1cc7ab4b6"
-// }
+/// Describe a tx set from multisig or unsigned tx hex in JSON-format (sync version).
+///
+/// Parameters:
+///   [jsonRequest] - multisig or unsigned tx hex in JSON-format.
+///     Example of unsigned tx hex in JSON-format: { "unsignedTxHex": "28d0825270cd06364f04c32992e3d918ad3fa3aceba66efa7ad3d6d1cc7ab4b6"}
+///     Example of multisig tx hex in JSON-format: { "multisigTxHex": "28d0825270cd06364f04c32992e3d918ad3fa3aceba66efa7ad3d6d1cc7ab4b6"}
+///
+/// Returns the tx set in JSON-format, containing structured transactions.
 String describeTxSetAsJsonSync(String jsonRequest) {
   final jsonRequestPointer = jsonRequest.toNativeUtf8().cast<Char>();
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
@@ -570,6 +667,12 @@ String describeTxSetAsJsonSync(String jsonRequest) {
   return result!;
 }
 
+/// Sweep all unlocked funds according to the given config (sync version).
+///
+/// All supported query criteria:
+///   address - single destination address (required)
+///
+/// Returns a [Future] that completes with the created transactions.
 Future<SweepUnlockedResponse> sweepUnlocked(SweepUnlockedRequest request) =>
     compute(_sweepUnlockedSync, {'request': request});
 
@@ -578,6 +681,12 @@ SweepUnlockedResponse _sweepUnlockedSync(Map args) {
   return sweepUnlockedSync(request);
 }
 
+/// Sweep all unlocked funds according to the given config (async version).
+///
+/// All supported query criteria:
+///   address - single destination address (required)
+///
+/// Returns the created transactions.
 SweepUnlockedResponse sweepUnlockedSync(SweepUnlockedRequest request) {
   final jsonRequest = jsonEncode(request.toJson());
   final jsonResponse = sweepUnlockedAsJsonSync(jsonRequest);
@@ -586,6 +695,13 @@ SweepUnlockedResponse sweepUnlockedSync(SweepUnlockedRequest request) {
   return SweepUnlockedResponse.fromJson(jsonMapResponse);
 }
 
+/// Sweep all unlocked funds according to the given config in JSON-format (async version).
+///
+/// All supported query criteria:
+///   address - single destination address (required).
+///     Example: {"destinations": [{"address":"86gwCboZti2hRP4m6pwFfVHwjtdptJVgFKhppuEQL6f2aJZZuJVaPzqK16NBfxWvPnFNDgKtAkptJPa1UCX1BnnUQsogxqA"}]}
+///
+/// Returns a [Future] that completes with the created transactions in JSON-format.
 Future<String> sweepUnlockedAsJson(String jsonRequest) =>
     compute(_sweepUnlockedAsJsonSync, {'jsonRequest': jsonRequest});
 
@@ -594,9 +710,13 @@ String _sweepUnlockedAsJsonSync(Map args) {
   return sweepUnlockedAsJsonSync(jsonRequest);
 }
 
-// {
-// "destinations": [{"address":"86gwCboZti2hRP4m6pwFfVHwjtdptJVgFKhppuEQL6f2aJZZuJVaPzqK16NBfxWvPnFNDgKtAkptJPa1UCX1BnnUQsogxqA"}]
-// }
+/// Sweep all unlocked funds according to the given config in JSON-format (sync version).
+///
+/// All supported query criteria:
+///   address - single destination address (required).
+///     Example: {"destinations": [{"address":"86gwCboZti2hRP4m6pwFfVHwjtdptJVgFKhppuEQL6f2aJZZuJVaPzqK16NBfxWvPnFNDgKtAkptJPa1UCX1BnnUQsogxqA"}]}
+///
+/// Returns the created transactions in JSON-format.
 String sweepUnlockedAsJsonSync(String jsonRequest) {
   final jsonRequestPointer = jsonRequest.toNativeUtf8().cast<Char>();
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
@@ -614,6 +734,10 @@ String sweepUnlockedAsJsonSync(String jsonRequest) {
   return result!;
 }
 
+/// Thaw a frozen output (async version).
+///
+/// Parameters:
+///    [keyImage] - key image of the output to thaw.
 Future thaw(String keyImage) => compute(_thawSync, {'keyImage': keyImage});
 
 void _thawSync(Map args) {
@@ -621,6 +745,10 @@ void _thawSync(Map args) {
   thawSync(keyImage);
 }
 
+/// Thaw a frozen output (sync version).
+///
+/// Parameters:
+///    [keyImage] - key image of the output to thaw.
 void thawSync(String keyImage) {
   final keyImagePointer = keyImage.toNativeUtf8().cast<Char>();
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
@@ -633,6 +761,10 @@ void thawSync(String keyImage) {
   }
 }
 
+/// Freeze an output (async version).
+///
+/// Parameters:
+///    [keyImage] - key image of the output to thaw.
 Future freeze(String keyImage) => compute(_freezeSync, {'keyImage': keyImage});
 
 void _freezeSync(Map args) {
@@ -640,6 +772,10 @@ void _freezeSync(Map args) {
   freezeSync(keyImage);
 }
 
+/// Freeze an output (sync version).
+///
+/// Parameters:
+///    [keyImage] - key image of the output to thaw.
 void freezeSync(String keyImage) {
   final keyImagePointer = keyImage.toNativeUtf8().cast<Char>();
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
@@ -652,6 +788,12 @@ void freezeSync(String keyImage) {
   }
 }
 
+/// Check if an output is frozen (async version).
+///
+/// Parameters:
+///    [keyImage] - key image of the output to thaw.
+///
+/// Returns a [Future] that completes with the true if the output is frozen, false otherwise.
 Future<bool> isFrozen(String keyImage) =>
     compute(_isFrozenSync, {'keyImage': keyImage});
 
@@ -660,6 +802,12 @@ bool _isFrozenSync(Map args) {
   return isFrozenSync(keyImage);
 }
 
+/// Check if an output is frozen (async version).
+///
+/// Parameters:
+///    [keyImage] - key image of the output to thaw.
+///
+/// Returns true if the output is frozen, false otherwise.
 bool isFrozenSync(String keyImage) {
   final keyImagePointer = keyImage.toNativeUtf8().cast<Char>();
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
