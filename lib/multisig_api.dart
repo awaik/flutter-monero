@@ -5,16 +5,24 @@ import 'package:flutter/foundation.dart';
 
 import 'monero_flutter.dart' as monero_flutter;
 
-Future<bool> isMultisig() => compute(_isMultisigSync, {});
-
-bool _isMultisigSync(Map args) => isMultisigSync();
-
-/// Checks if the wallet is using a multisig scheme.
+/// Checks if the wallet is using a multisig scheme (async version).
 ///
 /// This function checks whether the wallet is using a multisig scheme for transactions.
 /// It returns a boolean value indicating whether the wallet is using multisig.
 ///
-/// Returns true if the wallet is using multisig, false otherwise.
+/// Returns:
+///   A [Future] that completes as true, if the wallet is using multisig, false otherwise.
+Future<bool> isMultisig() => compute(_isMultisigSync, {});
+
+bool _isMultisigSync(Map args) => isMultisigSync();
+
+/// Checks if the wallet is using a multisig scheme (sync version).
+///
+/// This function checks whether the wallet is using a multisig scheme for transactions.
+/// It returns a boolean value indicating whether the wallet is using multisig.
+///
+/// Returns:
+///   Returns true if the wallet is using multisig, false otherwise.
 bool isMultisigSync() {
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
   var result = monero_flutter.bindings.is_multisig(errorBoxPointer);
@@ -28,11 +36,20 @@ bool isMultisigSync() {
   return result;
 }
 
+/// Prepares the wallet for a multisig transaction (async version).
+///
+/// This function prepares the wallet for a multisig transaction by generating initialization data
+/// and returning it as a string. Participants then send their initialization data manually to all
+/// other participants over a secure channel.
+/// The method is equivalent to the "prepare_multisig" command in the Monero command-line interface (monero-wallet-cli).
+/// See https://resilience365.com/monero-multisig-how-to/.
+///
+/// Returns a [Future] that completes with the string, containing the multisig initialization data (MultisigxV2R1...).
 Future<String> prepareMultisig() => compute(_prepareMultisigSync, {});
 
 String _prepareMultisigSync(Map args) => prepareMultisigSync();
 
-/// Prepares the wallet for a multisig transaction.
+/// Prepares the wallet for a multisig transaction (sync version).
 ///
 /// This function prepares the wallet for a multisig transaction by generating initialization data
 /// and returning it as a string. Participants then send their initialization data manually to all
@@ -59,11 +76,17 @@ String prepareMultisigSync() {
   return result;
 }
 
+/// Retrieves initialization data of the current multisig setup (async version).
+///
+/// This function retrieves initialization data of the current multisig setup.
+/// The output of method getMultisigInfo is similar to the output of method prepareMultisig.
+///
+/// Returns a [Future] that completes with the string, containing the multisig initialization data (MultisigxV2R1...).
 Future<String> getMultisigInfo() => compute(_getMultisigInfoSync, {});
 
 String _getMultisigInfoSync(Map args) => getMultisigInfoSync();
 
-/// Retrieves initialization data of the current multisig setup.
+/// Retrieves initialization data of the current multisig setup (sync version).
 ///
 /// This function retrieves initialization data of the current multisig setup.
 /// The output of method getMultisigInfo is similar to the output of method prepareMultisig.
@@ -86,6 +109,15 @@ String getMultisigInfoSync() {
   return result;
 }
 
+/// Method set the threshold and the initialization data from the other participants (async version).
+/// The method is equivalent to the "make_multisig" command in the Monero command-line interface (monero-wallet-cli).
+/// See https://resilience365.com/monero-multisig-how-to/.
+///
+/// [infoList] is a list of strings containing initialization data from the other participants.
+/// Initialization data can be obtained using either functionprepareMultisig or getMultisigInfo.
+/// [threshold] is an integer representing the minimum number of signatures required to sign transactions.
+///
+/// Returns a [Future] that completes with the [String], representing the second round of initialization data (MultisigxV2Rn...).
 Future<String> makeMultisig(
         {required List<String> infoList, required int threshold}) =>
     compute(_makeMultisigSync, {'infoList': infoList, 'threshold': threshold});
@@ -97,7 +129,7 @@ String _makeMultisigSync(Map args) {
   return makeMultisigSync(infoList: infoList, threshold: threshold);
 }
 
-/// Method set the threshold and the initialization data from the other participants.
+/// Method set the threshold and the initialization data from the other participants (sync version).
 /// The method is equivalent to the "make_multisig" command in the Monero command-line interface (monero-wallet-cli).
 /// See https://resilience365.com/monero-multisig-how-to/.
 ///
@@ -140,8 +172,13 @@ String makeMultisigSync(
   return result;
 }
 
-Future<String> exchangeMultisigKeys(
-    {required List<String> infoList}) =>
+/// The method is equivalent to the "exchange_multisig_keys" command in the Monero command-line interface (monero-wallet-cli). Async version.
+/// See https://resilience365.com/monero-multisig-how-to/.
+///
+/// Takes a list of [infoList] strings containing the second round of initialization data (MultisigxV2Rn...) each of the participants.
+///
+/// Returns a [Future] that completes with the [String] with multisig address.
+Future<String> exchangeMultisigKeys({required List<String> infoList}) =>
     compute(_exchangeMultisigKeysSync, {'infoList': infoList});
 
 String _exchangeMultisigKeysSync(Map args) {
@@ -150,7 +187,7 @@ String _exchangeMultisigKeysSync(Map args) {
   return exchangeMultisigKeysSync(infoList: infoList);
 }
 
-/// The method is equivalent to the "exchange_multisig_keys" command in the Monero command-line interface (monero-wallet-cli).
+/// The method is equivalent to the "exchange_multisig_keys" command in the Monero command-line interface (monero-wallet-cli). Sync version.
 /// See https://resilience365.com/monero-multisig-how-to/.
 ///
 /// Takes a list of [infoList] strings containing the second round of initialization data (MultisigxV2Rn...) each of the participants.
@@ -187,11 +224,15 @@ String exchangeMultisigKeysSync({required List<String> infoList}) {
   return result;
 }
 
-Future<bool> isMultisigImportNeeded() => compute(_isMultisigImportNeededSync, {});
+/// The method checks whether there is a need to import a partial key image (async version).
+///
+/// Returns a [Future], that completes with the [bool] indicating whether importing multisig is needed or not.
+Future<bool> isMultisigImportNeeded() =>
+    compute(_isMultisigImportNeededSync, {});
 
 bool _isMultisigImportNeededSync(Map args) => isMultisigImportNeededSync();
 
-/// The method checks whether there is a need to import a partial key image.
+/// The method checks whether there is a need to import a partial key image (sync version).
 ///
 /// Returns a [bool] indicating whether importing multisig is needed or not.
 bool isMultisigImportNeededSync() {
@@ -209,8 +250,15 @@ bool isMultisigImportNeededSync() {
   return result;
 }
 
-Future<int> importMultisigImages(
-    {required List<String> infoList}) =>
+/// Import partial key image (async version).
+/// The method is equivalent to the "import_multisig_info" command in the Monero command-line interface (monero-wallet-cli).
+/// See https://resilience365.com/monero-multisig-how-to/.
+///
+/// Takes a list of [infoList] strings containing partial key image(s) from the other participants.
+/// Partial key image is produced by exportMultisigImages function.
+///
+/// Returns a [Future] that completes with the [int], which display how many new inputs it has verified.
+Future<int> importMultisigImages({required List<String> infoList}) =>
     compute(_importMultisigImagesSync, {'infoList': infoList});
 
 int _importMultisigImagesSync(Map args) {
@@ -219,14 +267,14 @@ int _importMultisigImagesSync(Map args) {
   return importMultisigImagesSync(infoList: infoList);
 }
 
-/// Import partial key image.
+/// Import partial key image (sync version).
 /// The method is equivalent to the "import_multisig_info" command in the Monero command-line interface (monero-wallet-cli).
 /// See https://resilience365.com/monero-multisig-how-to/.
 ///
 /// Takes a list of [infoList] strings containing partial key image(s) from the other participants.
 /// Partial key image is produced by exportMultisigImages function.
 ///
-/// Returns an [int], which display how many new inputs it has verified.
+/// Returns an [int] which display how many new inputs it has verified.
 int importMultisigImagesSync({required List<String> infoList}) {
   final size = infoList.length;
 
@@ -256,11 +304,16 @@ int importMultisigImagesSync({required List<String> infoList}) {
   return result;
 }
 
+/// Exports partial key image (async version).
+/// The method is equivalent to the "export_multisig_info" command in the Monero command-line interface (monero-wallet-cli).
+/// See https://resilience365.com/monero-multisig-how-to/.
+///
+/// A [Future] that completes with the [String], containing a partial key image.
 Future<String> exportMultisigImages() => compute(_exportMultisigImagesSync, {});
 
 String _exportMultisigImagesSync(Map args) => exportMultisigImagesSync();
 
-/// Exports partial key image.
+/// Exports partial key image (sync version).
 /// The method is equivalent to the "export_multisig_info" command in the Monero command-line interface (monero-wallet-cli).
 /// See https://resilience365.com/monero-multisig-how-to/.
 ///
@@ -302,6 +355,13 @@ String exportMultisigImagesSync() {
   return info;
 }
 
+/// Signs a multisig transaction in hexadecimal format (async version).
+/// The method is equivalent to the "sign_multisig" command in the Monero command-line interface (monero-wallet-cli).
+/// See https://resilience365.com/monero-multisig-how-to/.
+///
+/// Takes [multisigTxHex] as a [String] representing the multisig transaction in hexadecimal format (PendingTransactionDescription.multisigSignData).
+///
+/// Returns a [Future] that completes with the [String], containing the signed multisig transaction.
 Future<String> signMultisigTxHex(String multisigTxHex) =>
     compute(_signMultisigTxHexSync, {'multisigTxHex': multisigTxHex});
 
@@ -311,7 +371,7 @@ String _signMultisigTxHexSync(Map args) {
   return signMultisigTxHexSync(multisigTxHex);
 }
 
-/// Signs a multisig transaction in hexadecimal format.
+/// Signs a multisig transaction in hexadecimal format (sync version).
 /// The method is equivalent to the "sign_multisig" command in the Monero command-line interface (monero-wallet-cli).
 /// See https://resilience365.com/monero-multisig-how-to/.
 ///
@@ -340,8 +400,15 @@ String signMultisigTxHexSync(String multisigTxHex) {
   return hex;
 }
 
-Future<List<String>> submitMultisigTxHex(String signedMultisigTxHex) =>
-    compute(_submitMultisigTxHexSync, {'signedMultisigTxHex': signedMultisigTxHex});
+/// Submits a signed multisig transaction in hexadecimal format for processing (async version).
+/// The method is equivalent to the "submit_multisig" command in the Monero command-line interface (monero-wallet-cli).
+/// See https://resilience365.com/monero-multisig-how-to/.
+///
+/// Takes [signedMultisigTxHex] as a [String] representing the signed multisig transaction in hexadecimal format.
+///
+/// Returns a [Future] that completes with the list of [String], containing identifiers of the submitted transactions.
+Future<List<String>> submitMultisigTxHex(String signedMultisigTxHex) => compute(
+    _submitMultisigTxHexSync, {'signedMultisigTxHex': signedMultisigTxHex});
 
 List<String> _submitMultisigTxHexSync(Map args) {
   final signedMultisigTxHex = args['signedMultisigTxHex'] as String;
@@ -349,7 +416,7 @@ List<String> _submitMultisigTxHexSync(Map args) {
   return submitMultisigTxHexSync(signedMultisigTxHex);
 }
 
-/// Submits a signed multisig transaction in hexadecimal format for processing.
+/// Submits a signed multisig transaction in hexadecimal format for processing (sync version).
 /// The method is equivalent to the "submit_multisig" command in the Monero command-line interface (monero-wallet-cli).
 /// See https://resilience365.com/monero-multisig-how-to/.
 ///

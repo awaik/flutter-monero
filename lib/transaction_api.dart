@@ -19,11 +19,17 @@ import 'exceptions/creation_transaction_exception.dart';
 import 'monero_flutter.dart' as monero_flutter;
 import 'monero_flutter_bindings_generated.dart';
 
+/// Initiates a refresh of the wallet's transactions (async version).
+///
+/// This function triggers a refresh of the wallet's transaction history,
+/// synchronizing it with the latest transactions on the blockchain. It is
+/// useful to call this function when you want to update the wallet's transaction
+/// data after new transactions have been made.
 Future transactionsRefresh() => compute(_transactionsRefreshSync, {});
 
 void _transactionsRefreshSync(Map args) => transactionsRefreshSync();
 
-/// Initiates a refresh of the wallet's transactions.
+/// Initiates a refresh of the wallet's transactions (sync version).
 ///
 /// This function triggers a refresh of the wallet's transaction history,
 /// synchronizing it with the latest transactions on the blockchain. It is
@@ -39,11 +45,16 @@ void transactionsRefreshSync() {
   }
 }
 
+/// Returns the count of transactions in the wallet (async version).
+///
+/// This function retrieves the total number of transactions stored in the wallet.
+///
+/// Returns a [Future] that completes with the integer value, representing the count of transactions.
 Future<int> transactionsCount() => compute(_transactionsCountSync, {});
 
 int _transactionsCountSync(Map args) => transactionsCountSync();
 
-/// Returns the count of transactions in the wallet.
+/// Returns the count of transactions in the wallet (sync version).
 ///
 /// This function retrieves the total number of transactions stored in the wallet.
 ///
@@ -60,13 +71,18 @@ int transactionsCountSync() {
   return result;
 }
 
+/// Retrieves all transactions stored in the wallet (async version).
+///
+/// This function retrieves all transactions stored in the wallet and returns them
+/// as a list of [TransactionInfoRow] objects. Each [TransactionInfoRow] object represents
+/// a single transaction with its associated details such as amount, date, sender, and recipient.
 Future<List<TransactionInfoRow>> getAllTransactions() =>
     compute(_getAllTransactionsSync, {});
 
 List<TransactionInfoRow> _getAllTransactionsSync(Map args) =>
     getAllTransactionsSync();
 
-/// Retrieves all transactions stored in the wallet.
+/// Retrieves all transactions stored in the wallet (sync version).
 ///
 /// This function retrieves all transactions stored in the wallet and returns them
 /// as a list of [TransactionInfoRow] objects. Each [TransactionInfoRow] object represents
@@ -101,7 +117,7 @@ List<TransactionInfoRow> getAllTransactionsSync() {
   return result;
 }
 
-/// Creates a new transaction asynchronously.
+/// Creates a new transaction asynchronously (async version).
 ///
 /// This function creates a new transaction to send funds to the specified address.
 /// It returns a [Future] that resolves to a [PendingTransactionDescription] object,
@@ -142,7 +158,7 @@ PendingTransactionDescription _createTransactionSync(Map args) {
       subaddrAccount: accountIndex);
 }
 
-/// Creates a new transaction synchronously.
+/// Creates a new transaction synchronously (sync version).
 ///
 /// This function creates a new transaction to send funds to the specified address.
 /// It returns a [PendingTransactionDescription] object that contains information about
@@ -197,7 +213,7 @@ PendingTransactionDescription createTransactionSync(
   return pendingTransactionDescription;
 }
 
-/// Creates a new transaction with multiple destinations asynchronously.
+/// Creates a new transaction with multiple destinations asynchronously (async version).
 ///
 /// This function creates a new transaction with multiple destinations using the specified outputs.
 /// It returns a [Future] that resolves to a [PendingTransactionDescription] object, which contains
@@ -233,7 +249,7 @@ PendingTransactionDescription _createTransactionMultDestSync(Map args) {
       accountIndex: accountIndex);
 }
 
-/// Creates a new transaction with multiple destinations synchronously.
+/// Creates a new transaction with multiple destinations synchronously (sync version).
 ///
 /// This function creates a new transaction with multiple destinations using the specified outputs.
 /// It returns a [PendingTransactionDescription] object that contains information about the created transaction.
@@ -325,6 +341,12 @@ PendingTransactionDescription _buildPendingTransactionDescription(
   return pendingTransactionDescription;
 }
 
+/// Commits a pending transaction (async version).
+///
+/// This function commits a pending transaction represented by the transactionDescription
+/// parameter. It finalizes the transaction and sends the funds to the specified destinations.
+/// The transactionDescription parameter should be a [PendingTransactionDescription] object
+/// obtained from the createTransaction or createTransactionMultDest functions.
 Future transactionCommit(
         PendingTransactionDescription transactionDescription) =>
     compute(_transactionCommitSync,
@@ -336,7 +358,7 @@ void _transactionCommitSync(Map args) {
   transactionCommitSync(transactionDescription);
 }
 
-/// Commits a pending transaction.
+/// Commits a pending transaction (sync version).
 ///
 /// This function commits a pending transaction represented by the transactionDescription
 /// parameter. It finalizes the transaction and sends the funds to the specified destinations.
@@ -358,6 +380,15 @@ void transactionCommitSync(
   }
 }
 
+/// Retrieves the transaction key for a transaction (async version).
+///
+/// This function retrieves the transaction key for the specified transactionId.
+/// The transaction key is a unique identifier associated with a transaction, and it
+/// can be used for various purposes such as verifying the transaction's authenticity
+/// or performing further operations on the transaction.
+///
+/// Parameters:
+/// - transactionId: The ID of the transaction for which to retrieve the transaction key.
 Future<String> getTransactionKey(String transactionId) =>
     compute(_getTransactionKeySync, {'transactionId': transactionId});
 
@@ -366,7 +397,7 @@ String _getTransactionKeySync(Map args) {
   return getTransactionKeySync(transactionId);
 }
 
-/// Retrieves the transaction key for a transaction.
+/// Retrieves the transaction key for a transaction (sync version).
 ///
 /// This function retrieves the transaction key for the specified transactionId.
 /// The transaction key is a unique identifier associated with a transaction, and it
@@ -583,8 +614,7 @@ String sweepUnlockedAsJsonSync(String jsonRequest) {
   return result!;
 }
 
-Future thaw(String keyImage) =>
-    compute(_thawSync, {'keyImage': keyImage});
+Future thaw(String keyImage) => compute(_thawSync, {'keyImage': keyImage});
 
 void _thawSync(Map args) {
   final keyImage = args['keyImage'] as String;
@@ -603,8 +633,7 @@ void thawSync(String keyImage) {
   }
 }
 
-Future freeze(String keyImage) =>
-    compute(_freezeSync, {'keyImage': keyImage});
+Future freeze(String keyImage) => compute(_freezeSync, {'keyImage': keyImage});
 
 void _freezeSync(Map args) {
   final keyImage = args['keyImage'] as String;
@@ -646,6 +675,12 @@ bool isFrozenSync(String keyImage) {
   return result;
 }
 
+/// Retrieves all transfers as JSON (async version).
+///
+/// This function retrieves all transfers made by the wallet and returns them as a JSON string.
+/// Each transfer represents a transaction involving the wallet, including both incoming and outgoing transfers.
+///
+/// Returns a [Future] that completes with the JSON string, containing all transfers.
 Future<String> getAllTransfersAsJson() =>
     compute(_getAllTransfersAsJsonSync, {});
 
@@ -653,7 +688,7 @@ String _getAllTransfersAsJsonSync(Map args) {
   return getAllTransfersAsJsonSync();
 }
 
-/// Retrieves all transfers as JSON.
+/// Retrieves all transfers as JSON (sync version).
 ///
 /// This function retrieves all transfers made by the wallet and returns them as a JSON string.
 /// Each transfer represents a transaction involving the wallet, including both incoming and outgoing transfers.

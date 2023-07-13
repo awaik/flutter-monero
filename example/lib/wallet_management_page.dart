@@ -200,6 +200,13 @@ class WalletManagementPage extends StatelessWidget {
       }
     }
 
+    final fileName = await  api.getFilename();
+
+    testResult = fileName + " " + walletPath;
+
+    // await api.closeCurrentWallet();
+     await api.loadWallet(path: fileName, password: " ");
+
     _resultController.text = testResult;
   }
 

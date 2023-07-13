@@ -35,14 +35,14 @@ void onStartupSync() {
 ///   [isLightWallet] - Whether it's a light wallet (default is false).
 ///
 /// Returns:
-///   A [Future] that completes with no result.
-Future setupNode(
+///   A [Future] that completes with the boolean value, indicating if the setup was successful.
+Future<bool> setupNode(
         {required String address,
         String? login,
         String? password,
         bool useSSL = false,
         bool isLightWallet = false}) =>
-    compute<Map<String, Object?>, void>(_setupNodeSync, {
+    compute(_setupNodeSync, {
       'address': address,
       'login': login,
       'password': password,
@@ -121,7 +121,7 @@ bool setupNodeSync(
 /// Retrieves the height of the connected Monero node, which represents the current blockchain height.
 ///
 /// Returns:
-///   A [Future] that completes with an integer representing the node height.
+///   A [Future] that completes with an integer, representing the node height.
 Future<int> getNodeHeight() => compute(_getNodeHeight, 0);
 
 int _getNodeHeight(Object _) => getNodeHeightSync();
@@ -170,13 +170,18 @@ SyncListener setListenersSync(void Function(int, int, double) onNewBlock,
   return listener;
 }
 
+/// Connects to the Monero blockchain node (async version).
+///
+/// This function establishes a connection to a Monero blockchain node
+/// in order to interact with the Monero network. Once connected, you can
+/// perform various operations such as retrieving information or sending transactions.
 Future connectToNode() => compute(_connectToNodeSync, {});
 
 void _connectToNodeSync(Map args) {
   connectToNodeSync();
 }
 
-/// Connects to the Monero blockchain node.
+/// Connects to the Monero blockchain node (sync version).
 ///
 /// This function establishes a connection to a Monero blockchain node
 /// in order to interact with the Monero network. Once connected, you can
@@ -192,13 +197,13 @@ void connectToNodeSync() {
   }
 }
 
-/// Checks if the wallet is connected to a Monero blockchain node.
+/// Checks if the wallet is connected to a Monero blockchain node (async version).
 ///
 /// This function verifies whether the wallet is currently connected
 /// to a Monero blockchain node in the network. It returns a boolean
 /// value indicating the connection status.
 ///
-/// Returns true if the wallet is connected to a node, false otherwise.
+/// Returns a [Future] that completes with the true, if the wallet is connected to a node, false otherwise.
 Future<bool> isConnected() => compute(_isConnected, 0);
 
 bool _isConnected(Object _) => isConnectedSync();
@@ -223,13 +228,20 @@ bool isConnectedSync() {
   return result;
 }
 
+/// Checks if the wallet needs to be refreshed (async version).
+///
+/// This function checks whether the wallet requires a refresh. A refresh is typically
+/// performed to synchronize the wallet's state with the latest blockchain transactions
+/// and balances. It returns a boolean value indicating whether a refresh is needed.
+///
+/// Returns a [Future] that completes with the true, if the wallet needs to be refreshed, false otherwise.
 Future<bool> isNeededToRefresh() => compute(_isNeededToRefreshSync, {});
 
 bool _isNeededToRefreshSync(Map args) {
   return isNeededToRefreshSync();
 }
 
-/// Checks if the wallet needs to be refreshed.
+/// Checks if the wallet needs to be refreshed (sync version).
 ///
 /// This function checks whether the wallet requires a refresh. A refresh is typically
 /// performed to synchronize the wallet's state with the latest blockchain transactions
@@ -248,13 +260,18 @@ bool isNeededToRefreshSync() {
   return result;
 }
 
+/// Starts the wallet refresh process (async version).
+///
+/// This function initiates the wallet refresh process, which synchronizes the wallet's state
+/// with the latest blockchain transactions and balances. It is necessary to call this function
+/// to update the wallet's information after transactions have been made.
 Future startRefresh() => compute(_startRefreshSync, {});
 
 void _startRefreshSync(Map args) {
   startRefreshSync();
 }
 
-/// Starts the wallet refresh process.
+/// Starts the wallet refresh process (sync version).
 ///
 /// This function initiates the wallet refresh process, which synchronizes the wallet's state
 /// with the latest blockchain transactions and balances. It is necessary to call this function
@@ -270,13 +287,19 @@ void startRefreshSync() {
   }
 }
 
+/// Pauses the wallet refresh process (async version).
+///
+/// This function pauses the wallet refresh process, which temporarily halts the synchronization
+/// of the wallet's state with the latest blockchain transactions and balances. Pausing the refresh
+/// process can be useful in situations where you want to conserve system resources or perform
+/// other tasks without interruption.
 Future pauseRefresh() => compute(_pauseRefreshSync, {});
 
 void _pauseRefreshSync(Map args) {
   pauseRefreshSync();
 }
 
-/// Pauses the wallet refresh process.
+/// Pauses the wallet refresh process (sync version).
 ///
 /// This function pauses the wallet refresh process, which temporarily halts the synchronization
 /// of the wallet's state with the latest blockchain transactions and balances. Pausing the refresh
@@ -293,6 +316,12 @@ void pauseRefreshSync() {
   }
 }
 
+/// Sets the refresh starting block height for the wallet (async version).
+///
+/// This function sets the block height from which the wallet should start the refresh process.
+/// By specifying the height, the wallet will synchronize its state with the blockchain transactions
+/// starting from the specified block. This can be useful in situations where you want to refresh
+/// the wallet from a specific point in the blockchain.
 Future setRefreshFromBlockHeight({required int height}) =>
     compute(_setRefreshFromBlockHeightSync, {'height': height});
 
@@ -301,7 +330,7 @@ void _setRefreshFromBlockHeightSync(Map args) {
   setRefreshFromBlockHeightSync(height: height);
 }
 
-/// Sets the refresh starting block height for the wallet.
+/// Sets the refresh starting block height for the wallet (sync version).
 ///
 /// This function sets the block height from which the wallet should start the refresh process.
 /// By specifying the height, the wallet will synchronize its state with the blockchain transactions
@@ -318,13 +347,19 @@ void setRefreshFromBlockHeightSync({required int height}) {
   }
 }
 
+/// Initiates a blockchain rescan for the wallet (async version).
+///
+/// This function triggers a rescan of the blockchain for the wallet, which reevaluates
+/// the wallet's state by scanning all blockchain transactions. This can be useful in situations
+/// where you suspect that some transactions might have been missed or the wallet's state is not
+/// up to date.
 Future rescanBlockchain() => compute(_rescanBlockchainSync, {});
 
 void _rescanBlockchainSync(Map args) {
   rescanBlockchainSync();
 }
 
-/// Initiates a blockchain rescan for the wallet.
+/// Initiates a blockchain rescan for the wallet (sync version).
 ///
 /// This function triggers a rescan of the blockchain for the wallet, which reevaluates
 /// the wallet's state by scanning all blockchain transactions. This can be useful in situations
@@ -341,14 +376,20 @@ void rescanBlockchainSync() {
   }
 }
 
-Future setTrustedDaemon(bool arg) => compute(_setTrustedDaemonSync, {'arg': arg});
+/// Sets the trusted daemon status for the wallet (async version).
+///
+/// This function sets the trusted daemon status for the wallet. When the trusted daemon is enabled,
+/// the wallet will only connect to specified trusted nodes for blockchain synchronization. This can
+/// provide an additional layer of security by avoiding connections to potentially malicious nodes.
+Future setTrustedDaemon(bool arg) =>
+    compute(_setTrustedDaemonSync, {'arg': arg});
 
 void _setTrustedDaemonSync(Map args) {
   final arg = args['arg'] as bool;
   setTrustedDaemonSync(arg);
 }
 
-/// Sets the trusted daemon status for the wallet.
+/// Sets the trusted daemon status for the wallet (sync version).
 ///
 /// This function sets the trusted daemon status for the wallet. When the trusted daemon is enabled,
 /// the wallet will only connect to specified trusted nodes for blockchain synchronization. This can
@@ -364,13 +405,16 @@ void setTrustedDaemonSync(bool arg) {
   }
 }
 
+/// Returns the trusted daemon status for the wallet (async version).
+///
+/// Returns a [Future] that completes with the true, if the wallet is set to use a trusted daemon, false otherwise.
 Future<bool> trustedDaemon() => compute(_trustedDaemonSync, {});
 
 bool _trustedDaemonSync(Map args) {
   return trustedDaemonSync();
 }
 
-/// Returns the trusted daemon status for the wallet.
+/// Returns the trusted daemon status for the wallet (sync version).
 ///
 /// Returns true if the wallet is set to use a trusted daemon, false otherwise.
 bool trustedDaemonSync() {
@@ -386,13 +430,20 @@ bool trustedDaemonSync() {
   return result;
 }
 
+/// Checks if there are new transactions for the wallet (async version).
+///
+/// This function checks whether there are any new transactions for the wallet
+/// that have not been processed yet. It returns a boolean value indicating whether
+/// new transactions exist.
+///
+/// Returns a [Future] that completes with the true, if new transactions exist, false otherwise.
 Future<bool> isNewTransactionExist() => compute(_isNewTransactionExistSync, {});
 
 bool _isNewTransactionExistSync(Map args) {
   return isNewTransactionExistSync();
 }
 
-/// Checks if there are new transactions for the wallet.
+/// Checks if there are new transactions for the wallet (sync version).
 ///
 /// This function checks whether there are any new transactions for the wallet
 /// that have not been processed yet. It returns a boolean value indicating whether
@@ -413,13 +464,20 @@ bool isNewTransactionExistSync() {
   return result;
 }
 
+/// Returns the current syncing height of the wallet (async version).
+///
+/// This function retrieves the height of the blockchain that the wallet is currently syncing to.
+/// The syncing height represents the progress of the wallet's synchronization with the blockchain.
+/// It returns an integer value representing the current syncing height.
+///
+/// Throws an exception if there is an error while retrieving the syncing height.
 Future<int> getSyncingHeight() => compute(_getSyncingHeightSync, {});
 
 int _getSyncingHeightSync(Map args) {
   return getSyncingHeightSync();
 }
 
-/// Returns the current syncing height of the wallet.
+/// Returns the current syncing height of the wallet (sync version).
 ///
 /// This function retrieves the height of the blockchain that the wallet is currently syncing to.
 /// The syncing height represents the progress of the wallet's synchronization with the blockchain.
@@ -439,13 +497,20 @@ int getSyncingHeightSync() {
   return result;
 }
 
+/// Returns the current height of the wallet (async version).
+///
+/// This function retrieves the current height of the blockchain that the wallet has reached.
+/// The height represents the number of blocks in the blockchain, indicating the level of
+/// synchronization with the network. It returns an integer value representing the current height.
+///
+/// Throws an exception if there is an error while retrieving the current height.
 Future<int> getCurrentHeight() => compute(_getCurrentHeightSync, {});
 
 int _getCurrentHeightSync(Map args) {
   return getCurrentHeightSync();
 }
 
-/// Returns the current height of the wallet.
+/// Returns the current height of the wallet (sync version).
 ///
 /// This function retrieves the current height of the blockchain that the wallet has reached.
 /// The height represents the number of blocks in the blockchain, indicating the level of
