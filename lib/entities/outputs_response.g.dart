@@ -15,7 +15,7 @@ OutputsResponse _$OutputsResponseFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$OutputsResponseToJson(OutputsResponse instance) =>
     <String, dynamic>{
-      'blocks': instance.blocks,
+      'blocks': instance.blocks.map((e) => e.toJson()).toList(),
     };
 
 OutputsResponseBlock _$OutputsResponseBlockFromJson(
@@ -32,7 +32,7 @@ Map<String, dynamic> _$OutputsResponseBlockToJson(
         OutputsResponseBlock instance) =>
     <String, dynamic>{
       'height': instance.height,
-      'txs': instance.txs,
+      'txs': instance.txs.map((e) => e.toJson()).toList(),
     };
 
 OutputsResponseTransaction _$OutputsResponseTransactionFromJson(
@@ -61,7 +61,7 @@ Map<String, dynamic> _$OutputsResponseTransactionToJson(
       'inTxPool': instance.inTxPool,
       'isDoubleSpendSeen': instance.isDoubleSpendSeen,
       'isFailed': instance.isFailed,
-      'outputs': instance.outputs,
+      'outputs': instance.outputs.map((e) => e.toJson()).toList(),
       'isLocked': instance.isLocked,
     };
 
@@ -85,7 +85,7 @@ Map<String, dynamic> _$OutputsResponseOutputToJson(
       'amount': instance.amount,
       'index': instance.index,
       'stealthPublicKey': instance.stealthPublicKey,
-      'keyImage': instance.keyImage,
+      'keyImage': instance.keyImage.toJson(),
       'accountIndex': instance.accountIndex,
       'subaddressIndex': instance.subaddressIndex,
       'isSpent': instance.isSpent,

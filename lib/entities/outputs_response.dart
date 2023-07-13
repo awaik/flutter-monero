@@ -1,7 +1,8 @@
 import 'package:json_annotation/json_annotation.dart';
+
 part 'outputs_response.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class OutputsResponse {
   List<OutputsResponseBlock> blocks;
 
@@ -13,7 +14,7 @@ class OutputsResponse {
   Map<String, dynamic> toJson() => _$OutputsResponseToJson(this);
 }
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class OutputsResponseBlock {
   int height;
   List<OutputsResponseTransaction> txs;
@@ -27,7 +28,7 @@ class OutputsResponseBlock {
   Map<String, dynamic> toJson() => _$OutputsResponseBlockToJson(this);
 }
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class OutputsResponseTransaction {
   String hash;
   bool relay;
@@ -55,7 +56,7 @@ class OutputsResponseTransaction {
   Map<String, dynamic> toJson() => _$OutputsResponseTransactionToJson(this);
 }
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class OutputsResponseOutput {
   int amount;
   int index;
@@ -81,7 +82,7 @@ class OutputsResponseOutput {
   Map<String, dynamic> toJson() => _$OutputsResponseOutputToJson(this);
 }
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class OutputsResponseKeyImage {
   String hex;
 

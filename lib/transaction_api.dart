@@ -19,6 +19,8 @@ import 'exceptions/creation_transaction_exception.dart';
 import 'monero_flutter.dart' as monero_flutter;
 import 'monero_flutter_bindings_generated.dart';
 
+export 'entities/outputs_request.dart';
+
 /// Initiates a refresh of the wallet's transactions (async version).
 ///
 /// This function triggers a refresh of the wallet's transaction history,
@@ -76,11 +78,9 @@ int transactionsCountSync() {
 /// This function retrieves all transactions stored in the wallet and returns them
 /// as a list of [TransactionInfoRow] objects. Each [TransactionInfoRow] object represents
 /// a single transaction with its associated details such as amount, date, sender, and recipient.
-Future<List<TransactionInfoRow>> getAllTransactions() =>
-    compute(_getAllTransactionsSync, {});
+Future<List<TransactionInfoRow>> getAllTransactions() => compute(_getAllTransactionsSync, {});
 
-List<TransactionInfoRow> _getAllTransactionsSync(Map args) =>
-    getAllTransactionsSync();
+List<TransactionInfoRow> _getAllTransactionsSync(Map args) => getAllTransactionsSync();
 
 /// Retrieves all transactions stored in the wallet (sync version).
 ///
@@ -95,8 +95,7 @@ List<TransactionInfoRow> getAllTransactionsSync() {
   }
 
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
-  final transactionsPointer =
-      monero_flutter.bindings.transactions_get_all(errorBoxPointer);
+  final transactionsPointer = monero_flutter.bindings.transactions_get_all(errorBoxPointer);
 
   final errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
 
@@ -107,9 +106,7 @@ List<TransactionInfoRow> getAllTransactionsSync() {
   final transactionsAddresses = transactionsPointer.asTypedList(size);
 
   var result = transactionsAddresses
-      .map((addr) => Pointer<ExternalTransactionInfoRow>.fromAddress(addr)
-          .ref
-          .buildTransactionInfoRow())
+      .map((addr) => Pointer<ExternalTransactionInfoRow>.fromAddress(addr).ref.buildTransactionInfoRow())
       .toList();
 
   monero_flutter.bindings.free_block_of_transactions(transactionsPointer, size);
@@ -151,11 +148,7 @@ PendingTransactionDescription _createTransactionSync(Map args) {
   final accountIndex = args['accountIndex'] as int;
 
   return createTransactionSync(
-      address: address,
-      paymentId: paymentId,
-      amount: amount,
-      priorityRaw: priorityRaw,
-      subaddrAccount: accountIndex);
+      address: address, paymentId: paymentId, amount: amount, priorityRaw: priorityRaw, subaddrAccount: accountIndex);
 }
 
 /// Creates a new transaction synchronously (sync version).
@@ -171,26 +164,15 @@ PendingTransactionDescription _createTransactionSync(Map args) {
 /// - priorityRaw: The priority for the transaction, represented as an integer value.
 /// - subaddrAccount: (Optional) The index of the subaddress account to use for the transaction. Default is 0.
 PendingTransactionDescription createTransactionSync(
-    {required String address,
-    String? amount,
-    String paymentId = '',
-    int priorityRaw = 1,
-    int subaddrAccount = 0}) {
+    {required String address, String? amount, String paymentId = '', int priorityRaw = 1, int subaddrAccount = 0}) {
   final addressPointer = address.toNativeUtf8().cast<Char>();
-  final amountPointer =
-      null != amount ? amount.toNativeUtf8().cast<Char>() : nullptr;
+  final amountPointer = null != amount ? amount.toNativeUtf8().cast<Char>() : nullptr;
   final paymentIdPointer = paymentId.toNativeUtf8().cast<Char>();
   final pendingTransactionPointer = calloc<ExternPendingTransactionRaw>();
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
 
-  monero_flutter.bindings.transaction_create(
-      addressPointer,
-      paymentIdPointer,
-      amountPointer,
-      priorityRaw,
-      subaddrAccount,
-      pendingTransactionPointer,
-      errorBoxPointer);
+  monero_flutter.bindings.transaction_create(addressPointer, paymentIdPointer, amountPointer, priorityRaw,
+      subaddrAccount, pendingTransactionPointer, errorBoxPointer);
 
   final errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
 
@@ -207,8 +189,7 @@ PendingTransactionDescription createTransactionSync(
     throw CreationTransactionException(message: errorInfo.getErrorMessage());
   }
 
-  final pendingTransactionDescription =
-      _buildPendingTransactionDescription(pendingTransactionPointer);
+  final pendingTransactionDescription = _buildPendingTransactionDescription(pendingTransactionPointer);
 
   return pendingTransactionDescription;
 }
@@ -225,16 +206,9 @@ PendingTransactionDescription createTransactionSync(
 /// - paymentId: (Optional) The payment ID associated with the transaction.
 /// - accountIndex: (Optional) The index of the account to use for the transaction. Default is 0.
 Future<PendingTransactionDescription> createTransactionMultDest(
-        {required List<MoneroOutput> outputs,
-        required int priorityRaw,
-        String paymentId = '',
-        int accountIndex = 0}) =>
-    compute(_createTransactionMultDestSync, {
-      'outputs': outputs,
-      'paymentId': paymentId,
-      'priorityRaw': priorityRaw,
-      'accountIndex': accountIndex
-    });
+        {required List<MoneroOutput> outputs, required int priorityRaw, String paymentId = '', int accountIndex = 0}) =>
+    compute(_createTransactionMultDestSync,
+        {'outputs': outputs, 'paymentId': paymentId, 'priorityRaw': priorityRaw, 'accountIndex': accountIndex});
 
 PendingTransactionDescription _createTransactionMultDestSync(Map args) {
   final outputs = args['outputs'] as List<MoneroOutput>;
@@ -243,10 +217,7 @@ PendingTransactionDescription _createTransactionMultDestSync(Map args) {
   final accountIndex = args['accountIndex'] as int;
 
   return createTransactionMultDestSync(
-      outputs: outputs,
-      paymentId: paymentId,
-      priorityRaw: priorityRaw,
-      accountIndex: accountIndex);
+      outputs: outputs, paymentId: paymentId, priorityRaw: priorityRaw, accountIndex: accountIndex);
 }
 
 /// Creates a new transaction with multiple destinations synchronously (sync version).
@@ -260,18 +231,13 @@ PendingTransactionDescription _createTransactionMultDestSync(Map args) {
 /// - priorityRaw: The priority for the transaction, represented as an integer value.
 /// - accountIndex: (Optional) The index of the account to use for the transaction. Default is 0.
 PendingTransactionDescription createTransactionMultDestSync(
-    {required List<MoneroOutput> outputs,
-    required String paymentId,
-    required int priorityRaw,
-    int accountIndex = 0}) {
+    {required List<MoneroOutput> outputs, required String paymentId, required int priorityRaw, int accountIndex = 0}) {
   final int size = outputs.length;
-  final List<Pointer<Char>> addressesPointers = outputs
-      .map((output) => output.address.toNativeUtf8().cast<Char>())
-      .toList();
+  final List<Pointer<Char>> addressesPointers =
+      outputs.map((output) => output.address.toNativeUtf8().cast<Char>()).toList();
   final Pointer<Pointer<Char>> addressesPointerPointer = calloc(size);
-  final List<Pointer<Char>> amountsPointers = outputs
-      .map((output) => output.amount.toNativeUtf8().cast<Char>())
-      .toList();
+  final List<Pointer<Char>> amountsPointers =
+      outputs.map((output) => output.amount.toNativeUtf8().cast<Char>()).toList();
   final Pointer<Pointer<Char>> amountsPointerPointer = calloc(size);
 
   for (int i = 0; i < size; i++) {
@@ -283,15 +249,8 @@ PendingTransactionDescription createTransactionMultDestSync(
   final pendingTransactionPointer = calloc<ExternPendingTransactionRaw>();
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
 
-  monero_flutter.bindings.transaction_create_mult_dest(
-      addressesPointerPointer,
-      paymentIdPointer,
-      amountsPointerPointer,
-      size,
-      priorityRaw,
-      accountIndex,
-      pendingTransactionPointer,
-      errorBoxPointer);
+  monero_flutter.bindings.transaction_create_mult_dest(addressesPointerPointer, paymentIdPointer, amountsPointerPointer,
+      size, priorityRaw, accountIndex, pendingTransactionPointer, errorBoxPointer);
 
   final errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
 
@@ -313,8 +272,7 @@ PendingTransactionDescription createTransactionMultDestSync(
     throw CreationTransactionException(message: errorInfo.getErrorMessage());
   }
 
-  final pendingTransactionDescription =
-      _buildPendingTransactionDescription(pendingTransactionPointer);
+  final pendingTransactionDescription = _buildPendingTransactionDescription(pendingTransactionPointer);
 
   return pendingTransactionDescription;
 }
@@ -327,9 +285,7 @@ PendingTransactionDescription _buildPendingTransactionDescription(
       hash: pendingTransactionPointer.ref.hash.cast<Utf8>().toDartString(),
       hex: pendingTransactionPointer.ref.hex.cast<Utf8>().toDartString(),
       txKey: pendingTransactionPointer.ref.tx_key.cast<Utf8>().toDartString(),
-      multisigSignData: pendingTransactionPointer.ref.multisig_sign_data
-          .cast<Utf8>()
-          .toDartString(),
+      multisigSignData: pendingTransactionPointer.ref.multisig_sign_data.cast<Utf8>().toDartString(),
       pointerAddress: pendingTransactionPointer.address);
 
   calloc.free(pendingTransactionPointer.ref.hash);
@@ -347,14 +303,11 @@ PendingTransactionDescription _buildPendingTransactionDescription(
 /// parameter. It finalizes the transaction and sends the funds to the specified destinations.
 /// The transactionDescription parameter should be a [PendingTransactionDescription] object
 /// obtained from the createTransaction or createTransactionMultDest functions.
-Future transactionCommit(
-        PendingTransactionDescription transactionDescription) =>
-    compute(_transactionCommitSync,
-        {'transactionDescription': transactionDescription});
+Future transactionCommit(PendingTransactionDescription transactionDescription) =>
+    compute(_transactionCommitSync, {'transactionDescription': transactionDescription});
 
 void _transactionCommitSync(Map args) {
-  final transactionDescription =
-      args['transactionDescription'] as PendingTransactionDescription;
+  final transactionDescription = args['transactionDescription'] as PendingTransactionDescription;
   transactionCommitSync(transactionDescription);
 }
 
@@ -364,15 +317,12 @@ void _transactionCommitSync(Map args) {
 /// parameter. It finalizes the transaction and sends the funds to the specified destinations.
 /// The transactionDescription parameter should be a [PendingTransactionDescription] object
 /// obtained from the createTransaction or createTransactionMultDest functions.
-void transactionCommitSync(
-    PendingTransactionDescription transactionDescription) {
+void transactionCommitSync(PendingTransactionDescription transactionDescription) {
   final pendingTransactionPointer =
-      Pointer<ExternPendingTransactionRaw>.fromAddress(
-          transactionDescription.pointerAddress);
+      Pointer<ExternPendingTransactionRaw>.fromAddress(transactionDescription.pointerAddress);
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
 
-  monero_flutter.bindings
-      .transaction_commit(pendingTransactionPointer, errorBoxPointer);
+  monero_flutter.bindings.transaction_commit(pendingTransactionPointer, errorBoxPointer);
   final errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
 
   if (0 != errorInfo.code) {
@@ -407,12 +357,10 @@ String _getTransactionKeySync(Map args) {
 /// Parameters:
 /// - transactionId: The ID of the transaction for which to retrieve the transaction key.
 String getTransactionKeySync(String transactionId) {
-  Pointer<Char> transactionIdPointer =
-      transactionId.toNativeUtf8().cast<Char>();
+  Pointer<Char> transactionIdPointer = transactionId.toNativeUtf8().cast<Char>();
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
 
-  final resultPointer =
-      monero_flutter.bindings.get_tx_key(transactionIdPointer, errorBoxPointer);
+  final resultPointer = monero_flutter.bindings.get_tx_key(transactionIdPointer, errorBoxPointer);
 
   final result = monero_flutter.extractString(resultPointer);
   final errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
@@ -439,9 +387,8 @@ OutputsResponse _getUtxosSync(Map args) {
 /// Returns:
 ///   The unspent transaction outputs.
 OutputsResponse getUtxosSync() {
-  OutputsRequest request = OutputsRequest(
-      isSpent: false,
-      txQuery: OutputsRequestTxQuery(isLocked: false, isConfirmed: false));
+  OutputsRequest request =
+      OutputsRequest(isSpent: false, txQuery: OutputsRequestTxQuery(isLocked: false, isConfirmed: false));
   return getOutputsSync(request);
 }
 
@@ -456,8 +403,7 @@ OutputsResponse getUtxosSync() {
 /// - txQuery: get outputs whose transaction meets this filter (optional).
 ///
 /// Returns the queried outputs.
-Future<OutputsResponse> getOutputs(OutputsRequest request) =>
-    compute(_getOutputsSync, {'request': request});
+Future<OutputsResponse> getOutputs(OutputsRequest request) => compute(_getOutputsSync, {'request': request});
 
 OutputsResponse _getOutputsSync(Map args) {
   final request = args['request'] as OutputsRequest;
@@ -494,8 +440,7 @@ OutputsResponse getOutputsSync(OutputsRequest request) {
 /// - txQuery: get outputs whose transaction meets this filter (optional).
 ///
 /// Returns the queried outputs in JSON-form.
-Future<String> getOutputsAsJson(String jsonRequest) =>
-    compute(_getOutputsAsJsonSync, {'jsonRequest': jsonRequest});
+Future<String> getOutputsAsJson(String jsonRequest) => compute(_getOutputsAsJsonSync, {'jsonRequest': jsonRequest});
 
 String _getOutputsAsJsonSync(Map args) {
   final jsonRequest = args['jsonRequest'] as String;
@@ -516,8 +461,7 @@ String _getOutputsAsJsonSync(Map args) {
 String getOutputsAsJsonSync(String jsonRequest) {
   final jsonRequestPointer = jsonRequest.toNativeUtf8().cast<Char>();
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
-  final resultPointer =
-      monero_flutter.bindings.get_outputs(jsonRequestPointer, errorBoxPointer);
+  final resultPointer = monero_flutter.bindings.get_outputs(jsonRequestPointer, errorBoxPointer);
 
   final jsonString = monero_flutter.extractString(resultPointer);
 
@@ -536,8 +480,7 @@ String getOutputsAsJsonSync(String jsonRequest) {
 ///   [request] - The object contains are hashes of transactions to get.
 ///
 /// Returns a [Future] that completes with the identified transactions or throw if a transaction is not found.
-Future<TxsResponse> getTxs(TxsRequest request) =>
-    compute(_getTxsSync, {'request': request});
+Future<TxsResponse> getTxs(TxsRequest request) => compute(_getTxsSync, {'request': request});
 
 TxsResponse _getTxsSync(Map args) {
   final request = args['request'] as TxsRequest;
@@ -566,8 +509,7 @@ TxsResponse getTxsSync(TxsRequest request) {
 ///
 /// Returns a [Future] that completes with the identified transactions in JSON-format or throw if
 /// a transaction is not found.
-Future<String> getTxsAsJson(String jsonRequest) =>
-    compute(_getTxsAsJsonSync, {'jsonRequest': jsonRequest});
+Future<String> getTxsAsJson(String jsonRequest) => compute(_getTxsAsJsonSync, {'jsonRequest': jsonRequest});
 
 String _getTxsAsJsonSync(Map args) {
   final jsonRequest = args['jsonRequest'] as String;
@@ -584,8 +526,7 @@ String _getTxsAsJsonSync(Map args) {
 String getTxsAsJsonSync(String jsonRequest) {
   final jsonRequestPointer = jsonRequest.toNativeUtf8().cast<Char>();
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
-  final resultPointer =
-      monero_flutter.bindings.get_txs(jsonRequestPointer, errorBoxPointer);
+  final resultPointer = monero_flutter.bindings.get_txs(jsonRequestPointer, errorBoxPointer);
 
   final result = monero_flutter.extractString(resultPointer);
 
@@ -653,8 +594,7 @@ String _describeTxSetAsJsonSync(Map args) {
 String describeTxSetAsJsonSync(String jsonRequest) {
   final jsonRequestPointer = jsonRequest.toNativeUtf8().cast<Char>();
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
-  final resultPointer = monero_flutter.bindings
-      .describe_tx_set(jsonRequestPointer, errorBoxPointer);
+  final resultPointer = monero_flutter.bindings.describe_tx_set(jsonRequestPointer, errorBoxPointer);
 
   final result = monero_flutter.extractString(resultPointer);
 
@@ -720,8 +660,7 @@ String _sweepUnlockedAsJsonSync(Map args) {
 String sweepUnlockedAsJsonSync(String jsonRequest) {
   final jsonRequestPointer = jsonRequest.toNativeUtf8().cast<Char>();
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
-  final resultPointer = monero_flutter.bindings
-      .sweep_unlocked(jsonRequestPointer, errorBoxPointer);
+  final resultPointer = monero_flutter.bindings.sweep_unlocked(jsonRequestPointer, errorBoxPointer);
 
   final result = monero_flutter.extractString(resultPointer);
 
@@ -794,8 +733,7 @@ void freezeSync(String keyImage) {
 ///    [keyImage] - key image of the output to thaw.
 ///
 /// Returns a [Future] that completes with the true if the output is frozen, false otherwise.
-Future<bool> isFrozen(String keyImage) =>
-    compute(_isFrozenSync, {'keyImage': keyImage});
+Future<bool> isFrozen(String keyImage) => compute(_isFrozenSync, {'keyImage': keyImage});
 
 bool _isFrozenSync(Map args) {
   final keyImage = args['keyImage'] as String;
@@ -811,8 +749,7 @@ bool _isFrozenSync(Map args) {
 bool isFrozenSync(String keyImage) {
   final keyImagePointer = keyImage.toNativeUtf8().cast<Char>();
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
-  bool result =
-      monero_flutter.bindings.frozen(keyImagePointer, errorBoxPointer);
+  bool result = monero_flutter.bindings.frozen(keyImagePointer, errorBoxPointer);
 
   final errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
 
@@ -829,8 +766,7 @@ bool isFrozenSync(String keyImage) {
 /// Each transfer represents a transaction involving the wallet, including both incoming and outgoing transfers.
 ///
 /// Returns a [Future] that completes with the JSON string, containing all transfers.
-Future<String> getAllTransfersAsJson() =>
-    compute(_getAllTransfersAsJsonSync, {});
+Future<String> getAllTransfersAsJson() => compute(_getAllTransfersAsJsonSync, {});
 
 String _getAllTransfersAsJsonSync(Map args) {
   return getAllTransfersAsJsonSync();

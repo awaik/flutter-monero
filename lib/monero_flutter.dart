@@ -6,6 +6,10 @@ import 'package:ffi/ffi.dart';
 import 'entities/error_info.dart';
 import 'monero_flutter_bindings_generated.dart';
 
+export 'account_api.dart';
+export 'multisig_api.dart';
+export 'transaction_api.dart';
+
 const String _libName = 'monero_flutter';
 
 /// The dynamic library in which the symbols for [MoneroAppBindings] can be found.
@@ -25,8 +29,7 @@ final DynamicLibrary _dylib = () {
 /// The bindings to the native functions in [_dylib].
 final MoneroApiBindings bindings = MoneroApiBindings(_dylib);
 
-Pointer<ErrorBox> buildErrorBoxPointer()
-{
+Pointer<ErrorBox> buildErrorBoxPointer() {
   Pointer<ErrorBox> pointerToErrorBox = calloc.call();
 
   pointerToErrorBox.ref.code = 0;
@@ -53,7 +56,6 @@ ErrorInfo extractErrorInfo(Pointer<ErrorBox> errorBoxPointer) {
 }
 
 String? extractString(Pointer<Char> charPointer) {
-
   if (nullptr == charPointer) {
     return null;
   }
