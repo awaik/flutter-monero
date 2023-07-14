@@ -1,7 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 part 'txs_response.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class TxsResponse {
   List<TxResponseBlock> blocks;
 
@@ -13,7 +13,7 @@ class TxsResponse {
   Map<String, dynamic> toJson() => _$TxsResponseToJson(this);
 }
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class TxResponseBlock {
   int height;
   int timestamp;
@@ -29,7 +29,7 @@ class TxResponseBlock {
   Map<String, dynamic> toJson() => _$TxResponseBlockToJson(this);
 }
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class TxResponseTransaction {
   int fee;
   int numConfirmations;
@@ -69,7 +69,7 @@ class TxResponseTransaction {
   Map<String, dynamic> toJson() => _$TxResponseTransactionToJson(this);
 }
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class TxResponseIncomingTransfer {
   int amount;
   int accountIndex;

@@ -1,7 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 part 'sweep_unlocked_response.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class SweepUnlockedResponse {
   List<SweepUnlockedResponseTxSet> txSets;
 
@@ -13,7 +13,7 @@ class SweepUnlockedResponse {
   Map<String, dynamic> toJson() => _$SweepUnlockedResponseToJson(this);
 }
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class SweepUnlockedResponseTxSet {
   String multisigTxHex;
   List<SweepUnlockedResponseTransaction> txs;
@@ -27,7 +27,7 @@ class SweepUnlockedResponseTxSet {
   Map<String, dynamic> toJson() => _$SweepUnlockedResponseTxSetToJson(this);
 }
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class SweepUnlockedResponseTransaction {
   int fee;
   int ringSize;
@@ -75,7 +75,7 @@ class SweepUnlockedResponseTransaction {
   Map<String, dynamic> toJson() => _$SweepUnlockedResponseTransactionToJson(this);
 }
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class SweepUnlockedResponseInput {
   SweepUnlockedResponseKeyImage keyImage;
 
@@ -87,7 +87,7 @@ class SweepUnlockedResponseInput {
   Map<String, dynamic> toJson() => _$SweepUnlockedResponseInputToJson(this);
 }
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class SweepUnlockedResponseKeyImage {
   String hex;
 
@@ -99,7 +99,7 @@ class SweepUnlockedResponseKeyImage {
   Map<String, dynamic> toJson() => _$SweepUnlockedResponseKeyImageToJson(this);
 }
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class SweepUnlockedResponseOutgoingTransfer {
   int amount;
   int accountIndex;
@@ -117,7 +117,7 @@ class SweepUnlockedResponseOutgoingTransfer {
   Map<String, dynamic> toJson() => _$SweepUnlockedResponseOutgoingTransferToJson(this);
 }
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class SweepUnlockedResponseDestination {
   int amount;
   String address;

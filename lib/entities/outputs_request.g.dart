@@ -16,7 +16,7 @@ OutputsRequest _$OutputsRequestFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$OutputsRequestToJson(OutputsRequest instance) =>
     <String, dynamic>{
       'isSpent': instance.isSpent,
-      'txQuery': instance.txQuery,
+      'txQuery': instance.txQuery.toJson(),
     };
 
 OutputsRequestTxQuery _$OutputsRequestTxQueryFromJson(

@@ -5,7 +5,7 @@ import 'package:json_annotation/json_annotation.dart';
 import 'describe_tx_request.dart';
 part 'describe_unsigned_tx_request.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class DescribeUnsignedTxRequest extends DescribeTxRequest {
   String unsignedTxHex;
 

@@ -27,14 +27,16 @@ class SyncWalletPage extends StatelessWidget {
     }
   }
 
-  void _setupToNode() {
+  void _setupNode() async {
     try {
-      api.setupNodeSync(
+      _resultController.text = "please wait...";
+      await api.setupNode(
           address: "node.moneroworld.com:18089",
           login: "Daemon username",
           password: "Daemon password",
           useSSL: true,
           isLightWallet: false);
+      _resultController.text = "Setup completed successfully!";
     } catch (e) {
       _resultController.text = e.toString();
     }
@@ -57,17 +59,19 @@ class SyncWalletPage extends StatelessWidget {
     }
   }
 
-  void _connectToNode() {
+  void _connectToNode() async {
     try {
-      api.connectToNode();
+      _resultController.text = "connecting...";
+      await api.connectToNode();
+      _resultController.text = "connected";
     } catch (e) {
       _resultController.text = e.toString();
     }
   }
 
-  void _getSyncingHeight() {
+  void _getSyncingHeight() async {
     try {
-      _resultController.text = api.getSyncingHeight().toString();
+      _resultController.text = (await api.getSyncingHeight()).toString();
     } catch (e) {
       _resultController.text = e.toString();
     }
@@ -139,7 +143,7 @@ class SyncWalletPage extends StatelessWidget {
                     padding: const EdgeInsets.all(10),
                     child: ElevatedButton(
                       child: Text("Set a node", style: TextStyle(fontSize: 22)),
-                      onPressed: _setupToNode,
+                      onPressed: _setupNode,
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.all(10),
                         minimumSize: Size(360, 60),

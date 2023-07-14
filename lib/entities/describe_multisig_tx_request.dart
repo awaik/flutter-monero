@@ -5,7 +5,7 @@ import 'package:json_annotation/json_annotation.dart';
 import 'describe_tx_request.dart';
 part 'describe_multisig_tx_request.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class DescribeMultisigTxRequest extends DescribeTxRequest {
   String multisigTxHex;
 

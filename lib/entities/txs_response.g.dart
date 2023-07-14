@@ -14,7 +14,7 @@ TxsResponse _$TxsResponseFromJson(Map<String, dynamic> json) => TxsResponse(
 
 Map<String, dynamic> _$TxsResponseToJson(TxsResponse instance) =>
     <String, dynamic>{
-      'blocks': instance.blocks,
+      'blocks': instance.blocks.map((e) => e.toJson()).toList(),
     };
 
 TxResponseBlock _$TxResponseBlockFromJson(Map<String, dynamic> json) =>
@@ -30,7 +30,7 @@ Map<String, dynamic> _$TxResponseBlockToJson(TxResponseBlock instance) =>
     <String, dynamic>{
       'height': instance.height,
       'timestamp': instance.timestamp,
-      'txs': instance.txs,
+      'txs': instance.txs.map((e) => e.toJson()).toList(),
     };
 
 TxResponseTransaction _$TxResponseTransactionFromJson(
@@ -73,7 +73,8 @@ Map<String, dynamic> _$TxResponseTransactionToJson(
       'isIncoming': instance.isIncoming,
       'isOutgoing': instance.isOutgoing,
       'isLocked': instance.isLocked,
-      'incomingTransfers': instance.incomingTransfers,
+      'incomingTransfers':
+          instance.incomingTransfers.map((e) => e.toJson()).toList(),
     };
 
 TxResponseIncomingTransfer _$TxResponseIncomingTransferFromJson(

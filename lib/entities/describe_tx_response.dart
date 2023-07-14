@@ -1,7 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 part 'describe_tx_response.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class DescribeTxResponse {
   List<DescribeTxResponseTransaction> txs;
 
@@ -13,7 +13,7 @@ class DescribeTxResponse {
   Map<String, dynamic> toJson() => _$DescribeTxResponseToJson(this);
 }
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class DescribeTxResponseTransaction {
   int fee;
   int ringSize;
@@ -43,7 +43,7 @@ class DescribeTxResponseTransaction {
   Map<String, dynamic> toJson() => _$DescribeTxResponseTransactionToJson(this);
 }
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class DescribeTxResponseOutgoingTransfer {
   List<DescribeTxResponseDestination> destinations;
 
@@ -55,7 +55,7 @@ class DescribeTxResponseOutgoingTransfer {
   Map<String, dynamic> toJson() => _$DescribeTxResponseOutgoingTransferToJson(this);
 }
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class DescribeTxResponseDestination {
   int amount;
   String address;

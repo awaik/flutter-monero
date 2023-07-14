@@ -1,7 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 part 'outputs_request.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class OutputsRequest {
 
   bool isSpent;
@@ -18,7 +18,7 @@ class OutputsRequest {
   Map<String, dynamic> toJson() => _$OutputsRequestToJson(this);
 }
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class OutputsRequestTxQuery {
   bool isLocked;
   bool isConfirmed;

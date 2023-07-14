@@ -16,7 +16,7 @@ DescribeTxResponse _$DescribeTxResponseFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$DescribeTxResponseToJson(DescribeTxResponse instance) =>
     <String, dynamic>{
-      'txs': instance.txs,
+      'txs': instance.txs.map((e) => e.toJson()).toList(),
     };
 
 DescribeTxResponseTransaction _$DescribeTxResponseTransactionFromJson(
@@ -49,7 +49,7 @@ Map<String, dynamic> _$DescribeTxResponseTransactionToJson(
       'numDummyOutputs': instance.numDummyOutputs,
       'extraHex': instance.extraHex,
       'isOutgoing': instance.isOutgoing,
-      'outgoingTransfer': instance.outgoingTransfer,
+      'outgoingTransfer': instance.outgoingTransfer?.toJson(),
     };
 
 DescribeTxResponseOutgoingTransfer _$DescribeTxResponseOutgoingTransferFromJson(
@@ -64,7 +64,7 @@ DescribeTxResponseOutgoingTransfer _$DescribeTxResponseOutgoingTransferFromJson(
 Map<String, dynamic> _$DescribeTxResponseOutgoingTransferToJson(
         DescribeTxResponseOutgoingTransfer instance) =>
     <String, dynamic>{
-      'destinations': instance.destinations,
+      'destinations': instance.destinations.map((e) => e.toJson()).toList(),
     };
 
 DescribeTxResponseDestination _$DescribeTxResponseDestinationFromJson(

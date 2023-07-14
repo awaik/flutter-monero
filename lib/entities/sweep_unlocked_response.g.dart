@@ -18,7 +18,7 @@ SweepUnlockedResponse _$SweepUnlockedResponseFromJson(
 Map<String, dynamic> _$SweepUnlockedResponseToJson(
         SweepUnlockedResponse instance) =>
     <String, dynamic>{
-      'txSets': instance.txSets,
+      'txSets': instance.txSets.map((e) => e.toJson()).toList(),
     };
 
 SweepUnlockedResponseTxSet _$SweepUnlockedResponseTxSetFromJson(
@@ -35,7 +35,7 @@ Map<String, dynamic> _$SweepUnlockedResponseTxSetToJson(
         SweepUnlockedResponseTxSet instance) =>
     <String, dynamic>{
       'multisigTxHex': instance.multisigTxHex,
-      'txs': instance.txs,
+      'txs': instance.txs.map((e) => e.toJson()).toList(),
     };
 
 SweepUnlockedResponseTransaction _$SweepUnlockedResponseTransactionFromJson(
@@ -86,10 +86,10 @@ Map<String, dynamic> _$SweepUnlockedResponseTransactionToJson(
       'isConfirmed': instance.isConfirmed,
       'inTxPool': instance.inTxPool,
       'isFailed': instance.isFailed,
-      'inputs': instance.inputs,
+      'inputs': instance.inputs.map((e) => e.toJson()).toList(),
       'isOutgoing': instance.isOutgoing,
       'isLocked': instance.isLocked,
-      'outgoingTransfer': instance.outgoingTransfer,
+      'outgoingTransfer': instance.outgoingTransfer?.toJson(),
     };
 
 SweepUnlockedResponseInput _$SweepUnlockedResponseInputFromJson(
@@ -102,7 +102,7 @@ SweepUnlockedResponseInput _$SweepUnlockedResponseInputFromJson(
 Map<String, dynamic> _$SweepUnlockedResponseInputToJson(
         SweepUnlockedResponseInput instance) =>
     <String, dynamic>{
-      'keyImage': instance.keyImage,
+      'keyImage': instance.keyImage.toJson(),
     };
 
 SweepUnlockedResponseKeyImage _$SweepUnlockedResponseKeyImageFromJson(
@@ -138,7 +138,7 @@ Map<String, dynamic> _$SweepUnlockedResponseOutgoingTransferToJson(
       'amount': instance.amount,
       'accountIndex': instance.accountIndex,
       'subaddressIndices': instance.subaddressIndices,
-      'destinations': instance.destinations,
+      'destinations': instance.destinations.map((e) => e.toJson()).toList(),
     };
 
 SweepUnlockedResponseDestination _$SweepUnlockedResponseDestinationFromJson(

@@ -11,6 +11,7 @@ class TransferPage extends StatelessWidget {
 
   void _getUtxos() async {
     try {
+      _resultController.text = "please wait...";
       _resultController.text = "hash=${(await api.getUtxos()).blocks[0].txs[0].hash}; amount=${(await api.getUtxos()).blocks[0].txs[0].outputs[0].amount}";
     } catch (e) {
       _resultController.text = e.toString();
@@ -20,6 +21,7 @@ class TransferPage extends StatelessWidget {
   void _getTxs() async {
     try {
       final hash = _resultController.text;
+      _resultController.text = "please wait...";
       _resultController.text = "numConfirmations=${(await api.getTxs(TxsRequest(txs: [TxsRequestBody(hash: hash)]))).blocks[0].txs[0].numConfirmations}";
     } catch (e) {
       _resultController.text = e.toString();
@@ -29,6 +31,7 @@ class TransferPage extends StatelessWidget {
   void _describeTxSet() async {
     try {
       final request = DescribeMultisigTxRequest(multisigTxHex: _resultController.text);
+      _resultController.text = "please wait...";
       _resultController.text = "outputSum=${(await api.describeTxSet(request)).txs[0].outputSum}";
     } catch (e) {
       _resultController.text = e.toString();
@@ -38,6 +41,7 @@ class TransferPage extends StatelessWidget {
   void _sweepUnlocked() async {
     try {
       final address = _resultController.text;
+      _resultController.text = "please wait...";
       final request = SweepUnlockedRequest(destinations: [SweepUnlockedRequestDestination(address: address)]);
       _resultController.text = "hash=${(await api.sweepUnlocked(request)).txSets[0].txs[0].hash}";
     } catch (e) {
@@ -55,6 +59,7 @@ class TransferPage extends StatelessWidget {
 
   void _getTransfers() async {
     try {
+      _resultController.text = "please wait...";
       _resultController.text = "amount=${(await api.getAllTransactions())[0].amount}";
     } catch (e) {
       _resultController.text = e.toString();
@@ -63,6 +68,7 @@ class TransferPage extends StatelessWidget {
 
   void _thaw() async {
     try {
+      _resultController.text = "please wait...";
       await api.thaw(_resultController.text);
       _resultController.text = "ok";
     } catch (e) {
@@ -72,6 +78,7 @@ class TransferPage extends StatelessWidget {
 
   void _freeze() async {
     try {
+      _resultController.text = "please wait...";
       await api.freeze(_resultController.text);
       _resultController.text = "ok";
     } catch (e) {
@@ -81,6 +88,7 @@ class TransferPage extends StatelessWidget {
 
   void _isFrozen() async {
     try {
+      _resultController.text = "please wait...";
       _resultController.text = await api.isFrozen(_resultController.text).toString();
     } catch (e) {
       _resultController.text = e.toString();

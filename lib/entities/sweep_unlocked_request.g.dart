@@ -18,7 +18,7 @@ SweepUnlockedRequest _$SweepUnlockedRequestFromJson(
 Map<String, dynamic> _$SweepUnlockedRequestToJson(
         SweepUnlockedRequest instance) =>
     <String, dynamic>{
-      'destinations': instance.destinations,
+      'destinations': instance.destinations.map((e) => e.toJson()).toList(),
     };
 
 SweepUnlockedRequestDestination _$SweepUnlockedRequestDestinationFromJson(

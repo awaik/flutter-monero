@@ -14,7 +14,7 @@ TxsRequest _$TxsRequestFromJson(Map<String, dynamic> json) => TxsRequest(
 
 Map<String, dynamic> _$TxsRequestToJson(TxsRequest instance) =>
     <String, dynamic>{
-      'txs': instance.txs,
+      'txs': instance.txs.map((e) => e.toJson()).toList(),
     };
 
 TxsRequestBody _$TxsRequestBodyFromJson(Map<String, dynamic> json) =>
