@@ -1244,6 +1244,15 @@ extern "C"
     // Account
     // **********************************************************************************************************************************
 
+    int32_t account_size(ErrorBox* error)
+    {
+        if (!is_account_loaded(error))
+            return -1;
+
+        auto accounts = m_account->getAll();
+        return (uint32_t)accounts.size();
+    }
+
     int64_t* account_get_all(ErrorBox* error)
     {
         if (!is_account_loaded(error))
@@ -1262,15 +1271,6 @@ extern "C"
         }
 
         return account_handles;
-    }
-
-    int32_t account_size(ErrorBox* error)
-    {
-        if (!is_account_loaded(error))
-            return 0;
-
-        auto accounts = m_account->getAll();
-        return (uint32_t)accounts.size();
     }
 
     void free_block_of_accounts(int64_t* handles, int32_t size)
@@ -1296,6 +1296,15 @@ extern "C"
         return (int32_t)m_wallet->numSubaddresses(account_index);
     }
 
+    int32_t subaddress_size(ErrorBox* error)
+    {
+        if (!is_subaddress_loaded(error))
+            return 0;
+
+        auto subaddresses = m_subaddress->getAll();
+        return (uint32_t)subaddresses.size();
+    }
+
     int64_t* subaddress_get_all(ErrorBox* error)
     {
         if (!is_subaddress_loaded(error))
@@ -1314,15 +1323,6 @@ extern "C"
         }
 
         return subaddressesValue;
-    }
-
-    int32_t subaddress_size(ErrorBox* error)
-    {
-        if (!is_subaddress_loaded(error))
-            return 0;
-
-        auto subaddresses = m_subaddress->getAll();
-        return (uint32_t)subaddresses.size();
     }
 
     void free_block_of_subaddresses(int64_t* handles, int32_t size)

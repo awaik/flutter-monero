@@ -116,13 +116,14 @@ extern "C"
     // **********************************************************************************************************************************
 
     // Get info
-    int64_t *account_get_all(ErrorBox *error);
     int32_t account_size(ErrorBox *error);
+    int64_t *account_get_all(ErrorBox *error);
     void free_block_of_accounts(int64_t *handles, int32_t size);
 
     int32_t get_num_subaddresses(int32_t account_index, ErrorBox *error);
-    int64_t *subaddress_get_all(ErrorBox *error);
+
     int32_t subaddress_size(ErrorBox *error);
+    int64_t *subaddress_get_all(ErrorBox *error);
     void free_block_of_subaddresses(int64_t *handles, int32_t size);
 
     const char *get_address(uint32_t account_index, uint32_t address_index, ErrorBox *error);

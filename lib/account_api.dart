@@ -115,15 +115,15 @@ int getAccountCountSync() {
 ///
 /// Returns:
 ///   Returns a [Future] that resolves to a list of [AccountRow] objects.
-Future<List<AccountRow>> getAllAccount() => compute(_getAllAccountSync, {});
+Future<List<AccountRow>> getAllAccounts() => compute(_getAllAccountsSync, {});
 
-List<AccountRow> _getAllAccountSync(Map args) => getAllAccountSync();
+List<AccountRow> _getAllAccountsSync(Map args) => getAllAccountsSync();
 
 /// Retrieves accounts in the currently opened Monero wallet (sync version).
 ///
 /// Returns:
 ///   All accounts in the currently opened Monero wallet.
-List<AccountRow> getAllAccountSync() {
+List<AccountRow> getAllAccountsSync() {
   final size = getAccountCountSync();
 
   if (0 == size) {
@@ -155,15 +155,15 @@ List<AccountRow> getAllAccountSync() {
 ///
 /// Returns:
 ///   A [Future] that completes with the total number of subaddresses as an integer.
-Future<int> getSubaddressesCount() => compute(_getSubaddressesCountSync, {});
+Future<int> getSubaddressCount() => compute(_getSubaddressCountSync, {});
 
-int _getSubaddressesCountSync(Map args) => getSubaddressesCountSync();
+int _getSubaddressCountSync(Map args) => getSubaddressCountSync();
 
 /// Retrieves the total number of subaddresses in the currently opened Monero wallet (sync version).
 ///
 /// Returns:
 ///   The total number of subaddresses as an integer.
-int getSubaddressesCountSync() {
+int getSubaddressCountSync() {
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
   final result = monero_flutter.bindings.subaddress_size(errorBoxPointer);
 
@@ -201,7 +201,7 @@ List<SubaddressRow> _getAllSubaddressesSync(Map args) =>
 /// `createSubaddress()`, the length of this list tells us exactly the index of
 /// the next unused subaddress, since the list has only been updated on address use.
 List<SubaddressRow> getAllSubaddressesSync() {
-  final size = getSubaddressesCountSync();
+  final size = getSubaddressCountSync();
 
   if (0 == size) {
     return [];
