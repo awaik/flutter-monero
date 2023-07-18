@@ -18,6 +18,21 @@ class TransferPage extends StatelessWidget {
     }
   }
 
+  void _getOutputs() async {
+    try {
+      String q = _resultController.text;
+
+      // if (q.isEmpty) {
+      //   q = "{}";
+      // }
+
+      _resultController.text = "please wait...";
+      _resultController.text = await api.getOutputsAsJson(q);
+    } catch (e) {
+      _resultController.text = e.toString();
+    }
+  }
+
   void _getTxs() async {
     try {
       final hash = _resultController.text;
@@ -122,6 +137,19 @@ class TransferPage extends StatelessWidget {
                       child: Text("Get Utxos",
                           style: TextStyle(fontSize: 22)),
                       onPressed: _getUtxos,
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.all(10),
+                        minimumSize: Size(360, 60),
+                      ),
+                    ),
+                  ),
+
+                  Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: ElevatedButton(
+                      child: Text("Get Outputs",
+                          style: TextStyle(fontSize: 22)),
+                      onPressed: _getOutputs,
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.all(10),
                         minimumSize: Size(360, 60),
