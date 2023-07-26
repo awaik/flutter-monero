@@ -159,6 +159,9 @@ extern "C"
     void transaction_create_mult_dest(const char **addresses, const char *payment_id, const char **amounts, uint32_t size, uint8_t priority, uint32_t subaddr_account, ExternPendingTransactionRaw *pending_transaction, ErrorBox *error);
     void transaction_commit(ExternPendingTransactionRaw *transaction, ErrorBox *error);
 
+    const char *create_transactions(const char *tx_config_json, ErrorBox *error);
+    const char *relay_transaction(const char *tx_metadata, ErrorBox *error);
+
     void freeze(const char *key_image, ErrorBox *error);
     void thaw(const char *key_image, ErrorBox *error);
     bool frozen(const char *key_image, ErrorBox *error);

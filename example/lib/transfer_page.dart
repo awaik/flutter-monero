@@ -1,5 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
-import 'package:monero_flutter/entities/describe_multisig_tx_request.dart';
+import 'package:monero_flutter/entities/outputs_request.dart';
 import 'package:monero_flutter/entities/sweep_unlocked_request.dart';
 import 'package:monero_flutter/entities/txs_request.dart';
 import 'package:monero_flutter/transaction_api.dart' as api;
@@ -12,7 +14,26 @@ class TransferPage extends StatelessWidget {
   void _getUtxos() async {
     try {
       _resultController.text = "please wait...";
-      _resultController.text = "hash=${(await api.getUtxos()).blocks[0].txs[0].hash}; amount=${(await api.getUtxos()).blocks[0].txs[0].outputs[0].amount}";
+
+      final utxos = await api.getUtxos();
+
+      String result = "";
+
+      for (final b in utxos.blocks) {
+
+        result += "block=${b.height} \r\n";
+
+        for (final t in b.txs) {
+          result += "=transaction=${t.hash} \r\n";
+
+          for (final o in t.outputs) {
+            result += "==amount=${o.amount} subaddressIndex=${o.subaddressIndex} \r\n";
+
+          }
+        }
+      }
+
+      _resultController.text = result;
     } catch (e) {
       _resultController.text = e.toString();
     }
@@ -45,9 +66,10 @@ class TransferPage extends StatelessWidget {
 
   void _describeTxSet() async {
     try {
-      final request = DescribeMultisigTxRequest(multisigTxHex: _resultController.text);
-      _resultController.text = "please wait...";
-      _resultController.text = "outputSum=${(await api.describeTxSet(request)).txs[0].outputSum}";
+      //final request = DescribeUnsignedTxRequest(unsignedTxHex: _resultController.text);
+      //_resultController.text = "please wait...";
+      //_resultController.text = "outputSum=${(await api.describeTxSet(request)).txs[0].outputSum}";
+      _resultController.text = api.describeTxSetAsJsonSync(_resultController.text);
     } catch (e) {
       _resultController.text = e.toString();
     }
@@ -105,6 +127,26 @@ class TransferPage extends StatelessWidget {
     try {
       _resultController.text = "please wait...";
       _resultController.text = await api.isFrozen(_resultController.text).toString();
+    } catch (e) {
+      _resultController.text = e.toString();
+    }
+  }
+
+  void _createTransaction() async {
+    try {
+      String jsonRequest = _resultController.text;
+      _resultController.text = "please wait...";
+      _resultController.text = await api.createExtendedTransactionAsJson(jsonRequest);
+    } catch (e) {
+      _resultController.text = e.toString();
+    }
+  }
+
+  void _relayTransaction() async {
+    try {
+      String request = _resultController.text;
+      _resultController.text = "please wait...";
+      _resultController.text = await api.relayTransaction(request);
     } catch (e) {
       _resultController.text = e.toString();
     }
@@ -254,6 +296,32 @@ class TransferPage extends StatelessWidget {
                       child:
                       Text("IsFrozen", style: TextStyle(fontSize: 22)),
                       onPressed: _isFrozen,
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.all(10),
+                        minimumSize: Size(360, 60),
+                      ),
+                    ),
+                  ),
+
+                  Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: ElevatedButton(
+                      child:
+                      Text("Crate transaction", style: TextStyle(fontSize: 22)),
+                      onPressed: _createTransaction,
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.all(10),
+                        minimumSize: Size(360, 60),
+                      ),
+                    ),
+                  ),
+
+                  Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: ElevatedButton(
+                      child:
+                      Text("Relay transaction", style: TextStyle(fontSize: 22)),
+                      onPressed: _relayTransaction,
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.all(10),
                         minimumSize: Size(360, 60),

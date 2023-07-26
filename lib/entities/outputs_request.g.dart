@@ -26,19 +26,27 @@ OutputsRequest _$OutputsRequestFromJson(Map<String, dynamic> json) =>
               json['txQuery'] as Map<String, dynamic>),
     );
 
-Map<String, dynamic> _$OutputsRequestToJson(OutputsRequest instance) =>
-    <String, dynamic>{
-      'minAmount': instance.minAmount,
-      'amount': instance.amount,
-      'maxAmount': instance.maxAmount,
-      'index': instance.index,
-      'accountIndex': instance.accountIndex,
-      'subaddressIndex': instance.subaddressIndex,
-      'keyImage': instance.keyImage?.toJson(),
-      'isSpent': instance.isSpent,
-      'isFrozen': instance.isFrozen,
-      'txQuery': instance.txQuery?.toJson(),
-    };
+Map<String, dynamic> _$OutputsRequestToJson(OutputsRequest instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('minAmount', instance.minAmount);
+  writeNotNull('amount', instance.amount);
+  writeNotNull('maxAmount', instance.maxAmount);
+  writeNotNull('index', instance.index);
+  writeNotNull('accountIndex', instance.accountIndex);
+  writeNotNull('subaddressIndex', instance.subaddressIndex);
+  writeNotNull('keyImage', instance.keyImage?.toJson());
+  writeNotNull('isSpent', instance.isSpent);
+  writeNotNull('isFrozen', instance.isFrozen);
+  writeNotNull('txQuery', instance.txQuery?.toJson());
+  return val;
+}
 
 OutputsRequestKeyImage _$OutputsRequestKeyImageFromJson(
         Map<String, dynamic> json) =>
@@ -48,11 +56,19 @@ OutputsRequestKeyImage _$OutputsRequestKeyImageFromJson(
     );
 
 Map<String, dynamic> _$OutputsRequestKeyImageToJson(
-        OutputsRequestKeyImage instance) =>
-    <String, dynamic>{
-      'hex': instance.hex,
-      'signature': instance.signature,
-    };
+    OutputsRequestKeyImage instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('hex', instance.hex);
+  writeNotNull('signature', instance.signature);
+  return val;
+}
 
 OutputsRequestTxQuery _$OutputsRequestTxQueryFromJson(
         Map<String, dynamic> json) =>
@@ -68,14 +84,22 @@ OutputsRequestTxQuery _$OutputsRequestTxQueryFromJson(
     );
 
 Map<String, dynamic> _$OutputsRequestTxQueryToJson(
-        OutputsRequestTxQuery instance) =>
-    <String, dynamic>{
-      'isOutgoing': instance.isOutgoing,
-      'isIncoming': instance.isIncoming,
-      'isLocked': instance.isLocked,
-      'isConfirmed': instance.isConfirmed,
-      'isRelayed': instance.isRelayed,
-      'isDoubleSpendSeen': instance.isDoubleSpendSeen,
-      'inputSum': instance.inputSum,
-      'outputSum': instance.outputSum,
-    };
+    OutputsRequestTxQuery instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('isOutgoing', instance.isOutgoing);
+  writeNotNull('isIncoming', instance.isIncoming);
+  writeNotNull('isLocked', instance.isLocked);
+  writeNotNull('isConfirmed', instance.isConfirmed);
+  writeNotNull('isRelayed', instance.isRelayed);
+  writeNotNull('isDoubleSpendSeen', instance.isDoubleSpendSeen);
+  writeNotNull('inputSum', instance.inputSum);
+  writeNotNull('outputSum', instance.outputSum);
+  return val;
+}

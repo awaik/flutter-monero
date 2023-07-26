@@ -1,15 +1,85 @@
 import 'package:flutter/material.dart';
 import 'package:monero_flutter/multisig_api.dart' as api;
 import 'package:monero_flutter/transaction_api.dart' as transaction_api;
+import 'package:monero_flutter/wallet_manager_api.dart' as wallet_manager_api;
 
 class MultisigPage extends StatelessWidget {
   final TextEditingController _resultController = TextEditingController();
 
   MultisigPage({super.key});
 
-  void _isMultisig() {
+  void _createOrOpenWallet(String walletPath) {
+    const password = "password1";
+    const language = "Eng";
+
+    if (!wallet_manager_api.isWalletExistSync(path: walletPath)) {
+      wallet_manager_api.createWalletSync(path: walletPath, password: password, language: language);
+    }
+    else {
+      wallet_manager_api.loadWallet(path: walletPath, password: password);
+    }
+  }
+
+  bool executed = false;
+
+  void _complexTest() async {
+
+    if (executed) {
+      return;
+    }
+
+    executed = true;
+
+    String wallet1Path = "/Users/dmytro/Documents/WALLET/mswallet1";
+    String wallet2Path = "/Users/dmytro/Documents/WALLET/mswallet2";
+
+    // wallet 1 (round 1)
+    _createOrOpenWallet(wallet1Path);
+
+    final round1Wallet1 = await api.prepareMultisig();
+    //final multisigInfoWallet1 = await api.getMultisigInfo();
+    wallet_manager_api.closeCurrentWallet();
+
+    // wallet 2 (round 1 and 2)
+    _createOrOpenWallet(wallet2Path);
+
+    final round1Wallet2 = await api.prepareMultisig();
+    //final multisigInfoWallet2 = await api.getMultisigInfo();
+    final round2Wallet2 = await api.makeMultisig(infoList: [round1Wallet1], threshold: 2);
+    wallet_manager_api.closeCurrentWallet();
+
+    // wallet 1 (round 2 and 3)
+    _createOrOpenWallet(wallet1Path);
+    final round2Wallet1 = await api.makeMultisig(infoList: [round1Wallet2], threshold: 2);
+    final round3Wallet1 = await api.exchangeMultisigKeys(infoList: [round2Wallet1, round2Wallet2]);
+    wallet_manager_api.closeCurrentWallet();
+
+    // wallet 2 (round 3)
+    _createOrOpenWallet(wallet2Path);
+    final round3Wallet2 = await api.exchangeMultisigKeys(infoList: [round2Wallet1, round3Wallet1]);
+    wallet_manager_api.closeCurrentWallet();
+    //
+    // // wallet 1 (round 4)
+    // _createOrOpenWallet(wallet1Path);
+    //final round3Wallet2 = await api.exchangeMultisigKeys(infoList: [round3Wallet2]);
+    //wallet_manager_api.closeCurrentWallet();
+
+    //_resultController.text = "=$address=";
+  }
+
+  void _createWallet1() async {
+    String wallet1Path = "/Users/dmytro/Documents/WALLET/mswallet1";
+    _createOrOpenWallet(wallet1Path);
+  }
+
+  void _createWallet2() async {
+    String wallet2Path = "/Users/dmytro/Documents/WALLET/mswallet2";
+    _createOrOpenWallet(wallet2Path);
+  }
+
+  void _isMultisig() async {
     try {
-      _resultController.text = api.isMultisig().toString();
+      _resultController.text = (await api.isMultisig()).toString();
     } catch (e) {
       _resultController.text = e.toString();
     }
@@ -40,9 +110,9 @@ class MultisigPage extends StatelessWidget {
     }
   }
 
-  void _isMultisigImportNeeded() {
+  void _isMultisigImportNeeded() async {
     try {
-      _resultController.text = api.isMultisigImportNeeded().toString();
+      _resultController.text = (await api.isMultisigImportNeeded()).toString();
     } catch (e) {
       _resultController.text = e.toString();
     }
@@ -57,10 +127,10 @@ class MultisigPage extends StatelessWidget {
     }
   }
 
-  void _importMultisigImages() {
+  void _importMultisigImages() async {
     try {
       List<String> list = [_resultController.text];
-      _resultController.text = api.importMultisigImages(infoList: list).toString();
+      _resultController.text = (await api.importMultisigImages(infoList: list)).toString();
     } catch (e) {
       _resultController.text = e.toString();
     }
@@ -112,6 +182,8 @@ class MultisigPage extends StatelessWidget {
         children: <Widget>[
           TextField(
             controller: _resultController,
+            keyboardType: TextInputType.multiline,
+            maxLines: 8,
             decoration: InputDecoration(
               border: OutlineInputBorder(),
             ),
@@ -121,6 +193,43 @@ class MultisigPage extends StatelessWidget {
             child: SingleChildScrollView(
               child: Column(
                 children: <Widget>[
+
+                  Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: ElevatedButton(
+                      child: Text("Complex Test", style: TextStyle(fontSize: 22)),
+                      onPressed: _complexTest,
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.all(10),
+                        minimumSize: Size(360, 60),
+                      ),
+                    ),
+                  ),
+
+                  Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: ElevatedButton(
+                      child: Text("Create wallet 1", style: TextStyle(fontSize: 22)),
+                      onPressed: _createWallet1,
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.all(10),
+                        minimumSize: Size(360, 60),
+                      ),
+                    ),
+                  ),
+
+                  Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: ElevatedButton(
+                      child: Text("Create wallet 2", style: TextStyle(fontSize: 22)),
+                      onPressed: _createWallet2,
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.all(10),
+                        minimumSize: Size(360, 60),
+                      ),
+                    ),
+                  ),
+
                   Padding(
                     padding: const EdgeInsets.all(10),
                     child: ElevatedButton(
@@ -132,6 +241,7 @@ class MultisigPage extends StatelessWidget {
                       ),
                     ),
                   ),
+
                   Padding(
                     padding: const EdgeInsets.all(10),
                     child: ElevatedButton(

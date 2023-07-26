@@ -428,12 +428,12 @@ List<String> submitMultisigTxHexSync(String signedMultisigTxHex) {
       signedMultisigTxHex.toNativeUtf8().cast<Char>();
 
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
-  final pointers = monero_flutter.bindings
+  final resultPointer = monero_flutter.bindings
       .submit_multisig_tx_hex(signedMultisigTxHexPointer, errorBoxPointer);
-  final result = _convertToList(pointers);
+
+  final result = _convertToList(resultPointer);
 
   calloc.free(signedMultisigTxHexPointer);
-  calloc.free(pointers);
 
   final errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
 
@@ -445,6 +445,11 @@ List<String> submitMultisigTxHexSync(String signedMultisigTxHex) {
 }
 
 List<String> _convertToList(Pointer<Pointer<Char>> pointers) {
+
+  if (nullptr == pointers) {
+    return [];
+  }
+
   final list = <String>[];
 
   var i = 0;

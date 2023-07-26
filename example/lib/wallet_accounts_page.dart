@@ -32,15 +32,19 @@ class WalletAccountsPage extends StatelessWidget {
 
   void _subaddressTest() async {
     try {
+      String result = "";
+
       //await api.addAccount(label: "test1");
 
       await api.refreshAccounts();
       final accountCount = await api.getAccountCount();
 
-      if (accountCount > 0){
-        int index = accountCount - 1;
-        await api.addSubaddress(accountIndex: index, label: "test subaddress 1");
-      }
+      result += "accountCount=$accountCount;\r\n";
+
+      // if (accountCount > 0){
+      //   int index = accountCount - 1;
+      //   await api.addSubaddress(accountIndex: index, label: "test subaddress 1");
+      // }
 
       for (int i = 0; i < accountCount; i++) {
         await api.refreshSubaddresses(accountIndex: i);
@@ -49,14 +53,21 @@ class WalletAccountsPage extends StatelessWidget {
       final accounts = await api.getAllAccounts();
       final subaddresses = await api.getAllSubaddresses();
 
-      if (accounts.isNotEmpty) {
-        int accountIndex = accounts.length - 1;
-        int subaddressIndex = subaddresses.length - 1;
-        _resultController.text = "${accounts[accountIndex].label} ${subaddresses[subaddressIndex].label}=${subaddresses[subaddressIndex].address}";
+      result += "--------";
+
+      for (final subaddress in subaddresses){
+
+        final id = subaddress.id;
+        final label = subaddress.label;
+        final address = subaddress.address;
+
+        result += "subaddress.id=$id;\r\n";
+        result += "subaddress.label=$label;\r\n";
+        result += "subaddress.address=$address;\r\n";
+        result += "--------";
       }
-      else{
-        _resultController.text = "empty";
-      }
+
+      _resultController.text = result;
     } catch (e) {
       _resultController.text = e.toString();
     }

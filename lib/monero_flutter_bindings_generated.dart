@@ -780,6 +780,20 @@ class MoneroApiBindings {
       _rescan_spentPtr.asFunction<void Function(ffi.Pointer<ErrorBox>)>();
 
   /// Get info
+  int account_size(
+    ffi.Pointer<ErrorBox> error,
+  ) {
+    return _account_size(
+      error,
+    );
+  }
+
+  late final _account_sizePtr =
+      _lookup<ffi.NativeFunction<ffi.Int32 Function(ffi.Pointer<ErrorBox>)>>(
+          'account_size');
+  late final _account_size =
+      _account_sizePtr.asFunction<int Function(ffi.Pointer<ErrorBox>)>();
+
   ffi.Pointer<ffi.Int64> account_get_all(
     ffi.Pointer<ErrorBox> error,
   ) {
@@ -794,20 +808,6 @@ class MoneroApiBindings {
               ffi.Pointer<ErrorBox>)>>('account_get_all');
   late final _account_get_all = _account_get_allPtr
       .asFunction<ffi.Pointer<ffi.Int64> Function(ffi.Pointer<ErrorBox>)>();
-
-  int account_size(
-    ffi.Pointer<ErrorBox> error,
-  ) {
-    return _account_size(
-      error,
-    );
-  }
-
-  late final _account_sizePtr =
-      _lookup<ffi.NativeFunction<ffi.Int32 Function(ffi.Pointer<ErrorBox>)>>(
-          'account_size');
-  late final _account_size =
-      _account_sizePtr.asFunction<int Function(ffi.Pointer<ErrorBox>)>();
 
   void free_block_of_accounts(
     ffi.Pointer<ffi.Int64> handles,
@@ -843,6 +843,20 @@ class MoneroApiBindings {
   late final _get_num_subaddresses = _get_num_subaddressesPtr
       .asFunction<int Function(int, ffi.Pointer<ErrorBox>)>();
 
+  int subaddress_size(
+    ffi.Pointer<ErrorBox> error,
+  ) {
+    return _subaddress_size(
+      error,
+    );
+  }
+
+  late final _subaddress_sizePtr =
+      _lookup<ffi.NativeFunction<ffi.Int32 Function(ffi.Pointer<ErrorBox>)>>(
+          'subaddress_size');
+  late final _subaddress_size =
+      _subaddress_sizePtr.asFunction<int Function(ffi.Pointer<ErrorBox>)>();
+
   ffi.Pointer<ffi.Int64> subaddress_get_all(
     ffi.Pointer<ErrorBox> error,
   ) {
@@ -857,20 +871,6 @@ class MoneroApiBindings {
               ffi.Pointer<ErrorBox>)>>('subaddress_get_all');
   late final _subaddress_get_all = _subaddress_get_allPtr
       .asFunction<ffi.Pointer<ffi.Int64> Function(ffi.Pointer<ErrorBox>)>();
-
-  int subaddress_size(
-    ffi.Pointer<ErrorBox> error,
-  ) {
-    return _subaddress_size(
-      error,
-    );
-  }
-
-  late final _subaddress_sizePtr =
-      _lookup<ffi.NativeFunction<ffi.Int32 Function(ffi.Pointer<ErrorBox>)>>(
-          'subaddress_size');
-  late final _subaddress_size =
-      _subaddress_sizePtr.asFunction<int Function(ffi.Pointer<ErrorBox>)>();
 
   void free_block_of_subaddresses(
     ffi.Pointer<ffi.Int64> handles,
@@ -1254,6 +1254,42 @@ class MoneroApiBindings {
       void Function(
           ffi.Pointer<ExternPendingTransactionRaw>, ffi.Pointer<ErrorBox>)>();
 
+  ffi.Pointer<ffi.Char> create_transactions(
+    ffi.Pointer<ffi.Char> tx_config_json,
+    ffi.Pointer<ErrorBox> error,
+  ) {
+    return _create_transactions(
+      tx_config_json,
+      error,
+    );
+  }
+
+  late final _create_transactionsPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Pointer<ffi.Char> Function(ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ErrorBox>)>>('create_transactions');
+  late final _create_transactions = _create_transactionsPtr.asFunction<
+      ffi.Pointer<ffi.Char> Function(
+          ffi.Pointer<ffi.Char>, ffi.Pointer<ErrorBox>)>();
+
+  ffi.Pointer<ffi.Char> relay_transaction(
+    ffi.Pointer<ffi.Char> tx_metadata,
+    ffi.Pointer<ErrorBox> error,
+  ) {
+    return _relay_transaction(
+      tx_metadata,
+      error,
+    );
+  }
+
+  late final _relay_transactionPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Pointer<ffi.Char> Function(ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ErrorBox>)>>('relay_transaction');
+  late final _relay_transaction = _relay_transactionPtr.asFunction<
+      ffi.Pointer<ffi.Char> Function(
+          ffi.Pointer<ffi.Char>, ffi.Pointer<ErrorBox>)>();
+
   void freeze(
     ffi.Pointer<ffi.Char> key_image,
     ffi.Pointer<ErrorBox> error,
@@ -1570,21 +1606,21 @@ class MoneroApiBindings {
           ffi.Pointer<ffi.Char>, ffi.Pointer<ErrorBox>)>();
 }
 
-class ErrorBox extends ffi.Struct {
+final class ErrorBox extends ffi.Struct {
   @ffi.Int()
   external int code;
 
   external ffi.Pointer<ffi.Char> message;
 }
 
-class ByteArray extends ffi.Struct {
+final class ByteArray extends ffi.Struct {
   external ffi.Pointer<ffi.Uint8> bytes;
 
   @ffi.Int32()
   external int length;
 }
 
-class ExternPendingTransactionRaw extends ffi.Struct {
+final class ExternPendingTransactionRaw extends ffi.Struct {
   @ffi.Int64()
   external int amount;
 

@@ -1,7 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 part 'txs_request.g.dart';
 
-@JsonSerializable(explicitToJson: true)
+@JsonSerializable(explicitToJson: true, includeIfNull: false)
 class TxsRequest {
   List<TxsRequestBody> txs;
 
@@ -13,7 +13,7 @@ class TxsRequest {
   Map<String, dynamic> toJson() => _$TxsRequestToJson(this);
 }
 
-@JsonSerializable(explicitToJson: true)
+@JsonSerializable(explicitToJson: true, includeIfNull: false)
 class TxsRequestBody {
   String hash;
 

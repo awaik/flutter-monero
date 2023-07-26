@@ -1,7 +1,7 @@
 import 'dart:ffi';
 import 'package:ffi/ffi.dart';
 
-class ExternalAccountRow extends Struct {
+final class ExternalAccountRow extends Struct {
   @Int64()
   external int id;
 

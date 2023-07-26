@@ -6,6 +6,8 @@ import 'package:flutter/foundation.dart';
 import 'package:monero_flutter/entities/outputs_response.dart';
 import 'package:monero_flutter/entities/txs_request.dart';
 
+import 'entities/create_transaction_request.dart';
+import 'entities/create_transaction_response.dart';
 import 'entities/describe_tx_request.dart';
 import 'entities/describe_tx_response.dart';
 import 'entities/monero_output.dart';
@@ -330,6 +332,89 @@ void transactionCommitSync(PendingTransactionDescription transactionDescription)
   }
 }
 
+/// Creates a new transaction specifying the extended info (async version).
+///
+/// This function creates a new transaction to send funds to the specified address.
+/// It returns a [Future] that resolves to a [CreateTransactionResponse] object,
+/// which contains information about the created transaction.
+///
+/// To send a transaction to the network, use the [relayTransaction] function.
+Future<CreateTransactionResponse> createExtendedTransaction(CreateTransactionRequest createTransactionRequest) async {
+  final txConfigJson = jsonEncode(createTransactionRequest.toJson());
+  final jsonResponse = await createExtendedTransactionAsJson(txConfigJson);
+  final jsonMapResponse = jsonDecode(jsonResponse);
+
+  return CreateTransactionResponse.fromJson(jsonMapResponse);
+}
+
+/// Creates a new transaction in JSON-format, specifying the extended info (async version).
+///
+/// To send a transaction to the network, use the [relayTransaction] function.
+Future<String> createExtendedTransactionAsJson(String txConfigJson) =>
+    compute(_createExtendedTransactionAsJsonSync, {'txConfigJson': txConfigJson});
+
+String _createExtendedTransactionAsJsonSync(Map args) {
+  final txConfigJson = args['txConfigJson'] as String;
+  return createExtendedTransactionAsJsonSync(txConfigJson);
+}
+
+/// Creates a new transaction in JSON-format, specifying the extended info (sync version).
+///
+/// To send a transaction to the network, use the [relayTransactionSync] function.
+String createExtendedTransactionAsJsonSync(String txConfigJson)
+{
+  final txConfigJsonPointer = txConfigJson.toNativeUtf8().cast<Char>();
+  final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
+
+  final resultPointer = monero_flutter.bindings.create_transactions(txConfigJsonPointer, errorBoxPointer);
+
+  calloc.free(txConfigJsonPointer);
+
+  final result = monero_flutter.extractString(resultPointer);
+  final errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
+
+  if (0 != errorInfo.code) {
+    throw Exception(errorInfo.getErrorMessage());
+  }
+
+  return result!;
+}
+
+/// Sending a transaction to the network (async version).
+///
+/// This function is commonly used after calling createExtendedTransaction or
+/// createExtendedTransactionAsJson functions.
+Future<String> relayTransaction(String txMetadata) =>
+    compute(_relayTransactionSync, {'txMetadata': txMetadata});
+
+String _relayTransactionSync(Map args) {
+  final txMetadata = args['txMetadata'] as String;
+  return relayTransactionSync(txMetadata);
+}
+
+/// Sending a transaction to the network (sync version).
+///
+/// This function is commonly used after calling createExtendedTransactionSync or
+/// createExtendedTransactionAsJsonSync functions.
+String relayTransactionSync(String txMetadata)
+{
+  final txMetadataPointer = txMetadata.toNativeUtf8().cast<Char>();
+  final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
+
+  final resultPointer = monero_flutter.bindings.relay_transaction(txMetadataPointer, errorBoxPointer);
+
+  calloc.free(txMetadataPointer);
+
+  final result = monero_flutter.extractString(resultPointer);
+  final errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
+
+  if (0 != errorInfo.code) {
+    throw Exception(errorInfo.getErrorMessage());
+  }
+
+  return result!;
+}
+
 /// Retrieves the transaction key for a transaction (async version).
 ///
 /// This function retrieves the transaction key for the specified transactionId.
@@ -388,7 +473,7 @@ OutputsResponse _getUtxosSync(Map args) {
 ///   The unspent transaction outputs.
 OutputsResponse getUtxosSync() {
   OutputsRequest request =
-      OutputsRequest(isSpent: false, txQuery: OutputsRequestTxQuery(isLocked: false, isConfirmed: false));
+      OutputsRequest(isSpent: false, txQuery: OutputsRequestTxQuery(isLocked: false, isConfirmed: true));
   return getOutputsSync(request);
 }
 

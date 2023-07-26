@@ -1,7 +1,7 @@
 import 'dart:ffi';
 import 'package:ffi/ffi.dart';
 
-class ExternalSubaddressRow extends Struct {
+final class ExternalSubaddressRow extends Struct {
   @Int64()
   external int id;
   external Pointer<Utf8> address;

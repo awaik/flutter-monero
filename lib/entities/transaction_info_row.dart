@@ -2,7 +2,7 @@ import 'dart:ffi';
 
 import 'package:ffi/ffi.dart';
 
-class ExternalTransactionInfoRow extends Struct {
+final class ExternalTransactionInfoRow extends Struct {
   @Uint64()
   external int amount;
 

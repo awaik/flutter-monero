@@ -1757,6 +1757,52 @@ extern "C"
             m_listener->m_new_transaction = true;
     }
 
+    const char *create_transactions(const char *tx_config_json, ErrorBox *error)
+    {
+        if (!is_wallet_created(error))
+            return nullptr;
+
+        std::string tx_config_json_value = tx_config_json;
+        std::string monero_tx_wallet_json;
+
+        try
+        {
+            monero_tx_wallet_json = m_wallet->create_txs(tx_config_json_value);
+        }
+        catch (std::exception& e)
+        {
+            error->code = -2;
+            error->message = strdup(e.what());
+
+            return nullptr;
+        }
+
+        return strdup(monero_tx_wallet_json.c_str());
+    }
+
+    const char *relay_transaction(const char *tx_metadata, ErrorBox *error)
+    {
+        if (!is_wallet_created(error))
+            return nullptr;
+
+        std::string tx_metadata_value = tx_metadata;
+        std::string tx_hash;
+
+        try
+        {
+            tx_hash = m_wallet->relay_tx(tx_metadata_value);
+        }
+        catch (std::exception& e)
+        {
+            error->code = -2;
+            error->message = strdup(e.what());
+
+            return nullptr;
+        }
+
+        return strdup(tx_hash.c_str());
+    }
+
     void freeze(const char* key_image, ErrorBox* error)
     {
         if (!is_wallet_created(error))

@@ -1,7 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 part 'outputs_request.g.dart';
 
-@JsonSerializable(explicitToJson: true)
+@JsonSerializable(explicitToJson: true, includeIfNull: false)
 class OutputsRequest {
 
   int? minAmount;
@@ -11,9 +11,7 @@ class OutputsRequest {
   int? index;
   int? accountIndex;
   int? subaddressIndex;
-
   OutputsRequestKeyImage? keyImage;
-
   bool? isSpent;
   bool? isFrozen;
 
@@ -36,7 +34,7 @@ class OutputsRequest {
   Map<String, dynamic> toJson() => _$OutputsRequestToJson(this);
 }
 
-@JsonSerializable(explicitToJson: true)
+@JsonSerializable(explicitToJson: true, includeIfNull: false)
 class OutputsRequestKeyImage {
   String? hex;
   String? signature;
@@ -47,7 +45,7 @@ class OutputsRequestKeyImage {
   Map<String, dynamic> toJson() => _$OutputsRequestKeyImageToJson(this);
 }
 
-@JsonSerializable(explicitToJson: true)
+@JsonSerializable(explicitToJson: true, includeIfNull: false)
 class OutputsRequestTxQuery {
 
   bool? isOutgoing;

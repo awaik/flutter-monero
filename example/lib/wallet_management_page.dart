@@ -17,7 +17,7 @@ class WalletManagementPage extends StatelessWidget {
     // final walletsDir = Directory('${root.path}/wallets3');
     // final walletDir = Directory('${walletsDir.path}/wallet_v3');
 
-    final walletDir = Directory("/Users/dmytro/Documents/TEMP");
+    final walletDir = Directory("/Users/dmytro/Documents/WALLET");
 
     if (!walletDir.existsSync()) {
       walletDir.createSync(recursive: true);

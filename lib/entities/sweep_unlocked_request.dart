@@ -1,7 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 part 'sweep_unlocked_request.g.dart';
 
-@JsonSerializable(explicitToJson: true)
+@JsonSerializable(explicitToJson: true, includeIfNull: false)
 class SweepUnlockedRequest {
   List<SweepUnlockedRequestDestination> destinations;
 
@@ -13,7 +13,7 @@ class SweepUnlockedRequest {
   Map<String, dynamic> toJson() => _$SweepUnlockedRequestToJson(this);
 }
 
-@JsonSerializable(explicitToJson: true)
+@JsonSerializable(explicitToJson: true, includeIfNull: false)
 class SweepUnlockedRequestDestination {
   String address;
 
