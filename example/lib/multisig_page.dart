@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:monero_flutter/entities/simplified_transaction_request.dart';
 import 'package:monero_flutter/multisig_api.dart' as api;
 import 'package:monero_flutter/transaction_api.dart' as transaction_api;
 import 'package:monero_flutter/wallet_manager_api.dart' as wallet_manager_api;
@@ -20,16 +23,26 @@ class MultisigPage extends StatelessWidget {
     }
   }
 
-  bool executed = false;
-
   void _complexTest() async {
+    try {
 
-    if (executed) {
-      return;
+      final destination1 = SimplifiedTransactionRequestDestination(address: '473iFs45jPh4nDSKxGXAxrLi2NVApdBhESrDcreyjGA7G4AtsLcB6RjN8LsU9MTpGRZxeykKHErQ2fY2wcFnHor24AZRrmC', amount: 500000000);
+      final destination2 = SimplifiedTransactionRequestDestination(address: '86jgL8oFUxmevDQ16SzEfFZjVYyWn6GGXMiZ5RomUyqYWRBrroauWtocVRNX5xrEf7CtxMhHjZjRcVHNv2NGo2nK42g2F8S', amount: 450000000);
+
+      final request = SimplifiedTransactionRequest(destinations: [destination1, destination2]);
+
+      final report = await api.prepareTransaction(request);
+
+      final jsonText = jsonEncode(report.toJson());
+
+      _resultController.text = jsonText;
     }
+    catch (e) {
+      _resultController.text = e.toString();
+    }
+  }
 
-    executed = true;
-
+  void _createPairTest() async {
     String wallet1Path = "/Users/dmytro/Documents/WALLET/mswallet1";
     String wallet2Path = "/Users/dmytro/Documents/WALLET/mswallet2";
 
@@ -176,7 +189,7 @@ class MultisigPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Monero :: Счета')),
+      appBar: AppBar(title: Text('Monero :: Multisig')),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[

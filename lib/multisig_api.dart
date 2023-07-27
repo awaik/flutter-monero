@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:ffi';
 
 import 'package:ffi/ffi.dart';
@@ -464,6 +465,12 @@ Future<SimplifiedTransactionReport> prepareTransaction(SimplifiedTransactionRequ
 
   for(final utxo in utxos)
   {
+    //////// TEMP!!!
+    if (utxo.subaddressIndex == 0) {
+      continue;
+    }
+
+
     usedUtxos.add(utxo);
 
     totalSum -= utxo.amount;
@@ -481,9 +488,10 @@ Future<SimplifiedTransactionReport> prepareTransaction(SimplifiedTransactionRequ
   final subaddressIndices = usedUtxos.map((uu) => uu.subaddressIndex).toList();
 
   final createTransactionRequest = CreateTransactionRequest(destinations: destinations, accountIndex: 0, subaddressIndices: subaddressIndices);
-
+  print("=====createTransactionRequest=====");
+  print(jsonEncode(createTransactionRequest.toJson())); ////
   final createTransactionResponse = await transaction_api.createExtendedTransaction(createTransactionRequest);
-
+  print(jsonEncode(createTransactionResponse.toJson())); ////
   final assignedUtxos = usedUtxos.map((e) => SimplifiedTransactionReportUtxo(id: e.keyImage)).toList();
 
   String uuid = const Uuid().v4();
