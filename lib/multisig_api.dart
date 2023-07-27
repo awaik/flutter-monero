@@ -2,8 +2,15 @@ import 'dart:ffi';
 
 import 'package:ffi/ffi.dart';
 import 'package:flutter/foundation.dart';
+import 'package:monero_flutter/entities/simplified_transaction_report.dart';
+import 'package:monero_flutter/entities/utxo.dart';
+import 'package:uuid/uuid.dart';
 
+import 'entities/create_transaction_request.dart';
+import 'entities/simplified_transaction_request.dart';
 import 'monero_flutter.dart' as monero_flutter;
+
+import 'package:monero_flutter/transaction_api.dart' as transaction_api;
 
 /// Checks if the wallet is using a multisig scheme (async version).
 ///
@@ -442,6 +449,50 @@ List<String> submitMultisigTxHexSync(String signedMultisigTxHex) {
   }
 
   return result;
+}
+
+Future<SimplifiedTransactionReport> prepareTransaction(SimplifiedTransactionRequest request) async {
+
+  const fee = 6000000;
+  int totalSum = request.destinations.map((d) => d.amount).reduce((sum, amount) => sum + amount);
+  totalSum += fee;
+
+  final utxos = (await transaction_api.getUtxos());
+  utxos.sort((a, b) => a.amount.compareTo(b.amount));
+
+  List<Utxo> usedUtxos = [];
+
+  for(final utxo in utxos)
+  {
+    usedUtxos.add(utxo);
+
+    totalSum -= utxo.amount;
+
+    if (totalSum <= 0) {
+      break;
+    }
+  }
+
+  if (totalSum > 0) {
+    throw Exception("Not enough money!");
+  }
+
+  final destinations = request.destinations.map((d) => CreateTransactionRequestDestination(address: d.address, amount: d.amount)).toList();
+  final subaddressIndices = usedUtxos.map((uu) => uu.subaddressIndex).toList();
+
+  final createTransactionRequest = CreateTransactionRequest(destinations: destinations, accountIndex: 0, subaddressIndices: subaddressIndices);
+
+  final createTransactionResponse = await transaction_api.createExtendedTransaction(createTransactionRequest);
+
+  final assignedUtxos = usedUtxos.map((e) => SimplifiedTransactionReportUtxo(id: e.keyImage)).toList();
+
+  String uuid = const Uuid().v4();
+
+  final txTree = SimplifiedTransactionReportTxTree(rawTx: createTransactionResponse.multisigTxHex!, childTawTxs: []);
+  final assignedTrade = SimplifiedTransactionReportTrade(id: uuid, txTree: txTree);
+  final utxoGroup = SimplifiedTransactionReportUtxoGroup(assignedUtxos: assignedUtxos, assignedTrades: [assignedTrade]);
+
+  return SimplifiedTransactionReport(utxoGroups: [utxoGroup]);
 }
 
 List<String> _convertToList(Pointer<Pointer<Char>> pointers) {

@@ -17,6 +17,7 @@ import 'entities/sweep_unlocked_request.dart';
 import 'entities/sweep_unlocked_response.dart';
 import 'entities/transaction_info_row.dart';
 import 'entities/txs_response.dart';
+import 'entities/utxo.dart';
 import 'exceptions/creation_transaction_exception.dart';
 import 'monero_flutter.dart' as monero_flutter;
 import 'monero_flutter_bindings_generated.dart';
@@ -457,24 +458,35 @@ String getTransactionKeySync(String transactionId) {
   return result!;
 }
 
-/// Retrieves a list of all unspent transaction outputs (UTXOs). Async version of method.
+/// Retrieves a list of all unspent transaction outputs (UTXOs).
 ///
 /// Returns:
 ///   A [Future] that completes with the response containing the unspent transaction outputs.
-Future<OutputsResponse> getUtxos() => compute(_getUtxosSync, {});
-
-OutputsResponse _getUtxosSync(Map args) {
-  return getUtxosSync();
-}
-
-/// Retrieves a list of all unspent transaction outputs (UTXOs). Sync version of method.
-///
-/// Returns:
-///   The unspent transaction outputs.
-OutputsResponse getUtxosSync() {
+Future<List<Utxo>> getUtxos() async {
   OutputsRequest request =
-      OutputsRequest(isSpent: false, txQuery: OutputsRequestTxQuery(isLocked: false, isConfirmed: true));
-  return getOutputsSync(request);
+  OutputsRequest(isSpent: false,
+      txQuery: OutputsRequestTxQuery(isLocked: false, isConfirmed: true));
+
+  var outputs = await getOutputs(request);
+  List<Utxo> utxos = [];
+
+  for (final b in outputs.blocks) {
+    for (final t in b.txs) {
+      for (final o in t.outputs) {
+        utxos.add(Utxo(blockHeight: b.height,
+            transactionHash: t.hash,
+            amount: o.amount,
+            index: o.index,
+            stealthPublicKey: o.stealthPublicKey,
+            keyImage: o.keyImage.hex,
+            accountIndex: o.accountIndex,
+            subaddressIndex: o.subaddressIndex,
+            isFrozen: o.isFrozen));
+      }
+    }
+  }
+
+  return utxos;
 }
 
 /// Get outputs which meet the criteria defined in a query object (async version).

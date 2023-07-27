@@ -1,7 +1,4 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:monero_flutter/entities/outputs_request.dart';
 import 'package:monero_flutter/entities/sweep_unlocked_request.dart';
 import 'package:monero_flutter/entities/txs_request.dart';
 import 'package:monero_flutter/transaction_api.dart' as api;
@@ -19,18 +16,8 @@ class TransferPage extends StatelessWidget {
 
       String result = "";
 
-      for (final b in utxos.blocks) {
-
-        result += "block=${b.height} \r\n";
-
-        for (final t in b.txs) {
-          result += "=transaction=${t.hash} \r\n";
-
-          for (final o in t.outputs) {
-            result += "==amount=${o.amount} subaddressIndex=${o.subaddressIndex} \r\n";
-
-          }
-        }
+      for (final u in utxos) {
+        result += "==amount=${u.amount} subaddressIndex=${u.subaddressIndex} \r\n";
       }
 
       _resultController.text = result;
