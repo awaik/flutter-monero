@@ -26,8 +26,8 @@ class MultisigPage extends StatelessWidget {
   void _complexTest() async {
     try {
 
-      final destination1 = SimplifiedTransactionRequestDestination(address: '473iFs45jPh4nDSKxGXAxrLi2NVApdBhESrDcreyjGA7G4AtsLcB6RjN8LsU9MTpGRZxeykKHErQ2fY2wcFnHor24AZRrmC', amount: 500000000);
-      final destination2 = SimplifiedTransactionRequestDestination(address: '86jgL8oFUxmevDQ16SzEfFZjVYyWn6GGXMiZ5RomUyqYWRBrroauWtocVRNX5xrEf7CtxMhHjZjRcVHNv2NGo2nK42g2F8S', amount: 450000000);
+      final destination1 = SimplifiedTransactionRequestDestination(address: '473iFs45jPh4nDSKxGXAxrLi2NVApdBhESrDcreyjGA7G4AtsLcB6RjN8LsU9MTpGRZxeykKHErQ2fY2wcFnHor24AZRrmC', amount: 100000000);
+      final destination2 = SimplifiedTransactionRequestDestination(address: '86jgL8oFUxmevDQ16SzEfFZjVYyWn6GGXMiZ5RomUyqYWRBrroauWtocVRNX5xrEf7CtxMhHjZjRcVHNv2NGo2nK42g2F8S', amount: 250000000);
 
       final request = SimplifiedTransactionRequest(destinations: [destination1, destination2]);
 

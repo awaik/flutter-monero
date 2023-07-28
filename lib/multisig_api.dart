@@ -455,27 +455,42 @@ List<String> submitMultisigTxHexSync(String signedMultisigTxHex) {
 Future<SimplifiedTransactionReport> prepareTransaction(SimplifiedTransactionRequest request) async {
 
   const fee = 6000000;
-  int totalSum = request.destinations.map((d) => d.amount).reduce((sum, amount) => sum + amount);
-  totalSum += fee;
+  int requiredAmount = request.destinations.map((d) => d.amount).reduce((sum, amount) => sum + amount);
+  requiredAmount += fee;
 
   final utxos = (await transaction_api.getUtxos());
   utxos.sort((a, b) => a.amount.compareTo(b.amount));
 
   List<Utxo> usedUtxos = [];
+  List<Utxo> unusedUtxos = [];
 
   for(final utxo in utxos)
   {
-    usedUtxos.add(utxo);
-
-    totalSum -= utxo.amount;
-
-    if (totalSum <= 0) {
-      break;
+    if (requiredAmount > 0) {
+      usedUtxos.add(utxo);
+      requiredAmount -= utxo.amount;
+    }
+    else {
+      unusedUtxos.add(utxo);
     }
   }
 
-  if (totalSum > 0) {
+  if (requiredAmount > 0) {
     throw Exception("Not enough money!");
+  }
+
+  for(final utxo in usedUtxos)
+  {
+    if (utxo.isFrozen) {
+      await transaction_api.thaw(utxo.keyImage);
+    }
+  }
+
+  for(final utxo in unusedUtxos)
+  {
+    if (!utxo.isFrozen) {
+      await transaction_api.freeze(utxo.keyImage);
+    }
   }
 
   final destinations = request.destinations.map((d) => CreateTransactionRequestDestination(address: d.address, amount: d.amount)).toList();

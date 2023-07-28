@@ -17,7 +17,7 @@ class TransferPage extends StatelessWidget {
       String result = "";
 
       for (final u in utxos) {
-        result += "==amount=${u.amount} subaddressIndex=${u.subaddressIndex} \r\n";
+        result += "==amount=${u.amount} subaddressIndex=${u.subaddressIndex}  keyImage=${u.keyImage} isFrozen=${u.isFrozen} \r\n";
       }
 
       _resultController.text = result;
@@ -92,8 +92,9 @@ class TransferPage extends StatelessWidget {
 
   void _thaw() async {
     try {
+      final keyImage = _resultController.text;
       _resultController.text = "please wait...";
-      await api.thaw(_resultController.text);
+      await api.thaw(keyImage);
       _resultController.text = "ok";
     } catch (e) {
       _resultController.text = e.toString();
@@ -102,8 +103,9 @@ class TransferPage extends StatelessWidget {
 
   void _freeze() async {
     try {
+      final keyImage = _resultController.text;
       _resultController.text = "please wait...";
-      await api.freeze(_resultController.text);
+      await api.freeze(keyImage);
       _resultController.text = "ok";
     } catch (e) {
       _resultController.text = e.toString();
@@ -112,8 +114,9 @@ class TransferPage extends StatelessWidget {
 
   void _isFrozen() async {
     try {
+      final keyImage = _resultController.text;
       _resultController.text = "please wait...";
-      _resultController.text = await api.isFrozen(_resultController.text).toString();
+      _resultController.text = (await api.isFrozen(keyImage)).toString();
     } catch (e) {
       _resultController.text = e.toString();
     }
