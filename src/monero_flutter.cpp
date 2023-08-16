@@ -1,9 +1,13 @@
 #include "cstdlib"
 #include <functional>
+#include <iostream>
+#include <fstream>
+
 #if defined(_WIN64)
 #else
 #include <unistd.h>
 #endif
+
 #include <mutex>
 #include "monero_flutter.h"
 #if __APPLE__
@@ -181,6 +185,28 @@ extern "C"
     // **********************************************************************************************************************************
     // Wallet manager
     // **********************************************************************************************************************************
+
+    int test_value;
+
+    static void log_to_file(const std::string message)
+    {
+       std::ofstream outfile;
+       outfile.open("/data/user/0/com.example.monero_flutter_example/app_flutter/log.txt", std::ios_base::app); // append instead of overwrite
+       outfile << message << std::endl;
+    }
+
+    void test_set(int v)
+    {
+        log_to_file("tsset-from-log");
+
+        std::cout << "test cout! \r\n";
+        test_value = v;
+    }
+
+    int test_get()
+    {
+        return test_value;
+    }
 
     void change_current_wallet(Monero::Wallet* wallet)
     {

@@ -9,6 +9,10 @@ import 'exceptions/wallet_restore_from_seed_exception.dart';
 
 import 'monero_flutter.dart' as monero_flutter;
 
+int testGet() => monero_flutter.bindings.test_get();
+
+void testSet(int v) => monero_flutter.bindings.test_set(v);
+
 /// Creates a new Monero wallet (async version).
 ///
 /// Generates a new Monero wallet using the specified [path], [password], [language],

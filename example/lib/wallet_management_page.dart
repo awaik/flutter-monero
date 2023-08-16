@@ -1,23 +1,63 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:mutex/mutex.dart';
 import 'dart:typed_data';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:monero_flutter/exceptions/wallet_restore_from_keys_exception.dart';
 import 'package:monero_flutter/wallet_manager_api.dart' as api;
+import 'package:path_provider/path_provider.dart';
+
+void _testNativeSet(Map<String, Object?> args) {
+  api.testSet(123);
+  print("tset");
+}
+
+int _testNativeGet(Map<String, Object?> args) {
+  return api.testGet();
+}
+
+final _mutex = Mutex();
+
+Future<int> _gTest1() async {
+  await compute<Map<String, Object?>, void>(_testNativeSet, {"arg1": 1});
+  int t = await compute<Map<String, Object?>, int>(_testNativeGet, {"arg1": 2});
+
+  return t;
+}
 
 class WalletManagementPage extends StatelessWidget {
   final TextEditingController _resultController = TextEditingController();
 
   WalletManagementPage({super.key});
 
-  Future<String> _getWalletPath({String name = "wallet1"}) async {
-    // final root = await getApplicationDocumentsDirectory();
-    //
-    // final walletsDir = Directory('${root.path}/wallets3');
-    // final walletDir = Directory('${walletsDir.path}/wallet_v3');
+  Future<String> readStringFromFile(String filePath) async {
+    try {
+      File file = File(filePath);
+      if (await file.exists()) {
+        String content = await file.readAsString();
+        return content;
+      } else {
+        return "File not found";
+      }
+    } catch (e) {
+      return "Error: $e";
+    }
+  }
 
-    final walletDir = Directory("/Users/dmytro/Documents/WALLET");
+  Future _test1() async {
+    //await _gTest1();
+    _resultController.text = await readStringFromFile('/data/user/0/com.example.monero_flutter_example/app_flutter/log.txt');
+  }
+
+  Future<String> _getWalletPath({String name = "wallet1"}) async {
+    final root = await getApplicationDocumentsDirectory();
+
+    final walletsDir = Directory('${root.path}/wallets3');
+    final walletDir = Directory('${walletsDir.path}/wallet_v3');
+
+    //final walletDir = Directory("/Users/dmytro/Documents/WALLET");
 
     if (!walletDir.existsSync()) {
       walletDir.createSync(recursive: true);
@@ -333,10 +373,18 @@ class WalletManagementPage extends StatelessWidget {
     String testResult;
 
     try {
-      api.store(path: walletPath);
+      await _mutex.acquire();
+
+      print("store1");
+      await api.store(path: walletPath);
+      print("store2");
+
       testResult = "Saved!";
     } catch (e) {
       testResult = e.toString();
+    }
+    finally {
+      _mutex.release();
     }
 
     _resultController.text = testResult;
@@ -484,6 +532,8 @@ class WalletManagementPage extends StatelessWidget {
         children: <Widget>[
           TextField(
             controller: _resultController,
+            keyboardType: TextInputType.multiline,
+            maxLines: 8,
             decoration: InputDecoration(
               border: OutlineInputBorder(),
             ),
@@ -493,6 +543,19 @@ class WalletManagementPage extends StatelessWidget {
             child: SingleChildScrollView(
               child: Column(
                 children: <Widget>[
+
+                  Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: ElevatedButton(
+                      child: Text("Test 1", style: TextStyle(fontSize: 22)),
+                      onPressed: _test1,
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.all(10),
+                        minimumSize: Size(360, 60),
+                      ),
+                    ),
+                  ),
+
                   Padding(
                     padding: const EdgeInsets.all(10),
                     child: ElevatedButton(
@@ -504,6 +567,7 @@ class WalletManagementPage extends StatelessWidget {
                       ),
                     ),
                   ),
+
                   Padding(
                     padding: const EdgeInsets.all(10),
                     child: ElevatedButton(

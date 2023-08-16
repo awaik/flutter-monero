@@ -33,6 +33,9 @@ extern "C"
     // Wallet manager
     // **********************************************************************************************************************************
 
+    void test_set(int v);
+    int test_get();
+
     // Creating (loading) wallet
     void create_wallet(const char *path, const char *password, const char *language, int32_t network_type, ErrorBox *error);
     void restore_wallet_from_seed(const char *path, const char *password, const char *seed, int32_t network_type, uint64_t restore_height, ErrorBox *error);

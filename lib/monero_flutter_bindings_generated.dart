@@ -26,6 +26,26 @@ class MoneroApiBindings {
           lookup)
       : _lookup = lookup;
 
+  void test_set(int v) {
+    return _test_set(v);
+  }
+
+  late final _test_set = _test_setPtr.asFunction<void Function(int)>();
+
+  late final _test_setPtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Uint32)>>('test_set');
+
+  //
+
+  int test_get() {
+    return _test_get();
+  }
+
+  late final _test_get = _test_getPtr.asFunction<int Function()>();
+
+  late final _test_getPtr = _lookup<ffi.NativeFunction<ffi.Int32 Function()>>('test_get');
+
+  // ---================
+
   /// Creating (loading) wallet
   void create_wallet(
     ffi.Pointer<ffi.Char> path,
