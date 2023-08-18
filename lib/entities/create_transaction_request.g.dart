@@ -17,6 +17,7 @@ CreateTransactionRequest _$CreateTransactionRequestFromJson(
       subaddressIndices: (json['subaddressIndices'] as List<dynamic>)
           .map((e) => e as int)
           .toList(),
+      fee: json['fee'] as int,
     );
 
 Map<String, dynamic> _$CreateTransactionRequestToJson(
@@ -25,6 +26,7 @@ Map<String, dynamic> _$CreateTransactionRequestToJson(
       'destinations': instance.destinations.map((e) => e.toJson()).toList(),
       'accountIndex': instance.accountIndex,
       'subaddressIndices': instance.subaddressIndices,
+      'fee': instance.fee,
     };
 
 CreateTransactionRequestDestination

@@ -4,7 +4,7 @@ class Utxo {
   int amount;
   int index;
   String stealthPublicKey;
-  String keyImage;
+  String? keyImage;
   int accountIndex;
   int subaddressIndex;
   bool isFrozen;
@@ -15,7 +15,7 @@ class Utxo {
     required this.amount,
     required this.index,
     required this.stealthPublicKey,
-    required this.keyImage,
+    this.keyImage,
     required this.accountIndex,
     required this.subaddressIndex,
     required this.isFrozen,

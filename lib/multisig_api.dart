@@ -479,37 +479,39 @@ Future<SimplifiedTransactionReport> prepareTransaction(SimplifiedTransactionRequ
     throw Exception("Not enough money!");
   }
 
-  for(final utxo in usedUtxos)
-  {
-    if (utxo.isFrozen) {
-      await transaction_api.thaw(utxo.keyImage);
-    }
-  }
-
-  for(final utxo in unusedUtxos)
-  {
-    if (!utxo.isFrozen) {
-      await transaction_api.freeze(utxo.keyImage);
-    }
-  }
+  // for(final utxo in usedUtxos)
+  // {
+  //   if (utxo.isFrozen) {
+  //     await transaction_api.thaw(utxo.keyImage);
+  //   }
+  // }
+  //
+  // for(final utxo in unusedUtxos)
+  // {
+  //   if (!utxo.isFrozen) {
+  //     await transaction_api.freeze(utxo.keyImage);
+  //   }
+  // }
 
   final destinations = request.destinations.map((d) => CreateTransactionRequestDestination(address: d.address, amount: d.amount)).toList();
   final subaddressIndices = usedUtxos.map((uu) => uu.subaddressIndex).toList();
 
-  final createTransactionRequest = CreateTransactionRequest(destinations: destinations, accountIndex: 0, subaddressIndices: subaddressIndices);
-  // print("=====createTransactionRequest=====");
-  // print(jsonEncode(createTransactionRequest.toJson())); ////
-  final createTransactionResponse = await transaction_api.createExtendedTransaction(createTransactionRequest);
-  //print(jsonEncode(createTransactionResponse.toJson())); ////
-  final assignedUtxos = usedUtxos.map((e) => SimplifiedTransactionReportUtxo(id: e.keyImage)).toList();
+  // final createTransactionRequest = CreateTransactionRequest(destinations: destinations, accountIndex: 0, subaddressIndices: subaddressIndices);
+  // // print("=====createTransactionRequest=====");
+  // // print(jsonEncode(createTransactionRequest.toJson())); ////
+  // final createTransactionResponse = await transaction_api.createExtendedTransaction(createTransactionRequest);
+  // //print(jsonEncode(createTransactionResponse.toJson())); ////
+  // //final assignedUtxos = usedUtxos.map((e) => SimplifiedTransactionReportUtxo(id: e.keyImage)).toList();
+  //
+  // String uuid = const Uuid().v4();
+  //
+  // final txTree = SimplifiedTransactionReportTxTree(rawTx: createTransactionResponse.multisigTxHex!, childTawTxs: []);
+  // final assignedTrade = SimplifiedTransactionReportTrade(id: uuid, txTree: txTree);
+  // //final utxoGroup = SimplifiedTransactionReportUtxoGroup(assignedUtxos: assignedUtxos, assignedTrades: [assignedTrade]);
+  //
+  // //return SimplifiedTransactionReport(utxoGroups: [utxoGroup]);
 
-  String uuid = const Uuid().v4();
-
-  final txTree = SimplifiedTransactionReportTxTree(rawTx: createTransactionResponse.multisigTxHex!, childTawTxs: []);
-  final assignedTrade = SimplifiedTransactionReportTrade(id: uuid, txTree: txTree);
-  final utxoGroup = SimplifiedTransactionReportUtxoGroup(assignedUtxos: assignedUtxos, assignedTrades: [assignedTrade]);
-
-  return SimplifiedTransactionReport(utxoGroups: [utxoGroup]);
+  throw Exception("Not impl.");
 }
 
 List<String> _convertToList(Pointer<Pointer<Char>> pointers) {

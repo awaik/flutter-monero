@@ -8,11 +8,13 @@ class CreateTransactionRequest
   List<CreateTransactionRequestDestination> destinations;
   int accountIndex;
   List<int> subaddressIndices;
+  int fee;
 
   CreateTransactionRequest({
     required this.destinations,
     required this.accountIndex,
     required this.subaddressIndices,
+    required this.fee
   });
 
   factory CreateTransactionRequest.fromJson(Map<String, dynamic> json) => _$CreateTransactionRequestFromJson(json);

@@ -71,8 +71,10 @@ OutputsResponseOutput _$OutputsResponseOutputFromJson(
       amount: json['amount'] as int,
       index: json['index'] as int,
       stealthPublicKey: json['stealthPublicKey'] as String,
-      keyImage: OutputsResponseKeyImage.fromJson(
-          json['keyImage'] as Map<String, dynamic>),
+      keyImage: json['keyImage'] == null
+          ? null
+          : OutputsResponseKeyImage.fromJson(
+              json['keyImage'] as Map<String, dynamic>),
       accountIndex: json['accountIndex'] as int,
       subaddressIndex: json['subaddressIndex'] as int,
       isSpent: json['isSpent'] as bool,
@@ -85,7 +87,7 @@ Map<String, dynamic> _$OutputsResponseOutputToJson(
       'amount': instance.amount,
       'index': instance.index,
       'stealthPublicKey': instance.stealthPublicKey,
-      'keyImage': instance.keyImage.toJson(),
+      'keyImage': instance.keyImage?.toJson(),
       'accountIndex': instance.accountIndex,
       'subaddressIndex': instance.subaddressIndex,
       'isSpent': instance.isSpent,
