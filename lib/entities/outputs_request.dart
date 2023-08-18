@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:json_annotation/json_annotation.dart';
 part 'outputs_request.g.dart';
 
@@ -32,6 +33,11 @@ class OutputsRequest {
 
   factory OutputsRequest.fromJson(Map<String, dynamic> json) => _$OutputsRequestFromJson(json);
   Map<String, dynamic> toJson() => _$OutputsRequestToJson(this);
+
+  String toJsonString(){
+    final jsonString = jsonEncode(toJson());
+    return jsonString;
+  }
 }
 
 @JsonSerializable(explicitToJson: true, includeIfNull: false)

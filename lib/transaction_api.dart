@@ -478,7 +478,7 @@ Future<List<Utxo>> getUtxos() async {
             amount: o.amount,
             index: o.index,
             stealthPublicKey: o.stealthPublicKey,
-            keyImage: o.keyImage.hex,
+            keyImage: o.keyImage?.hex,
             accountIndex: o.accountIndex,
             subaddressIndex: o.subaddressIndex,
             isFrozen: o.isFrozen));

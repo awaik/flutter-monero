@@ -61,7 +61,7 @@ class OutputsResponseOutput {
   int amount;
   int index;
   String stealthPublicKey;
-  OutputsResponseKeyImage keyImage;
+  OutputsResponseKeyImage? keyImage;
   int accountIndex;
   int subaddressIndex;
   bool isSpent;
@@ -71,7 +71,7 @@ class OutputsResponseOutput {
     required this.amount,
     required this.index,
     required this.stealthPublicKey,
-    required this.keyImage,
+    this.keyImage,
     required this.accountIndex,
     required this.subaddressIndex,
     required this.isSpent,
