@@ -13,21 +13,30 @@ CreateTransactionRequest _$CreateTransactionRequestFromJson(
           .map((e) => CreateTransactionRequestDestination.fromJson(
               e as Map<String, dynamic>))
           .toList(),
-      accountIndex: json['accountIndex'] as int,
-      subaddressIndices: (json['subaddressIndices'] as List<dynamic>)
-          .map((e) => e as int)
+      accountIndex: json['accountIndex'] as int?,
+      subaddressIndices: (json['subaddressIndices'] as List<dynamic>?)
+          ?.map((e) => e as int)
           .toList(),
-      fee: json['fee'] as int,
+      fee: json['fee'] as int?,
     );
 
 Map<String, dynamic> _$CreateTransactionRequestToJson(
-        CreateTransactionRequest instance) =>
-    <String, dynamic>{
-      'destinations': instance.destinations.map((e) => e.toJson()).toList(),
-      'accountIndex': instance.accountIndex,
-      'subaddressIndices': instance.subaddressIndices,
-      'fee': instance.fee,
-    };
+    CreateTransactionRequest instance) {
+  final val = <String, dynamic>{
+    'destinations': instance.destinations.map((e) => e.toJson()).toList(),
+  };
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('accountIndex', instance.accountIndex);
+  writeNotNull('subaddressIndices', instance.subaddressIndices);
+  writeNotNull('fee', instance.fee);
+  return val;
+}
 
 CreateTransactionRequestDestination
     _$CreateTransactionRequestDestinationFromJson(Map<String, dynamic> json) =>
