@@ -26,6 +26,16 @@ class MoneroApiBindings {
           lookup)
       : _lookup = lookup;
 
+  bool is_wallet_loaded() {
+    return _is_wallet_loaded();
+  }
+
+  late final _is_wallet_loadedPtr =
+      _lookup<ffi.NativeFunction<ffi.Bool Function()>>('is_wallet_loaded');
+
+  late final _is_wallet_loaded =
+      _is_wallet_loadedPtr.asFunction<bool Function()>();
+
   /// Creating (loading) wallet
   void create_wallet(
     ffi.Pointer<ffi.Char> path,
@@ -435,9 +445,9 @@ class MoneroApiBindings {
   }
 
   late final _set_recovering_from_seedPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Void Function(
-              ffi.Bool, ffi.Pointer<ErrorBox>)>>('set_recovering_from_seed');
+          ffi
+          .NativeFunction<ffi.Void Function(ffi.Bool, ffi.Pointer<ErrorBox>)>>(
+      'set_recovering_from_seed');
   late final _set_recovering_from_seed = _set_recovering_from_seedPtr
       .asFunction<void Function(bool, ffi.Pointer<ErrorBox>)>();
 
@@ -689,9 +699,9 @@ class MoneroApiBindings {
   }
 
   late final _set_trusted_daemonPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Void Function(
-              ffi.Bool, ffi.Pointer<ErrorBox>)>>('set_trusted_daemon');
+          ffi
+          .NativeFunction<ffi.Void Function(ffi.Bool, ffi.Pointer<ErrorBox>)>>(
+      'set_trusted_daemon');
   late final _set_trusted_daemon = _set_trusted_daemonPtr
       .asFunction<void Function(bool, ffi.Pointer<ErrorBox>)>();
 

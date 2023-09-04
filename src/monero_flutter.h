@@ -34,6 +34,7 @@ extern "C"
     // **********************************************************************************************************************************
 
     // Creating (loading) wallet
+    bool is_wallet_loaded();
     void create_wallet(const char *path, const char *password, const char *language, int32_t network_type, ErrorBox *error);
     void restore_wallet_from_seed(const char *path, const char *password, const char *seed, int32_t network_type, uint64_t restore_height, ErrorBox *error);
     void restore_wallet_from_keys(const char *path, const char *password, const char *language, const char *address, const char *view_key, const char *spend_key, int32_t network_type, uint64_t restore_height, ErrorBox *error);

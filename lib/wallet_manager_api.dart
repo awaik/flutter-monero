@@ -9,6 +9,24 @@ import 'exceptions/wallet_restore_from_seed_exception.dart';
 
 import 'monero_flutter.dart' as monero_flutter;
 
+/// Mthod checks whether the wallet is loaded (async version).
+///
+/// Returns:
+///   A [Future] that completes with the boolean value, indicating whether the wallet loaded.
+Future<bool> isWalletLoaded() {
+  return compute<Map<String, Object?>, bool>(_isWalletLoaded, {});
+}
+
+bool _isWalletLoaded(Map<String, dynamic> args) => isWalletLoadedSync();
+
+/// Mthod checks whether the wallet is loaded (sync version).
+///
+/// Returns:
+///   A boolean value, indicating whether the wallet loaded.
+bool isWalletLoadedSync() {
+  return monero_flutter.bindings.is_wallet_loaded();
+}
+
 /// Creates a new Monero wallet (async version).
 ///
 /// Generates a new Monero wallet using the specified [path], [password], [language],

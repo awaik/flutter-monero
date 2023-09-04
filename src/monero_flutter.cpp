@@ -205,7 +205,7 @@ extern "C"
 
     // Creating (loading) wallet
 
-    static bool is_wallet_created(ErrorBox* error)
+    static bool is_wallet_loaded(ErrorBox* error)
     {
         const char* const message = "Wallet not found!";
 
@@ -292,6 +292,11 @@ extern "C"
             error->code = -100;
             error->message = strdup(errorString.c_str());
         }
+    }
+
+    bool is_wallet_loaded()
+    {
+        return nullptr != m_wallet;
     }
 
     void create_wallet(const char* path, const char* password, const char* language, int32_t network_type, ErrorBox* error)
@@ -492,7 +497,7 @@ extern "C"
 
     void close_current_wallet(ErrorBox* error)
     {
-        if (!is_wallet_created(error))
+        if (!is_wallet_loaded(error))
             return;
 
         auto wallet = m_wallet;
@@ -532,7 +537,7 @@ extern "C"
 
     const char* secret_view_key(ErrorBox* error)
     {
-        if (!is_wallet_created(error))
+        if (!is_wallet_loaded(error))
             return nullptr;
 
         const char* result = nullptr;
@@ -552,7 +557,7 @@ extern "C"
 
     const char* public_view_key(ErrorBox* error)
     {
-        if (!is_wallet_created(error))
+        if (!is_wallet_loaded(error))
             return nullptr;
 
         const char* result = nullptr;
@@ -572,7 +577,7 @@ extern "C"
 
     const char* secret_spend_key(ErrorBox* error)
     {
-        if (!is_wallet_created(error))
+        if (!is_wallet_loaded(error))
             return nullptr;
 
         const char* result = nullptr;
@@ -592,7 +597,7 @@ extern "C"
 
     const char* public_spend_key(ErrorBox* error)
     {
-        if (!is_wallet_created(error))
+        if (!is_wallet_loaded(error))
             return nullptr;
 
         const char* result = nullptr;
@@ -612,7 +617,7 @@ extern "C"
 
     const char* seed(ErrorBox* error)
     {
-        if (!is_wallet_created(error))
+        if (!is_wallet_loaded(error))
             return nullptr;
 
         const char* result = nullptr;
@@ -632,7 +637,7 @@ extern "C"
 
     const char *get_mnemonic(ErrorBox *error)
     {
-        if (!is_wallet_created(error))
+        if (!is_wallet_loaded(error))
             return nullptr;
 
         const char* result = nullptr;
@@ -652,7 +657,7 @@ extern "C"
 
     const char* get_filename(ErrorBox* error)
     {
-        if (!is_wallet_created(error))
+        if (!is_wallet_loaded(error))
             return nullptr;
 
         const char* result = nullptr;
@@ -674,7 +679,7 @@ extern "C"
 
     void set_password(const char* password, ErrorBox* error)
     {
-        if (!is_wallet_created(error))
+        if (!is_wallet_loaded(error))
             return;
 
         auto wallet = m_wallet;
@@ -704,7 +709,7 @@ extern "C"
 
     void store(const char* path, ErrorBox* error)
     {
-        if (!is_wallet_created(error))
+        if (!is_wallet_loaded(error))
             return;
 
         if (is_storing)
@@ -747,7 +752,7 @@ extern "C"
     // Unknown use case!
     void set_recovering_from_seed(bool is_recovery, ErrorBox* error)
     {
-        if (!is_wallet_created(error))
+        if (!is_wallet_loaded(error))
             return;
 
         m_wallet->setRecoveringFromSeed(is_recovery);
@@ -771,7 +776,7 @@ extern "C"
         nice(19);
         #endif
 
-        if (!is_wallet_created(error))
+        if (!is_wallet_loaded(error))
             return nullptr;
 
         const char* buffer = nullptr;
@@ -798,7 +803,7 @@ extern "C"
         result.length = 0;
         result.bytes = nullptr;
 
-        if (!is_wallet_created(error))
+        if (!is_wallet_loaded(error))
             return result;
 
         try
@@ -822,7 +827,7 @@ extern "C"
         nice(19);
         #endif
 
-        if (!is_wallet_created(error))
+        if (!is_wallet_loaded(error))
             return nullptr;
 
         const char* buffer = nullptr;
@@ -849,7 +854,7 @@ extern "C"
         result.length = 0;
         result.bytes = nullptr;
 
-        if (!is_wallet_created(error))
+        if (!is_wallet_loaded(error))
             return result;
 
         try
@@ -887,7 +892,7 @@ extern "C"
 
     void setup_node(const char* address, const char* login, const char* password, bool use_ssl, bool is_light_wallet, ErrorBox* error)
     {
-        if (!is_wallet_created(error))
+        if (!is_wallet_loaded(error))
             return;
 
         #if defined(_POSIX_VERSION)
@@ -952,7 +957,7 @@ extern "C"
 
     void set_listener(ErrorBox* error)
     {
-        if (!is_wallet_created(error))
+        if (!is_wallet_loaded(error))
             return;
 
         m_last_known_wallet_height = 0;
@@ -967,7 +972,7 @@ extern "C"
 
     void connect_to_node(ErrorBox* error)
     {
-        if (!is_wallet_created(error))
+        if (!is_wallet_loaded(error))
             return;
 
         auto wallet = m_wallet;
@@ -999,7 +1004,7 @@ extern "C"
 
     bool is_connected(ErrorBox* error)
     {
-        if (!is_wallet_created(error))
+        if (!is_wallet_loaded(error))
             return false;
 
         bool is_connected = false;
@@ -1032,7 +1037,7 @@ extern "C"
 
     void start_refresh(ErrorBox* error)
     {
-        if (!is_wallet_created(error))
+        if (!is_wallet_loaded(error))
             return;
 
         auto wallet = m_wallet;
@@ -1051,7 +1056,7 @@ extern "C"
 
     void pause_refresh(ErrorBox *error)
     {
-        if (!is_wallet_created(error))
+        if (!is_wallet_loaded(error))
             return;
 
         auto wallet = m_wallet;
@@ -1069,7 +1074,7 @@ extern "C"
 
     void set_refresh_from_block_height(uint64_t height, ErrorBox* error)
     {
-        if (!is_wallet_created(error))
+        if (!is_wallet_loaded(error))
             return;
 
         try
@@ -1085,7 +1090,7 @@ extern "C"
 
     void rescan_blockchain(ErrorBox* error)
     {
-        if (!is_wallet_created(error))
+        if (!is_wallet_loaded(error))
             return;
 
         try
@@ -1101,7 +1106,7 @@ extern "C"
 
     void set_trusted_daemon(bool arg, ErrorBox* error)
     {
-        if (!is_wallet_created(error))
+        if (!is_wallet_loaded(error))
             return;
 
         try
@@ -1117,7 +1122,7 @@ extern "C"
 
     bool trusted_daemon(ErrorBox* error)
     {
-        if (!is_wallet_created(error))
+        if (!is_wallet_loaded(error))
             return false;
 
         bool result = false;
@@ -1137,7 +1142,7 @@ extern "C"
 
     uint64_t get_node_height(ErrorBox* error)
     {
-        if (!is_wallet_created(error))
+        if (!is_wallet_loaded(error))
             return 0;
 
         uint64_t result = 0;
@@ -1186,7 +1191,7 @@ extern "C"
 
     uint64_t get_current_height(ErrorBox* error)
     {
-        if (!is_wallet_created(error))
+        if (!is_wallet_loaded(error))
             return 0;
 
         uint64_t result = 0;
@@ -1214,7 +1219,7 @@ extern "C"
 
     void rescan_spent(ErrorBox* error)
     {
-        if (!is_wallet_created(error))
+        if (!is_wallet_loaded(error))
             return;
 
         auto wallet = m_wallet;
@@ -1290,7 +1295,7 @@ extern "C"
 
     int32_t get_num_subaddresses(int32_t account_index, ErrorBox *error)
     {
-        if (!is_wallet_created(error))
+        if (!is_wallet_loaded(error))
             return 0;
 
         return (int32_t)m_wallet->numSubaddresses(account_index);
@@ -1342,7 +1347,7 @@ extern "C"
 
     const char* get_address(uint32_t account_index, uint32_t address_index, ErrorBox* error)
     {
-        if (!is_wallet_created(error))
+        if (!is_wallet_loaded(error))
             return nullptr;
 
         const char* address = nullptr;
@@ -1362,7 +1367,7 @@ extern "C"
 
     uint64_t get_full_balance(uint32_t account_index, ErrorBox* error)
     {
-        if (!is_wallet_created(error))
+        if (!is_wallet_loaded(error))
             return 0;
 
         uint64_t balance;
@@ -1382,7 +1387,7 @@ extern "C"
 
     uint64_t get_unlocked_balance(uint32_t account_index, ErrorBox* error)
     {
-        if (!is_wallet_created(error))
+        if (!is_wallet_loaded(error))
             return 0;
 
         uint64_t balance;
@@ -1402,7 +1407,7 @@ extern "C"
 
     const char* get_subaddress_label(uint32_t account_index, uint32_t address_index, ErrorBox* error)
     {
-        if (!is_wallet_created(error))
+        if (!is_wallet_loaded(error))
             return nullptr;
 
         const char* label = nullptr;
@@ -1581,7 +1586,7 @@ extern "C"
 
     const char* get_tx_key(const char* tx_id, ErrorBox* error)
     {
-        if (!is_wallet_created(error))
+        if (!is_wallet_loaded(error))
             return nullptr;
 
         const char* tx_key = nullptr;
@@ -1601,7 +1606,7 @@ extern "C"
 
     void transaction_create(const char* address, const char* payment_id, const char* amount, uint8_t priority, uint32_t subaddr_account, ExternPendingTransactionRaw* pending_transaction, ErrorBox* error)
     {
-        if (!is_wallet_created(error))
+        if (!is_wallet_loaded(error))
             return;
 
         auto wallet = m_wallet;
@@ -1660,7 +1665,7 @@ extern "C"
 
     void transaction_create_mult_dest(const char** addresses, const char* payment_id, const char** amounts, uint32_t size, uint8_t priority_raw, uint32_t subaddr_account, ExternPendingTransactionRaw* pending_transaction, ErrorBox* error)
     {
-        if (!is_wallet_created(error))
+        if (!is_wallet_loaded(error))
             return;
 
         auto wallet = m_wallet;
@@ -1759,7 +1764,7 @@ extern "C"
 
     const char *create_transactions(const char *tx_config_json, ErrorBox *error)
     {
-        if (!is_wallet_created(error))
+        if (!is_wallet_loaded(error))
             return nullptr;
 
         std::string tx_config_json_value = tx_config_json;
@@ -1782,7 +1787,7 @@ extern "C"
 
     const char *relay_transaction(const char *tx_metadata, ErrorBox *error)
     {
-        if (!is_wallet_created(error))
+        if (!is_wallet_loaded(error))
             return nullptr;
 
         std::string tx_metadata_value = tx_metadata;
@@ -1805,7 +1810,7 @@ extern "C"
 
     void freeze(const char* key_image, ErrorBox* error)
     {
-        if (!is_wallet_created(error))
+        if (!is_wallet_loaded(error))
             return;
 
         auto wallet = m_wallet;
@@ -1834,7 +1839,7 @@ extern "C"
 
     void thaw(const char* key_image, ErrorBox* error)
     {
-        if (!is_wallet_created(error))
+        if (!is_wallet_loaded(error))
             return;
 
         auto wallet = m_wallet;
@@ -1863,7 +1868,7 @@ extern "C"
 
     bool frozen(const char* key_image, ErrorBox* error)
     {
-        if (!is_wallet_created(error))
+        if (!is_wallet_loaded(error))
             return false;
 
         std::string key_value = key_image;
@@ -1887,7 +1892,7 @@ extern "C"
     {
         char *result = nullptr;
 
-        if (!is_wallet_created(error))
+        if (!is_wallet_loaded(error))
             return result;
 
         std::string json_string = tx_query_json;
@@ -1910,7 +1915,7 @@ extern "C"
     {
         char *result = nullptr;
 
-        if (!is_wallet_created(error))
+        if (!is_wallet_loaded(error))
             return result;
 
         std::string json_string = output_query_json;
@@ -1933,7 +1938,7 @@ extern "C"
     {
         char *result = nullptr;
 
-        if (!is_wallet_created(error))
+        if (!is_wallet_loaded(error))
             return result;
 
         std::string json_string = config_json;
@@ -1956,7 +1961,7 @@ extern "C"
     {
         char *result = nullptr;
 
-        if (!is_wallet_created(error))
+        if (!is_wallet_loaded(error))
             return result;
 
         std::string json_string = tx_set_json;
@@ -1977,7 +1982,7 @@ extern "C"
 
     const char *get_transfers(ErrorBox* error)
     {
-        if (!is_wallet_created(error))
+        if (!is_wallet_loaded(error))
             return nullptr;
 
         std::string text;
@@ -2039,7 +2044,7 @@ extern "C"
 
     bool is_multisig(ErrorBox* error)
     {
-        if (!is_wallet_created(error))
+        if (!is_wallet_loaded(error))
             return false;
 
         Monero::MultisigState state;
@@ -2061,7 +2066,7 @@ extern "C"
 
     const char* prepare_multisig(ErrorBox* error)
     {
-        if (!is_wallet_created(error))
+        if (!is_wallet_loaded(error))
             return nullptr;
 
         std::string result;
@@ -2083,7 +2088,7 @@ extern "C"
 
     const char* get_multisig_info(ErrorBox* error)
     {
-        if (!is_wallet_created(error))
+        if (!is_wallet_loaded(error))
             return nullptr;
 
         std::string result;
@@ -2108,7 +2113,7 @@ extern "C"
 
     const char* exchange_multisig_keys(const char* const* const info, uint32_t size, ErrorBox* error)
     {
-        if (!is_wallet_created(error))
+        if (!is_wallet_loaded(error))
             return nullptr;
 
         auto info_vector = to_vector(info, size);
@@ -2135,7 +2140,7 @@ extern "C"
 
     bool is_multisig_import_needed(ErrorBox* error)
     {
-        if (!is_wallet_created(error))
+        if (!is_wallet_loaded(error))
             return false;
 
         bool result = false;
@@ -2155,7 +2160,7 @@ extern "C"
 
     uint32_t import_multisig_images(const char* const* const info, uint32_t size, ErrorBox* error)
     {
-        if (!is_wallet_created(error))
+        if (!is_wallet_loaded(error))
             return 0;
 
         auto info_vector = to_vector(info, size);
@@ -2177,7 +2182,7 @@ extern "C"
 
     void export_multisig_images(const char** info, ErrorBox* error)
     {
-        if (!is_wallet_created(error))
+        if (!is_wallet_loaded(error))
             return;
 
         auto wallet = m_wallet;
@@ -2208,7 +2213,7 @@ extern "C"
 
     const char* make_multisig(const char* const* const info, uint32_t size, uint32_t threshold, ErrorBox* error)
     {
-        if (!is_wallet_created(error))
+        if (!is_wallet_loaded(error))
             return nullptr;
 
         std::vector<std::string> info_vector = to_vector(info, size);
@@ -2234,7 +2239,7 @@ extern "C"
 
     const char* sign_multisig_tx_hex(const char* multisig_tx_hex, ErrorBox* error)
     {
-        if (!is_wallet_created(error))
+        if (!is_wallet_loaded(error))
             return nullptr;
 
         const char* result = nullptr;
@@ -2260,7 +2265,7 @@ extern "C"
 
     const char* const* submit_multisig_tx_hex(const char* signed_multisig_tx_hex, ErrorBox* error)
     {
-        if (!is_wallet_created(error))
+        if (!is_wallet_loaded(error))
             return nullptr;
 
         std::string signed_multisig_tx_hex_value = signed_multisig_tx_hex;
