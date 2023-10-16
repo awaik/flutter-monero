@@ -112,6 +112,9 @@ extern "C"
 
     //uint64_t get_node_height_or_update(uint64_t base_eight);
 
+    const char *const * get_public_nodes(bool white_only, ErrorBox* error);
+    uint64_t get_single_block_tx_count(const char *nodeAddress, uint64_t blockHeight, ErrorBox* error);
+
     // **********************************************************************************************************************************
     // Account
     // **********************************************************************************************************************************

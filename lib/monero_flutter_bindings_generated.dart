@@ -26,17 +26,16 @@ class MoneroApiBindings {
           lookup)
       : _lookup = lookup;
 
+  /// Creating (loading) wallet
   bool is_wallet_loaded() {
     return _is_wallet_loaded();
   }
 
   late final _is_wallet_loadedPtr =
       _lookup<ffi.NativeFunction<ffi.Bool Function()>>('is_wallet_loaded');
-
   late final _is_wallet_loaded =
       _is_wallet_loadedPtr.asFunction<bool Function()>();
 
-  /// Creating (loading) wallet
   void create_wallet(
     ffi.Pointer<ffi.Char> path,
     ffi.Pointer<ffi.Char> password,
@@ -788,6 +787,45 @@ class MoneroApiBindings {
           'rescan_spent');
   late final _rescan_spent =
       _rescan_spentPtr.asFunction<void Function(ffi.Pointer<ErrorBox>)>();
+
+  /// uint64_t get_node_height_or_update(uint64_t base_eight);
+  ffi.Pointer<ffi.Pointer<ffi.Char>> get_public_nodes(
+    bool white_only,
+    ffi.Pointer<ErrorBox> error,
+  ) {
+    return _get_public_nodes(
+      white_only,
+      error,
+    );
+  }
+
+  late final _get_public_nodesPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Pointer<ffi.Pointer<ffi.Char>> Function(
+              ffi.Bool, ffi.Pointer<ErrorBox>)>>('get_public_nodes');
+  late final _get_public_nodes = _get_public_nodesPtr.asFunction<
+      ffi.Pointer<ffi.Pointer<ffi.Char>> Function(
+          bool, ffi.Pointer<ErrorBox>)>();
+
+  int get_single_block_tx_count(
+    ffi.Pointer<ffi.Char> nodeAddress,
+    int blockHeight,
+    ffi.Pointer<ErrorBox> error,
+  ) {
+    return _get_single_block_tx_count(
+      nodeAddress,
+      blockHeight,
+      error,
+    );
+  }
+
+  late final _get_single_block_tx_countPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Uint64 Function(ffi.Pointer<ffi.Char>, ffi.Uint64,
+              ffi.Pointer<ErrorBox>)>>('get_single_block_tx_count');
+  late final _get_single_block_tx_count =
+      _get_single_block_tx_countPtr.asFunction<
+          int Function(ffi.Pointer<ffi.Char>, int, ffi.Pointer<ErrorBox>)>();
 
   /// Get info
   int account_size(

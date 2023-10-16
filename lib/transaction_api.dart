@@ -521,6 +521,10 @@ OutputsResponse _getOutputsSync(Map args) {
 OutputsResponse getOutputsSync(OutputsRequest request) {
   final jsonRequest = jsonEncode(request.toJson());
   final jsonResponse = getOutputsAsJsonSync(jsonRequest);
+
+  // TODO: TEMP!
+  debugPrint("\r\n================BEGIN====================\r\n" + jsonResponse + "\r\n=================== END =================\r\n");
+
   final jsonMapResponse = jsonDecode(jsonResponse);
 
   return OutputsResponse.fromJson(jsonMapResponse);

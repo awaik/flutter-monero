@@ -439,7 +439,7 @@ List<String> submitMultisigTxHexSync(String signedMultisigTxHex) {
   final resultPointer = monero_flutter.bindings
       .submit_multisig_tx_hex(signedMultisigTxHexPointer, errorBoxPointer);
 
-  final result = _convertToList(resultPointer);
+  final result = monero_flutter.convertToList(resultPointer);
 
   calloc.free(signedMultisigTxHexPointer);
 
@@ -512,43 +512,4 @@ Future<SimplifiedTransactionReport> prepareTransaction(SimplifiedTransactionRequ
   // //return SimplifiedTransactionReport(utxoGroups: [utxoGroup]);
 
   throw Exception("Not impl.");
-}
-
-List<String> _convertToList(Pointer<Pointer<Char>> pointers) {
-
-  if (nullptr == pointers) {
-    return [];
-  }
-
-  final list = <String>[];
-
-  var i = 0;
-
-  while (true) {
-    final pointer = pointers.elementAt(i).value;
-
-    if (pointer == nullptr) {
-      break;
-    }
-
-    final string = pointer.cast<Utf8>().toDartString();
-    list.add(string);
-    i++;
-  }
-
-  i = 0;
-  while (true) {
-    final pointer = pointers.elementAt(i).value;
-
-    if (pointer == nullptr) {
-      break;
-    }
-
-    calloc.free(pointer);
-    i++;
-  }
-
-  calloc.free(pointers);
-
-  return list;
 }

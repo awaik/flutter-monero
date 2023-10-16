@@ -64,3 +64,42 @@ String? extractString(Pointer<Char> charPointer) {
   calloc.free(charPointer);
   return value;
 }
+
+List<String> convertToList(Pointer<Pointer<Char>> pointers) {
+
+  if (nullptr == pointers) {
+    return [];
+  }
+
+  final list = <String>[];
+
+  var i = 0;
+
+  while (true) {
+    final pointer = pointers.elementAt(i).value;
+
+    if (pointer == nullptr) {
+      break;
+    }
+
+    final string = pointer.cast<Utf8>().toDartString();
+    list.add(string);
+    i++;
+  }
+
+  i = 0;
+  while (true) {
+    final pointer = pointers.elementAt(i).value;
+
+    if (pointer == nullptr) {
+      break;
+    }
+
+    calloc.free(pointer);
+    i++;
+  }
+
+  calloc.free(pointers);
+
+  return list;
+}

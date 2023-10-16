@@ -529,3 +529,98 @@ int getCurrentHeightSync() {
 
   return result;
 }
+
+/// Retrieves a list of public nodes for the Monero network (async version).
+
+/// Parameters:
+/// - `whiteOnly`: Optional. When set to `true`, retrieves only white-listed nodes.
+///                Defaults to `true` if not provided.
+///
+/// Returns:
+/// A future that resolves to a list of strings. Each string represents
+/// the address of a public node on the Monero network.
+///
+/// Notes:
+/// Ensure the wallet connection is active before calling to avoid unexpected behavior.
+Future<List<String>> getPublicNodes({bool whiteOnly = true}) async =>
+    compute(_getPublicNodesSync, {'whiteOnly': whiteOnly});
+
+List<String> _getPublicNodesSync(Map<String, dynamic> args) {
+  final whiteOnly = args['whiteOnly'] as bool;
+
+  return getPublicNodesSync(whiteOnly: whiteOnly);
+}
+
+/// Retrieves a list of public nodes for the Monero network (sync version).
+
+/// Parameters:
+/// - `whiteOnly`: Optional. When set to `true`, retrieves only white-listed nodes.
+///                Defaults to `true` if not provided.
+///
+/// Returns:
+/// A list of strings. Each string represents the address of a public node on the
+/// Monero network.
+///
+/// Notes:
+/// Ensure the wallet connection is active before calling to avoid unexpected behavior.
+List<String> getPublicNodesSync({bool whiteOnly = true}) {
+  final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
+  final resultPointer =
+      monero_flutter.bindings.get_public_nodes(whiteOnly, errorBoxPointer);
+
+  final errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
+
+  if (0 != errorInfo.code) {
+    throw Exception(errorInfo.getErrorMessage());
+  }
+
+  final result = monero_flutter.convertToList(resultPointer);
+
+  return result;
+}
+
+/// Communicates with a specified node, fetches the block at the given block height,
+/// and returns the count of transactions in that block (async version).
+///
+/// Parameters:
+/// - `nodeAddress`: The address of the node to communicate with.
+/// - `blockHeight`: The height of the block whose transactions count is to be retrieved.
+///
+/// Returns:
+/// A future that resolves to an integer representing the number of transactions in the specified block.
+Future getSingleBlockTxCount(String nodeAddress, int blockHeight) async =>
+    compute(_getSingleBlockTxCountSync,
+        {'nodeAddress': nodeAddress, 'blockHeight': blockHeight});
+
+int _getSingleBlockTxCountSync(Map<String, dynamic> args) {
+  final nodeAddress = args['nodeAddress'] as String;
+  final blockHeight = args['blockHeight'] as int;
+
+  return getSingleBlockTxCountSync(nodeAddress, blockHeight);
+}
+
+/// Communicates with a specified node, fetches the block at the given block height,
+/// and returns the count of transactions in that block (sync version).
+///
+/// Parameters:
+/// - `nodeAddress`: The address of the node to communicate with.
+/// - `blockHeight`: The height of the block whose transactions count is to be retrieved.
+///
+/// Returns:
+/// An integer, representing the number of transactions in the specified block.
+int getSingleBlockTxCountSync(String nodeAddress, int blockHeight) {
+  final nodeAddressPointer = nodeAddress.toNativeUtf8().cast<Char>();
+  final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
+  final result = monero_flutter.bindings.get_single_block_tx_count(
+      nodeAddressPointer, blockHeight, errorBoxPointer);
+
+  final errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
+
+  calloc.free(nodeAddressPointer);
+
+  if (0 != errorInfo.code) {
+    throw Exception(errorInfo.getErrorMessage());
+  }
+
+  return result;
+}

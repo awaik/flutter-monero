@@ -178,6 +178,40 @@ extern "C"
     std::mutex store_lock;
     bool is_storing = false;
 
+    static const std::vector<std::string> to_vector(const char* const* const array, uint32_t size)
+    {
+        std::vector<std::string> result;
+
+        for (uint32_t i = 0; i < size; i++)
+        {
+            std::string item = std::string(array[i]);
+            result.push_back(item);
+        }
+
+        return result;
+    }
+
+    static const char* const* from_vector(const std::vector<std::string>& input)
+    {
+        if (input.size() <= 0)
+            return nullptr;
+
+        // deallocate memory in the calling code!
+        char** result = (char**)calloc(input.size() + 1, sizeof(char**));
+
+        char** rp = result;
+
+        for (auto const& s : input)
+        {
+            char* item = (char*)calloc(s.size() + 1, sizeof(char*));
+            *rp++ = std::strcpy(item, s.c_str());
+        }
+
+        (*rp) = nullptr;
+
+        return result;
+    }
+
     // **********************************************************************************************************************************
     // Wallet manager
     // **********************************************************************************************************************************
@@ -1222,13 +1256,11 @@ extern "C"
         if (!is_wallet_loaded(error))
             return;
 
-        auto wallet = m_wallet;
-
         bool is_success;
 
         try
         {
-            is_success = wallet->rescanSpent();
+            is_success = m_wallet->rescanSpent();
         }
         catch (std::exception& e)
         {
@@ -1241,8 +1273,53 @@ extern "C"
         if (!is_success)
         {
             error->code = -3;
-            error->message = strdup(wallet->errorString().c_str());
+            error->message = strdup(m_wallet->errorString().c_str());
         }
+    }
+
+    const char *const * get_public_nodes(bool white_only, ErrorBox* error)
+    {
+        if (!is_wallet_loaded(error))
+            return nullptr;
+
+        std::vector<std::string> nodes;
+
+        try
+        {
+            nodes = m_wallet->get_public_nodes(white_only);
+        }
+        catch (std::exception& e)
+        {
+            error->code = -2;
+            error->message = strdup(e.what());
+
+            return nullptr;
+        }
+
+        return from_vector(nodes);
+    }
+
+    uint64_t get_single_block_tx_count(const char *nodeAddress, uint64_t blockHeight, ErrorBox* error)
+    {
+        if (!is_wallet_loaded(error))
+            return -1;
+
+        uint64_t result;
+
+        try
+        {
+            std::string address = nodeAddress;
+            result = m_wallet->get_single_block_tx_count(address, blockHeight);
+        }
+        catch (std::exception& e)
+        {
+            error->code = -2;
+            error->message = strdup(e.what());
+
+            return - 1;
+        }
+
+        return result;
     }
 
     // **********************************************************************************************************************************
@@ -2007,40 +2084,6 @@ extern "C"
     // **********************************************************************************************************************************
     // Multisig
     // **********************************************************************************************************************************
-
-    static const std::vector<std::string> to_vector(const char* const* const array, uint32_t size)
-    {
-        std::vector<std::string> result;
-
-        for (uint32_t i = 0; i < size; i++)
-        {
-            std::string item = std::string(array[i]);
-            result.push_back(item);
-        }
-
-        return result;
-    }
-
-    static const char* const* from_vector(const std::vector<std::string>& input)
-    {
-        if (input.size() <= 0)
-            return nullptr;
-
-        // deallocate memory in the calling code!
-        char** result = (char**)calloc(input.size() + 1, sizeof(char**));
-
-        char** rp = result;
-
-        for (auto const& s : input)
-        {
-            char* item = (char*)calloc(s.size() + 1, sizeof(char*));
-            *rp++ = std::strcpy(item, s.c_str());
-        }
-
-        (*rp) = nullptr;
-
-        return result;
-    }
 
     bool is_multisig(ErrorBox* error)
     {

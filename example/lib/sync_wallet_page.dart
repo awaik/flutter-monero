@@ -79,6 +79,31 @@ class SyncWalletPage extends StatelessWidget {
     }
   }
 
+  void _getNodes() async {
+    List<String> nodes;
+    try {
+      nodes = await api.getPublicNodes();
+    } catch (e) {
+      _resultController.text = e.toString();
+      return;
+    }
+
+    _resultController.text = nodes.join("\r\n");
+  }
+
+  void _getTxCountOnNode() async {
+    int txCount;
+
+    try {
+      txCount = await api.getSingleBlockTxCount(_resultController.text, 2996900);
+    } catch (e) {
+      _resultController.text = e.toString();
+      return;
+    }
+
+    _resultController.text = txCount.toString();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -88,6 +113,8 @@ class SyncWalletPage extends StatelessWidget {
         children: <Widget>[
           TextField(
             controller: _resultController,
+            keyboardType: TextInputType.multiline,
+            maxLines: 8,
             decoration: InputDecoration(
               border: OutlineInputBorder(),
             ),
@@ -190,6 +217,28 @@ class SyncWalletPage extends StatelessWidget {
                     child: ElevatedButton(
                       child: Text("Synchronization progress", style: TextStyle(fontSize: 22)),
                       onPressed: _getSyncingHeight,
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.all(10),
+                        minimumSize: Size(360, 60),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: ElevatedButton(
+                      child: Text("Get nodes", style: TextStyle(fontSize: 22)),
+                      onPressed: _getNodes,
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.all(10),
+                        minimumSize: Size(360, 60),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: ElevatedButton(
+                      child: Text("Get tx count on node", style: TextStyle(fontSize: 22)),
+                      onPressed: _getTxCountOnNode,
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.all(10),
                         minimumSize: Size(360, 60),
