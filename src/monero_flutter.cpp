@@ -1301,15 +1301,12 @@ extern "C"
 
     uint64_t get_single_block_tx_count(const char *nodeAddress, uint64_t blockHeight, ErrorBox* error)
     {
-        if (!is_wallet_loaded(error))
-            return -1;
-
         uint64_t result;
 
         try
         {
             std::string address = nodeAddress;
-            result = m_wallet->get_single_block_tx_count(address, blockHeight);
+            result = Monero::Wallet::get_single_block_tx_count(address, blockHeight);
         }
         catch (std::exception& e)
         {
