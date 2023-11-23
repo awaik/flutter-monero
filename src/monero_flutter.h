@@ -32,7 +32,7 @@ const ByteArray get_keys_data(const char *password, bool view_only, ErrorBox* er
 
 const ByteArray get_cache_data(ErrorBox* error);
 
-void store(const char* path, ErrorBox* error);
+void store(ErrorBox* error);
 
 void close_current_wallet(ErrorBox* error);
 
@@ -52,7 +52,7 @@ uint32_t import_multisig_images(const char* const* const info, uint32_t size, Er
 
 // ************* Sync *************
 
-void setup_node(const char* address, const char* login, const char* password, bool use_ssl, bool is_light_wallet, ErrorBox* error);
+void setup_node(const char* address, const char* login, const char* password, ErrorBox* error);
 
 void start_refresh(ErrorBox* error);
 
@@ -64,7 +64,7 @@ uint64_t get_node_height_or_update(uint64_t base_eight);
 
 // ************* Financial *************
 
-const char* get_address(uint32_t account_index, uint32_t address_index, ErrorBox* error);
+const char* get_address(uint32_t account_index, uint32_t subaddress_index, ErrorBox* error);
 
 int32_t get_num_subaddresses(int32_t account_index, ErrorBox *error);
 

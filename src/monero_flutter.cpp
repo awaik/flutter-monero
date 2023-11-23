@@ -1,11 +1,26 @@
 #include <memory>
 #include "monero_flutter.h"
+#include "wallet/monero_wallet.h"
 #include "wallet/monero_wallet_full.h"
 #include "wallet/monero_wallet_model.h"
 #include "daemon/monero_daemon_model.h"
+#include "utils/monero_utils.h"
+
+// TODO
+#include <iostream>
 
 using namespace std;
 using namespace monero;
+
+struct wallet_listener : public monero_wallet_listener {
+    void on_sync_progress(uint64_t height, uint64_t start_height, uint64_t end_height, double percent_done, const string& message) override {
+        cout << "height=" << height << "; start_height=" << start_height << "; end_height=" << end_height << "; percent_done=" << percent_done << "; " << message << endl;
+    }
+    void on_new_block(uint64_t height) override{}
+    void on_balances_changed(uint64_t new_balance, uint64_t new_unlocked_balance) override {}
+    void on_output_received(const monero_output_wallet& output) override {}
+    void on_output_spent(const monero_output_wallet& output) override {}
+};
 
 #if __APPLE__
 // Fix for randomx on ios
@@ -115,6 +130,11 @@ const ByteArray get_cache_data(ErrorBox* error)
     result.bytes = duplicate_bytes(buffer);
 }
 
+void store(ErrorBox* error)
+{
+    _wallet->save();
+}
+
 // ************* Multisig *************
 
 const char* prepare_multisig(ErrorBox* error)
@@ -136,58 +156,57 @@ const char* make_multisig(const char* const* const info, uint32_t size, uint32_t
 
 const char* exchange_multisig_keys(const char* const* const info, uint32_t size, const char *password, ErrorBox* error)
 {
-    //auto info_vector = to_vector(info, size);
+    auto info_vector = to_vector(info, size);
+    auto init_result = _wallet->exchange_multisig_keys(info_vector, password);
+    auto multisig_hex = init_result.m_multisig_hex;
     
-    //auto init_result = _wallet->exchange_multisig_keys(info_vector, password);
-    
-    //auto multisig_hex = init_result->m_multisig_hex;
-    
-    //return strdup(multisig_hex.c_str());
-    
-    return nullptr;
+    return strdup(multisig_hex->c_str());
 }
 
 bool is_multisig_import_needed(ErrorBox* error)
 {
-    return false;
-    //return _wallet->is_multisig_import_needed();
+    return _wallet->is_multisig_import_needed();
 }
 
 void export_multisig_images(const char** info, ErrorBox* error)
 {
+    string multisig_hex = _wallet->export_multisig_hex();
     
-    //std::string images;
-    
-    //bool is_success = _wallet->export_key_images(images);
-    
-    //if (is_success)
-    //    (*info) = strdup(images.c_str());
+    if (!multisig_hex.empty())
+        (*info) = strdup(multisig_hex.c_str());
 }
 
 uint32_t import_multisig_images(const char* const* const info, uint32_t size, ErrorBox* error)
 {
-    //auto info_vector = to_vector(info, size);
-    
-    //uint32_t result = (uint32_t)_wallet->import_key_images(info_vector);
-    
-    //return result;
-    
-    return 1;
+    auto multisig_hexes = to_vector(info, size);
+    auto result = _wallet->import_multisig_hex(multisig_hexes);
+    return result;
 }
 
-void setup_node(const char* address, const char* login, const char* password, bool use_ssl, bool is_light_wallet, ErrorBox* error)
+// ************* Sync *************
+
+void setup_node(const char* address, const char* login, const char* password, ErrorBox* error)
 {
+    bool is_connected = _wallet->is_connected_to_daemon();
+    cout << "is_connected_to_daemon=" << is_connected << endl;
     
+    _wallet->set_daemon_connection(address, login, password);
+    
+    is_connected = _wallet->is_connected_to_daemon();
+    cout << "is_connected_to_daemon=" << is_connected << endl;
 }
 
 void start_refresh(ErrorBox* error)
 {
+    wallet_listener listener;
+    _wallet->add_listener(listener);
     
+    _wallet->sync();
 }
 
 uint64_t get_syncing_height(ErrorBox* error)
 {
-    return 0;
+    return _wallet->get_height();
 }
 
 uint64_t get_current_height(ErrorBox* error)
@@ -202,19 +221,55 @@ uint64_t get_node_height_or_update(uint64_t base_eight)
 
 // ************* Financial *************
 
-const char* get_address(uint32_t account_index, uint32_t address_index, ErrorBox* error)
+const char* get_address(uint32_t account_index, uint32_t subaddress_index, ErrorBox* error)
 {
-    return nullptr;
+    auto address = _wallet->get_address(account_index, subaddress_index);
+    return strdup(address.c_str());
 }
 
 int32_t get_num_subaddresses(int32_t account_index, ErrorBox *error)
 {
-    return 0;
+    // TODO???
+    //_wallet->count
 }
 
-const char *get_outputs(const char *output_query_json, ErrorBox *error)
+const char *get_utxos_json(ErrorBox *error)
 {
-    return nullptr;
+    auto output_query = make_shared<monero_output_query>();
+    
+    // TODO!!!
+    output_query->m_is_spent = false;
+
+    // get outputs
+    auto outputs = _wallet->get_outputs(*output_query);
+
+    // return unique blocks to preserve model relationships as tree
+    vector<monero_block> blocks;
+    unordered_set<shared_ptr<monero_block>> seen_block_ptrs;
+
+    for (auto const &output: outputs)
+    {
+        auto tx = static_pointer_cast<monero_tx_wallet>(output->m_tx);
+
+        if (tx->m_block == boost::none)
+            throw runtime_error("Need to handle unconfirmed output");
+
+        unordered_set<shared_ptr<monero_block>>::const_iterator got = seen_block_ptrs.find(*tx->m_block);
+
+        if (got == seen_block_ptrs.end())
+        {
+            seen_block_ptrs.insert(*tx->m_block);
+            blocks.push_back(**tx->m_block);
+        }
+    }
+
+    // wrap and serialize blocks
+    rapidjson::Document doc;
+    doc.SetObject();
+    doc.AddMember("blocks", monero_utils::to_rapidjson_val(doc.GetAllocator(), blocks), doc.GetAllocator());
+    auto blocks_json = monero_utils::serialize(doc);
+
+    return strdup(blocks_json.c_str());
 }
 
 void thaw(const char* key_image, ErrorBox* error)
@@ -227,14 +282,27 @@ void freeze(const char* key_image, ErrorBox* error)
     _wallet->freeze_output(key_image);
 }
 
-const char *create_transactions(const char *tx_config_json, ErrorBox *error)
+const char *create_transaction(const char *tx_config_json, ErrorBox *error)
 {
-    return nullptr;
+    auto tx_config = monero_tx_config::deserialize(tx_config_json);
+    auto txs = _wallet->create_txs(*tx_config);
+    
+    if (txs.size() != 1) {
+        // TODO
+    }
+    
+    auto result = txs[0]->m_tx_set.get()->serialize();
+    
+    return strdup(result.c_str());
 }
 
 const char *describe_tx_set(const char *tx_set_json, ErrorBox *error)
 {
-    return nullptr;
+    auto tx_set = monero_tx_set::deserialize(tx_set_json);
+    auto result = _wallet->describe_tx_set(tx_set);
+    string result_json = result.serialize();
+    
+    return strdup(result_json.c_str());
 }
 
 #ifdef __cplusplus
