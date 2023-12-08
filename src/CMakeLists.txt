@@ -1,17 +1,30 @@
-# The Flutter tooling requires that developers have CMake 3.10 or later
-# installed. You should not increase this version, as doing so will cause
-# the plugin to fail to compile for some customers of the plugin.
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.4.1)
 
-project(monero_flutter_library VERSION 0.0.1 LANGUAGES C)
+set(EXTERNAL_DIR ${CMAKE_SOURCE_DIR}/../android/external)
 
-add_library(monero_flutter SHARED
-  "monero_flutter.c"
+add_library(monero_flutter
+    SHARED
+    monero_flutter.cpp)
+
+add_library(monero-ffi SHARED IMPORTED)
+set_target_properties(monero-ffi PROPERTIES IMPORTED_LOCATION
+    ${EXTERNAL_DIR}/${ANDROID_ABI}/lib/libmonero-ffi.so)
+
+add_library(charset SHARED IMPORTED)
+set_target_properties(charset PROPERTIES IMPORTED_LOCATION
+    ${EXTERNAL_DIR}/${ANDROID_ABI}/lib/libcharset.so)
+
+add_library(iconv SHARED IMPORTED)
+set_target_properties(iconv PROPERTIES IMPORTED_LOCATION
+    ${EXTERNAL_DIR}/${ANDROID_ABI}/lib/libiconv.so)
+
+add_library(boost_program_options STATIC IMPORTED)
+set_target_properties(boost_program_options PROPERTIES IMPORTED_LOCATION
+    ${EXTERNAL_DIR}/${ANDROID_ABI}/lib/libboost_program_options.a)
+
+target_link_libraries(monero_flutter
+    monero-ffi
+    charset
+    iconv
+    boost_program_options
 )
-
-set_target_properties(monero_flutter PROPERTIES
-  PUBLIC_HEADER monero_flutter.h
-  OUTPUT_NAME "monero_flutter"
-)
-
-target_compile_definitions(monero_flutter PUBLIC DART_SHARED_LIB)
