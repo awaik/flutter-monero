@@ -4,6 +4,7 @@ import 'dart:typed_data';
 
 import 'package:ffi/ffi.dart';
 import 'package:monero_flutter/entities/error_info.dart';
+import 'package:monero_flutter/entities/native_string_list.dart';
 
 import 'monero_ffi_bindings_generated.dart';
 
@@ -69,7 +70,11 @@ Pointer<Uint8> toNativeByteArray(Uint8List bytes) {
   return nativeData;
 }
 
-List<String> convertToList(Pointer<Pointer<Char>> pointers) {
+NativeList fromStringList(List<String> sourceList) {
+  return NativeList(sourceList);
+}
+
+List<String> toList(Pointer<Pointer<Char>> pointers) {
 
   if (nullptr == pointers) {
     return [];

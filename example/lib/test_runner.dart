@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:monero_flutter_example/wallet_tests.dart';
 
 import 'test_result.dart';
 
 Stream<TestResult> _runAll() async* {
 
+  final walletTests = WalletTests();
+
   List<TestFunction> testFunctions = [];
+  testFunctions.addAll(walletTests.testFunctions);
 
   for (final testFunction in testFunctions) {
     TestResult testResult;

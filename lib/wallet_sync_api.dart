@@ -68,6 +68,7 @@ bool setupNodeSync(
 
   monero_flutter.bindings.setup_node(
       addressPointer, loginPointer, passwordPointer, errorBoxPointer);
+
   final errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
 
   calloc.free(addressPointer);
@@ -123,20 +124,12 @@ void startRefreshSync() {
 // *****************************************************************************
 
 /// Returns the start syncing height of the wallet (async version).
-Future<int> getStartSyncingHeight() => compute(_getStartSyncingHeightSync, {});
+Future<int> getStartHeight() => compute(_getStartHeightSync, {});
 
-int _getStartSyncingHeightSync(Map args) {
-  return getStartSyncingHeightSync();
-}
+int _getStartHeightSync(Map args) => getStartHeightSync();
 
-/// Returns the current syncing height of the wallet (sync version).
-///
-/// This function retrieves the height of the blockchain that the wallet is currently syncing to.
-/// The syncing height represents the progress of the wallet's synchronization with the blockchain.
-/// It returns an integer value representing the current syncing height.
-///
-/// Throws an exception if there is an error while retrieving the syncing height.
-int getStartSyncingHeightSync() {
+/// Returns the start syncing height of the wallet (sync version).
+int getStartHeightSync() {
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
   final result = monero_flutter.bindings.get_start_height(errorBoxPointer);
 
@@ -175,6 +168,7 @@ int _getCurrentHeightSync(Map args) {
 /// Throws an exception if there is an error while retrieving the current height.
 int getCurrentHeightSync() {
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
+
   final result = monero_flutter.bindings.get_current_height(errorBoxPointer);
 
   final errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
@@ -196,16 +190,16 @@ int getCurrentHeightSync() {
 ///
 /// Returns:
 ///   A [Future] that completes with an integer, representing the node height.
-Future<int> getNodeHeight() => compute(_getNodeHeight, 0);
+Future<int> getEndHeight() => compute(_getEndHeight, 0);
 
-int _getNodeHeight(Object _) => getNodeHeightSync();
+int _getEndHeight(Object _) => getEndHeightSync();
 
 /// Returns the height of the Monero blockchain node, synchronously (sync version).
 ///
 /// This function retrieves the height of the blockchain node in the Monero network
 /// and returns it as an integer value. The height represents the number of blocks
 /// in the blockchain, indicating the level of synchronization with the network.
-int getNodeHeightSync() {
+int getEndHeightSync() {
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
   int result = monero_flutter.bindings.get_end_height(errorBoxPointer);
 
@@ -256,7 +250,7 @@ List<String> getPublicNodesSync() {
     throw Exception(errorInfo.getErrorMessage());
   }
 
-  final result = monero_flutter.convertToList(resultPointer);
+  final result = monero_flutter.toList(resultPointer);
 
   return result;
 }

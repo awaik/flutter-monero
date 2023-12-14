@@ -13,7 +13,7 @@ import 'package:monero_flutter/monero_flutter.dart' as monero_flutter;
 ///
 /// Returns:
 ///   A [Future] that completes with the address as a [String].
-Future<String> getAddress({int accountIndex = 0, int addressIndex = 0}) =>
+Future<String> getAddress() =>
     compute(_getAddressSync, {});
 
 String _getAddressSync(Map args) => getAddressSync();
@@ -54,7 +54,7 @@ String getAddressSync() {
 ///
 /// Returns:
 ///   A [Future] that completes with the string, representing the receive address.
-Future<String> getReceiveAddress({int accountIndex = 0, int addressIndex = 0}) =>
+Future<String> getReceiveAddress() =>
     compute(_getReceiveAddressSync, {});
 
 String _getReceiveAddressSync(Map args) => getReceiveAddressSync();
@@ -123,6 +123,13 @@ int getConfirmedBalanceSync() {
 // *****************************************************************************
 // get_all_transactions_json
 // *****************************************************************************
+
+// Future<TxsResponse> getAllTransfers() async {
+//   final jsonResponse = await getAllTransfersAsJson();
+//   final jsonMapResponse = jsonDecode(jsonResponse);
+//
+//   return TxsResponse.fromJson(jsonMapResponse);
+// }
 
 /// Retrieves all transfers as JSON (async version).
 ///

@@ -7,6 +7,8 @@ import 'package:monero_flutter/exceptions/restore_wallet_from_seed_exception.dar
 
 import 'package:monero_flutter/monero_flutter.dart' as monero_flutter;
 
+const int networkType = 0;
+
 // *****************************************************************************
 // is_wallet_exist
 // *****************************************************************************
@@ -121,7 +123,7 @@ void restoreWalletFromSeedSync({
     pathPointer,
     passwordPointer,
     seedPointer,
-    0,
+    networkType,
     errorBoxPointer,
   );
   final errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
@@ -141,11 +143,10 @@ void restoreWalletFromSeedSync({
 
 /// Opens a Monero wallet using the provided keys data and cache data as `Uint8List` (async version).
 ///
-/// Opens a Monero wallet using the provided [password], [testnet] flag, [keysData] and [cacheData].
+/// Opens a Monero wallet using the provided [password], [keysData] and [cacheData].
 ///
 /// Parameters:
 ///   [password] - The password to decrypt the wallet.
-///   [testnet] - A boolean flag indicating whether to use the testnet.
 ///   [keysData] - The keys data as a `Uint8List`.
 ///   [cacheData] - The cache data as a `Uint8List`.
 ///
@@ -153,12 +154,10 @@ void restoreWalletFromSeedSync({
 ///   A [Future] that completes with no result.
 Future openWalletData(
     String password,
-    bool testnet,
     Uint8List keysData,
     Uint8List cacheData) {
   return compute<Map<String, Object?>, void>(_openWalletDataSync, {
     'password': password,
-    'testnet': testnet,
     'keysData': keysData,
     'cacheData': cacheData
   });
@@ -166,26 +165,22 @@ Future openWalletData(
 
 void _openWalletDataSync(Map<String, Object?> args) {
   final password = args['password'] as String;
-  final testnet = args['testnet'] as bool;
   final keysData = args['keysData'] as Uint8List;
   final cacheData = args['cacheData'] as Uint8List;
 
-  openWalletDataSync(password, testnet, keysData, cacheData);
+  openWalletDataSync(password, keysData, cacheData);
 }
 
 /// Opens a Monero wallet synchronously using the provided keys data and cache data as `Uint8List` (sync version).
 ///
-/// Opens a Monero wallet synchronously using the provided [password], [testnet] flag, [keysData], [cacheData],
-/// [daemonAddress], [daemonUsername], and [daemonPassword].
+/// Opens a Monero wallet synchronously using the provided [password], [keysData] and [cacheData].
 ///
 /// Parameters:
 ///   [password] - The password to decrypt the wallet.
-///   [testnet] - A boolean flag indicating whether to use the testnet.
 ///   [keysData] - The keys data as a `Uint8List`.
 ///   [cacheData] - The cache data as a `Uint8List`.
 void openWalletDataSync(
     String password,
-    bool testnet,
     Uint8List keysData,
     Uint8List cacheData) {
   final passwordPointer = password.toNativeUtf8().cast<Char>();
@@ -195,7 +190,7 @@ void openWalletDataSync(
 
   monero_flutter.bindings.open_wallet_data(
       passwordPointer,
-      0,
+      networkType,
       keysDataPointer,
       keysData.length,
       cacheDataPointer,
@@ -224,11 +219,9 @@ void openWalletDataSync(
 /// Parameters:
 ///   [path] - The path to the wallet file.
 ///   [password] - The password to decrypt the wallet.
-///   [nettype] - (Optional) The network type. Defaults to 0.
 Future loadWallet(
     {required String path,
-      required String password,
-      int nettype = 0}) async =>
+      required String password}) async =>
     compute(_loadWallet, {'path': path, 'password': password});
 
 void _loadWallet(Map<String, dynamic> args) {
@@ -245,15 +238,14 @@ void _loadWallet(Map<String, dynamic> args) {
 /// Parameters:
 ///   [path] - The path to the wallet file.
 ///   [password] - The password to decrypt the wallet.
-///   [nettype] - (Optional) The network type. Defaults to 0.
 void loadWalletSync(
-    {required String path, required String password, int nettype = 0}) {
+    {required String path, required String password}) {
   final pathPointer = path.toNativeUtf8().cast<Char>();
   final passwordPointer = password.toNativeUtf8().cast<Char>();
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
 
   monero_flutter.bindings
-      .load_wallet(pathPointer, passwordPointer, nettype, errorBoxPointer);
+      .load_wallet(pathPointer, passwordPointer, networkType, errorBoxPointer);
   final errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
 
   calloc.free(pathPointer);
@@ -375,7 +367,7 @@ Uint8List getCacheDataBufferSync() {
 // *****************************************************************************
 
 /// Stores the currently opened Monero wallet (async version).
-Future store({required String path}) => compute(_storeSync, {});
+Future store() => compute(_storeSync, {});
 
 void _storeSync(Map args) {
   storeSync();

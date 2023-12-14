@@ -92,28 +92,20 @@ String makeMultisigSync(
     {required List<String> infoList,
     required int threshold,
     required password}) {
-  final size = infoList.length;
-
-  final List<Pointer<Char>> infoPointers =
-      infoList.map((info) => info.toNativeUtf8().cast<Char>()).toList();
-  final Pointer<Pointer<Char>> infoPointerPointer = calloc(size);
+  final nativeInfoList = monero_flutter.fromStringList(infoList);
   final passwordPointer = password.toNativeUtf8().cast<Char>();
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
 
-  for (int i = 0; i < size; i++) {
-    infoPointerPointer[i] = infoPointers[i];
-  }
-
   Pointer<Char> resultPointer = monero_flutter.bindings.make_multisig(
-      infoPointerPointer, size, threshold, passwordPointer, errorBoxPointer);
+      nativeInfoList.pointerToPointers,
+      nativeInfoList.size,
+      threshold,
+      passwordPointer,
+      errorBoxPointer);
 
   final result = resultPointer.cast<Utf8>().toDartString();
 
-  for (var element in infoPointers) {
-    calloc.free(element);
-  }
-
-  calloc.free(infoPointerPointer);
+  nativeInfoList.free();
   calloc.free(resultPointer);
 
   final errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
@@ -135,8 +127,10 @@ String makeMultisigSync(
 /// Takes a list of [infoList] strings containing the second round of initialization data (MultisigxV2Rn...) each of the participants.
 ///
 /// Returns a [Future] that completes with the [String] with multisig address.
-Future<String> exchangeMultisigKeys({required List<String> infoList, required String password}) =>
-    compute(_exchangeMultisigKeysSync, {'infoList': infoList, 'password': password});
+Future<String> exchangeMultisigKeys(
+        {required List<String> infoList, required String password}) =>
+    compute(_exchangeMultisigKeysSync,
+        {'infoList': infoList, 'password': password});
 
 String _exchangeMultisigKeysSync(Map args) {
   final infoList = args['infoList'] as List<String>;
@@ -151,27 +145,21 @@ String _exchangeMultisigKeysSync(Map args) {
 /// Takes a list of [infoList] strings containing the second round of initialization data (MultisigxV2Rn...) each of the participants.
 ///
 /// Returns a [String] with multisig address.
-String exchangeMultisigKeysSync({required List<String> infoList, required String password}) {
-  final size = infoList.length;
-  final List<Pointer<Char>> infoPointers =
-      infoList.map((info) => info.toNativeUtf8().cast<Char>()).toList();
-  final Pointer<Pointer<Char>> infoPointerPointer = calloc(size);
-
-  for (int i = 0; i < size; i++) {
-    infoPointerPointer[i] = infoPointers[i];
-  }
+String exchangeMultisigKeysSync(
+    {required List<String> infoList, required String password}) {
+  final nativeInfoList = monero_flutter.fromStringList(infoList);
 
   final passwordPointer = password.toNativeUtf8().cast<Char>();
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
-  final resultPointer = monero_flutter.bindings
-      .exchange_multisig_keys(infoPointerPointer, size, passwordPointer, errorBoxPointer);
+  final resultPointer = monero_flutter.bindings.exchange_multisig_keys(
+      nativeInfoList.pointerToPointers,
+      nativeInfoList.size,
+      passwordPointer,
+      errorBoxPointer);
 
   final result = resultPointer.cast<Utf8>().toDartString();
 
-  for (var element in infoPointers) {
-    calloc.free(element);
-  }
-  calloc.free(infoPointerPointer);
+  nativeInfoList.free();
   calloc.free(resultPointer);
 
   final errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
@@ -285,7 +273,6 @@ Future<int> importMultisigImages({required List<String> infoList}) =>
 
 int _importMultisigImagesSync(Map args) {
   final infoList = args['infoList'] as List<String>;
-
   return importMultisigImagesSync(infoList: infoList);
 }
 
@@ -298,25 +285,12 @@ int _importMultisigImagesSync(Map args) {
 ///
 /// Returns an [int] which display how many new inputs it has verified.
 int importMultisigImagesSync({required List<String> infoList}) {
-  final size = infoList.length;
-
-  final List<Pointer<Char>> infoPointers =
-      infoList.map((info) => info.toNativeUtf8().cast<Char>()).toList();
-  final Pointer<Pointer<Char>> infoPointerPointer = calloc(size);
-
-  for (int i = 0; i < size; i++) {
-    infoPointerPointer[i] = infoPointers[i];
-  }
-
+  final nativeInfoList = monero_flutter.fromStringList(infoList);
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
-  int result = monero_flutter.bindings
-      .import_multisig_images(infoPointerPointer, size, errorBoxPointer);
+  int result = monero_flutter.bindings.import_multisig_images(
+      nativeInfoList.pointerToPointers, nativeInfoList.size, errorBoxPointer);
 
-  for (var element in infoPointers) {
-    calloc.free(element);
-  }
-  calloc.free(infoPointerPointer);
-
+  nativeInfoList.free();
   final errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
 
   if (0 != errorInfo.code) {
