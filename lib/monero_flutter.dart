@@ -1,27 +1,11 @@
-
-import 'dart:async';
 import 'dart:ffi';
 import 'dart:io';
-import 'dart:isolate';
+import 'dart:typed_data';
 
 import 'package:ffi/ffi.dart';
+import 'package:monero_flutter/entities/error_info.dart';
 
 import 'monero_ffi_bindings_generated.dart';
-
-//int sum(int a, int b) => _bindings.sum(a, b);
-
-String test() {
-  Pointer<ErrorBox> pointerToErrorBox = calloc.call();
-
-  pointerToErrorBox.ref.code = 0;
-  pointerToErrorBox.ref.message = nullptr;
-
-  _bindings.get_current_height(pointerToErrorBox);
-
-  final message = pointerToErrorBox.ref.message.cast<Utf8>().toDartString();
-
-  return message;
-}
 
 const String _libName = 'monero_flutter';
 
@@ -40,4 +24,86 @@ final DynamicLibrary _dylib = () {
 }();
 
 /// The bindings to the native functions in [_dylib].
-final MoneroFlutterBindings _bindings = MoneroFlutterBindings(_dylib);
+final MoneroFlutterBindings bindings = MoneroFlutterBindings(_dylib);
+
+Pointer<ErrorBox> buildErrorBoxPointer() {
+  Pointer<ErrorBox> pointerToErrorBox = calloc.call();
+
+  pointerToErrorBox.ref.code = 0;
+  pointerToErrorBox.ref.message = nullptr;
+
+  return pointerToErrorBox;
+}
+
+ErrorInfo extractErrorInfo(Pointer<ErrorBox> errorBoxPointer) {
+  final code = errorBoxPointer.ref.code;
+  String? message;
+
+  if (0 != code) {
+    message = errorBoxPointer.ref.message.cast<Utf8>().toDartString();
+  }
+
+  if (nullptr != errorBoxPointer.ref.message) {
+    calloc.free(errorBoxPointer.ref.message);
+  }
+
+  calloc.free(errorBoxPointer);
+
+  return ErrorInfo(code: code, message: message);
+}
+
+String? extractString(Pointer<Char> charPointer) {
+  if (nullptr == charPointer) {
+    return null;
+  }
+
+  String value = charPointer.cast<Utf8>().toDartString();
+  calloc.free(charPointer);
+  return value;
+}
+
+Pointer<Uint8> toNativeByteArray(Uint8List bytes) {
+  final nativeData = calloc<Uint8>(bytes.length);
+  nativeData.asTypedList(bytes.length).setAll(0, bytes);
+
+  return nativeData;
+}
+
+List<String> convertToList(Pointer<Pointer<Char>> pointers) {
+
+  if (nullptr == pointers) {
+    return [];
+  }
+
+  final list = <String>[];
+
+  var i = 0;
+
+  while (true) {
+    final pointer = pointers.elementAt(i).value;
+
+    if (pointer == nullptr) {
+      break;
+    }
+
+    final string = pointer.cast<Utf8>().toDartString();
+    list.add(string);
+    i++;
+  }
+
+  i = 0;
+  while (true) {
+    final pointer = pointers.elementAt(i).value;
+
+    if (pointer == nullptr) {
+      break;
+    }
+
+    calloc.free(pointer);
+    i++;
+  }
+
+  calloc.free(pointers);
+
+  return list;
+}
