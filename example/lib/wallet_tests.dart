@@ -9,8 +9,13 @@ import 'package:monero_flutter/wallet_sync_api.dart' as sync_api;
 import 'package:monero_flutter/transaction_api.dart' as transaction_api;
 
 class WalletTests {
-  List<TestFunction> get testFunctions =>
-      [_openWalletTest, _setupNodeTest, _startRefreshTest, _getUtxosAsJsonTest];
+  List<TestFunction> get testFunctions => [
+        _openWalletTest,
+        _setupNodeTest,
+        _startRefreshTest,
+        _getAllTransfersAsJsonTest,
+        _getUtxosAsJsonTest,
+      ];
 
   Future<TestResult> _loadWalletTest() async {
     const path = "/Users/dmytro/Documents/_WALLETS/v1/moneroWalletVer3";
@@ -25,7 +30,8 @@ class WalletTests {
   }
 
   Future<TestResult> _openWalletTest() async {
-    const keysPath = "/Users/dmytro/Documents/_WALLETS/v1/moneroWalletVer3.keys";
+    const keysPath =
+        "/Users/dmytro/Documents/_WALLETS/v1/moneroWalletVer3.keys";
     const cachePath = "/Users/dmytro/Documents/_WALLETS/v1/moneroWalletVer3";
 
     final keysData = await _readBytes(keysPath);
@@ -42,7 +48,6 @@ class WalletTests {
   }
 
   Future<TestResult> _startRefreshTest() async {
-
     final task1 = Future(() async {
       while (true) {
         int currentHeight = await sync_api.getCurrentHeight();
@@ -68,7 +73,8 @@ class WalletTests {
 
   Future<TestResult> _getAllTransfersAsJsonTest() async {
     final json = await transaction_api.getAllTransfersAsJson();
-    return TestResult("Get All Transfers (JSON)", true, message: "\r\n$json\r\n");
+    return TestResult("Get All Transfers (JSON)", true,
+        message: "\r\n$json\r\n");
   }
 
   Future<TestResult> _getUtxosAsJsonTest() async {

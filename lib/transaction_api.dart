@@ -3,6 +3,8 @@ import 'dart:ffi';
 
 import 'package:ffi/ffi.dart';
 import 'package:flutter/foundation.dart';
+import 'package:monero_flutter/entities/create_transaction_request.dart';
+import 'package:monero_flutter/entities/create_transaction_response.dart';
 import 'package:monero_flutter/entities/outputs_response.dart';
 import 'package:monero_flutter/entities/txs_response.dart';
 import 'package:monero_flutter/entities/utxo.dart';
@@ -292,6 +294,21 @@ void freezeSync(String keyImage) {
 // *****************************************************************************
 // create_transaction
 // *****************************************************************************
+
+/// Creates a new transaction specifying the extended info (async version).
+///
+/// This function creates a new transaction to send funds to the specified address.
+/// It returns a [Future] that resolves to a [CreateTransactionResponse] object,
+/// which contains information about the created transaction.
+///
+/// To send a transaction to the network, use the [relayTransaction] function.
+Future<CreateTransactionResponse> createExtendedTransaction(CreateTransactionRequest createTransactionRequest) async {
+  final txConfigJson = jsonEncode(createTransactionRequest.toJson());
+  final jsonResponse = await createExtendedTransactionAsJson(txConfigJson);
+  final jsonMapResponse = jsonDecode(jsonResponse);
+
+  return CreateTransactionResponse.fromJson(jsonMapResponse);
+}
 
 /// Creates a new transaction in JSON-format, specifying the extended info (async version).
 ///
