@@ -31,9 +31,9 @@ class SyncWalletPage extends StatelessWidget {
     try {
       _resultController.text = "please wait...";
       await api.setupNode(
-          address: "node.moneroworld.com:18089",
-          login: "Daemon username",
-          password: "Daemon password",
+          address: "xmrno.de:18089",
+          //login: "Daemon username",
+          //password: "Daemon password",
           useSSL: true,
           isLightWallet: false);
       _resultController.text = "Setup completed successfully!";

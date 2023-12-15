@@ -11,13 +11,13 @@ class WalletManagementPage extends StatelessWidget {
 
   WalletManagementPage({super.key});
 
-  Future<String> _getWalletPath({String name = "wallet1"}) async {
+  Future<String> _getWalletPath({String name = "moneroWalletVer3"}) async {
     // final root = await getApplicationDocumentsDirectory();
     //
     // final walletsDir = Directory('${root.path}/wallets3');
     // final walletDir = Directory('${walletsDir.path}/wallet_v3');
 
-    final walletDir = Directory("/Users/dmytro/Documents/WALLET");
+    final walletDir = Directory("/Users/dmytro/Documents/_WALLETS/v1");
 
     if (!walletDir.existsSync()) {
       walletDir.createSync(recursive: true);
@@ -191,7 +191,7 @@ class WalletManagementPage extends StatelessWidget {
       testResult = "Error: wallet wasn't created!";
     } else {
       try {
-        var password = " ";
+        var password = "";
         api.loadWalletSync(path: walletPath, password: password);
         testResult = "Wallet opened successfully!";
       } catch (e) {
@@ -205,7 +205,7 @@ class WalletManagementPage extends StatelessWidget {
     testResult = fileName + " " + walletPath;
 
     // await api.closeCurrentWallet();
-     await api.loadWallet(path: fileName, password: " ");
+     //await api.loadWallet(path: fileName, password: "");
 
     _resultController.text = testResult;
   }
