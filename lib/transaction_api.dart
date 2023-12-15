@@ -1,7 +1,11 @@
+import 'dart:convert';
 import 'dart:ffi';
 
 import 'package:ffi/ffi.dart';
 import 'package:flutter/foundation.dart';
+import 'package:monero_flutter/entities/outputs_response.dart';
+import 'package:monero_flutter/entities/txs_response.dart';
+import 'package:monero_flutter/entities/utxo.dart';
 
 import 'package:monero_flutter/monero_flutter.dart' as monero_flutter;
 
@@ -124,12 +128,12 @@ int getConfirmedBalanceSync() {
 // get_all_transactions_json
 // *****************************************************************************
 
-// Future<TxsResponse> getAllTransfers() async {
-//   final jsonResponse = await getAllTransfersAsJson();
-//   final jsonMapResponse = jsonDecode(jsonResponse);
-//
-//   return TxsResponse.fromJson(jsonMapResponse);
-// }
+Future<TxsResponse> getAllTransfers() async {
+  final jsonResponse = await getAllTransfersAsJson();
+  final jsonMapResponse = jsonDecode(jsonResponse);
+
+  return TxsResponse.fromJson(jsonMapResponse);
+}
 
 /// Retrieves all transfers as JSON (async version).
 ///
@@ -168,6 +172,37 @@ String getAllTransfersAsJsonSync() {
 // *****************************************************************************
 // get_utxos_json
 // *****************************************************************************
+
+/// Retrieves a list of all unspent transaction outputs (UTXOs).
+///
+/// Returns:
+///   A [Future] that completes with the response containing the unspent transaction outputs.
+Future<List<Utxo>> getOutputs() async {
+  final jsonResponse = await getUtxosAsJson();
+  final jsonMapResponse = jsonDecode(jsonResponse);
+
+  final outputs = OutputsResponse.fromJson(jsonMapResponse);
+
+  List<Utxo> utxos = [];
+
+  for (final b in outputs.blocks) {
+    for (final t in b.txs) {
+      for (final o in t.outputs) {
+        utxos.add(Utxo(blockHeight: b.height,
+            transactionHash: t.hash,
+            amount: o.amount,
+            index: o.index,
+            stealthPublicKey: o.stealthPublicKey,
+            keyImage: o.keyImage?.hex,
+            accountIndex: o.accountIndex,
+            subaddressIndex: o.subaddressIndex,
+            isFrozen: o.isFrozen));
+      }
+    }
+  }
+
+  return utxos;
+}
 
 /// Retrieves a list of all unspent transaction outputs (UTXOs) in JSON-form (async version).
 Future<String> getUtxosAsJson() => compute(_getUtxosAsJsonSync, {});

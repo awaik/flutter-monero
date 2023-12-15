@@ -10,7 +10,7 @@ import 'package:monero_flutter/transaction_api.dart' as transaction_api;
 
 class WalletTests {
   List<TestFunction> get testFunctions =>
-      [_openWalletTest, _setupNodeTest, _startRefreshTest, _getAllTransfersAsJsonTest];
+      [_openWalletTest, _setupNodeTest, _startRefreshTest, _getUtxosAsJsonTest];
 
   Future<TestResult> _loadWalletTest() async {
     const path = "/Users/dmytro/Documents/_WALLETS/v1/moneroWalletVer3";
@@ -61,14 +61,19 @@ class WalletTests {
     await sync_api.startRefresh();
     await wallet_manager_api.store();
 
-    await task1;
+    //await task1;
 
     return TestResult("Start Refresh", true);
   }
 
   Future<TestResult> _getAllTransfersAsJsonTest() async {
     final json = await transaction_api.getAllTransfersAsJson();
-    return TestResult("loadWallet", true, message: "\r\n$json\r\n");
+    return TestResult("Get All Transfers (JSON)", true, message: "\r\n$json\r\n");
+  }
+
+  Future<TestResult> _getUtxosAsJsonTest() async {
+    final json = await transaction_api.getUtxosAsJson();
+    return TestResult("Get Utxos (JSON)", true, message: "\r\n$json\r\n");
   }
 
   Future<Uint8List> _readBytes(String path) async {
