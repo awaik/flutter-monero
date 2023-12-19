@@ -1,5 +1,5 @@
-class TransferInfo {
-  final int height;
-  final int timestamp;
-  final fee;
-}
+// class TransferInfo {
+//   final int height;
+//   final int timestamp;
+//   final fee;
+// }

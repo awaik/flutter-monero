@@ -1,26 +1,30 @@
 name: monero_flutter
-description: "A new Flutter FFI plugin project."
-version: 0.0.1
-homepage:
+description: Sample of using Monero API.
+version: 0.0.3
+homepage: https://github.com/awaik/monero_flutter
 
 environment:
-  sdk: '>=3.2.3 <4.0.0'
-  flutter: '>=3.3.0'
+  sdk: '>=3.0.6 <4.0.0'
+  flutter: ">=2.11.0"
 
 dependencies:
-  build_runner: ^2.4.7
-  ffi: ^2.1.0
   flutter:
     sdk: flutter
-  json_annotation: ^4.8.1
-  json_serializable: ^6.7.1
+  ffi: ^2.0.1
   plugin_platform_interface: ^2.0.2
+  json_annotation: ^4.8.1
+  path_provider: ^2.0.14
+  convert: ^3.1.1
+  uuid: ^3.0.4
 
 dev_dependencies:
-  ffigen: ^9.0.0
+  ffigen: ^6.1.2
   flutter_test:
     sdk: flutter
   flutter_lints: ^2.0.0
+  build_runner: ^2.4.5
+  json_serializable: ^6.7.1
+  analyzer: ^6.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

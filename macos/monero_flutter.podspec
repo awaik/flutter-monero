@@ -13,6 +13,9 @@ A new Flutter FFI plugin project.
   s.license          = { :file => '../LICENSE' }
   s.author           = { 'Your Company' => 'email@example.com' }
 
+  s.library = 'c++'
+  s.xcconfig = { 'CLANG_CXX_LANGUAGE_STANDARD' => 'c++11', 'CLANG_CXX_LIBRARY' => 'libc++' }
+
   # This will ensure the source files in Classes/ are included in the native
   # builds of apps using this FFI plugin. Podspec does not support relative
   # paths, so Classes contains a forwarder C file that relatively imports
@@ -26,5 +29,4 @@ A new Flutter FFI plugin project.
   s.swift_version = '5.0'
 
   s.vendored_libraries =  'external/libmonero-cpp.dylib', 'external/libmonero-ffi.dylib'
-
 end

@@ -8,7 +8,7 @@
 PRODUCT_NAME = monero_flutter_example
 
 // The application's bundle identifier
-PRODUCT_BUNDLE_IDENTIFIER = com.example.moneroFlutterExample
+PRODUCT_BUNDLE_IDENTIFIER = com.example.moneroApiExample
 
 // The copyright displayed in application information
 PRODUCT_COPYRIGHT = Copyright © 2023 com.example. All rights reserved.
