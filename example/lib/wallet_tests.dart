@@ -15,6 +15,8 @@ class WalletTests {
         _startRefreshTest,
         _getAllTransfersAsJsonTest,
         _getUtxosAsJsonTest,
+        _getAllTransfers,
+        _getUtxos
       ];
 
   Future<TestResult> _loadWalletTest() async {
@@ -80,6 +82,17 @@ class WalletTests {
   Future<TestResult> _getUtxosAsJsonTest() async {
     final json = await transaction_api.getUtxosAsJson();
     return TestResult("Get Utxos (JSON)", true, message: "\r\n$json\r\n");
+  }
+
+  Future<TestResult> _getAllTransfers() async {
+    final result = await transaction_api.getAllTransfers();
+    return TestResult("Get All Transfers", true,
+        message: "cnt=${result.length}");
+  }
+
+  Future<TestResult> _getUtxos() async {
+    final result = await transaction_api.getUtxos();
+    return TestResult("Get Utxos", true, message: "cnt=${result.length}");
   }
 
   Future<Uint8List> _readBytes(String path) async {

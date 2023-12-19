@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:monero_flutter/entities/create_transaction_request.dart';
 import 'package:monero_flutter/entities/create_transaction_response.dart';
 import 'package:monero_flutter/entities/outputs_response.dart';
+import 'package:monero_flutter/entities/transfer_info.dart';
 import 'package:monero_flutter/entities/txs_response.dart';
 import 'package:monero_flutter/entities/utxo.dart';
 
@@ -19,8 +20,7 @@ import 'package:monero_flutter/monero_flutter.dart' as monero_flutter;
 ///
 /// Returns:
 ///   A [Future] that completes with the address as a [String].
-Future<String> getAddress() =>
-    compute(_getAddressSync, {});
+Future<String> getAddress() => compute(_getAddressSync, {});
 
 String _getAddressSync(Map args) => getAddressSync();
 
@@ -30,8 +30,7 @@ String _getAddressSync(Map args) => getAddressSync();
 ///   The address as a string.
 String getAddressSync() {
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
-  final addressPointer = monero_flutter.bindings
-      .get_address(errorBoxPointer);
+  final addressPointer = monero_flutter.bindings.get_address(errorBoxPointer);
 
   final address = addressPointer.cast<Utf8>().toDartString();
   calloc.free(addressPointer);
@@ -60,8 +59,7 @@ String getAddressSync() {
 ///
 /// Returns:
 ///   A [Future] that completes with the string, representing the receive address.
-Future<String> getReceiveAddress() =>
-    compute(_getReceiveAddressSync, {});
+Future<String> getReceiveAddress() => compute(_getReceiveAddressSync, {});
 
 String _getReceiveAddressSync(Map args) => getReceiveAddressSync();
 
@@ -78,8 +76,8 @@ String _getReceiveAddressSync(Map args) => getReceiveAddressSync();
 ///   A string representing the receive address.
 String getReceiveAddressSync() {
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
-  final addressPointer = monero_flutter.bindings
-      .get_receive_address(errorBoxPointer);
+  final addressPointer =
+      monero_flutter.bindings.get_receive_address(errorBoxPointer);
 
   final address = addressPointer.cast<Utf8>().toDartString();
   calloc.free(addressPointer);
@@ -101,8 +99,7 @@ String getReceiveAddressSync() {
 ///
 /// Returns:
 ///   A [Future] that completes with the total balance of the account as an integer.
-Future<int> getConfirmedBalance() =>
-    compute(_getConfirmedBalanceSync, {});
+Future<int> getConfirmedBalance() => compute(_getConfirmedBalanceSync, {});
 
 int _getConfirmedBalanceSync(Map args) {
   return getConfirmedBalanceSync();
@@ -114,8 +111,7 @@ int _getConfirmedBalanceSync(Map args) {
 ///   The total balance of the account as an integer.
 int getConfirmedBalanceSync() {
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
-  final result =
-  monero_flutter.bindings.get_confirmed_balance(errorBoxPointer);
+  final result = monero_flutter.bindings.get_confirmed_balance(errorBoxPointer);
 
   final errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
 
@@ -130,11 +126,84 @@ int getConfirmedBalanceSync() {
 // get_all_transactions_json
 // *****************************************************************************
 
-Future<TxsResponse> getAllTransfers() async {
+Future<List<TransferInfo>> getAllTransfers() async {
   final jsonResponse = await getAllTransfersAsJson();
   final jsonMapResponse = jsonDecode(jsonResponse);
 
-  return TxsResponse.fromJson(jsonMapResponse);
+  final txsResponse = TxsResponse.fromJson(jsonMapResponse);
+
+  List<TransferInfo> result = [];
+
+  for (final block in txsResponse.blocks) {
+    for (final tx in block.txs) {
+      if (tx.isIncoming) {
+        final its = tx.incomingTransfers;
+
+        if (null == its) {
+          continue;
+        }
+
+        for (final it in its) {
+          final incomingTransfer = IncomingTransferInfo(
+              height: block.height,
+              timestamp: block.timestamp,
+              fee: tx.fee,
+              numConfirmations: tx.numConfirmations,
+              unlockTime: tx.unlockTime,
+              hash: tx.hash,
+              isMinerTx: tx.isMinerTx,
+              relay: tx.relay,
+              isRelayed: tx.isRelayed,
+              isConfirmed: tx.isConfirmed,
+              inTxPool: tx.inTxPool,
+              isDoubleSpendSeen: tx.isDoubleSpendSeen,
+              isFailed: tx.isFailed,
+              isIncoming: tx.isIncoming,
+              isOutgoing: tx.isOutgoing,
+              isLocked: tx.isLocked,
+              amount: it.amount,
+              accountIndex: it.accountIndex,
+              subaddressIndex: it.subaddressIndex,
+              numSuggestedConfirmations: it.numSuggestedConfirmations,
+              address: it.address);
+
+          result.add(incomingTransfer);
+        }
+      } else {
+        final ot = tx.outgoingTransfer;
+
+        if (null == ot) {
+          continue;
+        }
+
+        final outgoingTransfer = OutgoingTransferInfo(
+            height: block.height,
+            timestamp: block.timestamp,
+            fee: tx.fee,
+            numConfirmations: tx.numConfirmations,
+            unlockTime: tx.unlockTime,
+            hash: tx.hash,
+            isMinerTx: tx.isMinerTx,
+            relay: tx.relay,
+            isRelayed: tx.isRelayed,
+            isConfirmed: tx.isConfirmed,
+            inTxPool: tx.inTxPool,
+            isDoubleSpendSeen: tx.isDoubleSpendSeen,
+            isFailed: tx.isFailed,
+            isIncoming: tx.isIncoming,
+            isOutgoing: tx.isOutgoing,
+            isLocked: tx.isLocked,
+            amount: ot.amount,
+            accountIndex: ot.accountIndex,
+            subaddressIndices: ot.subaddressIndices,
+            addresses: ot.addresses);
+
+        result.add(outgoingTransfer);
+      }
+    }
+  }
+
+  return result;
 }
 
 /// Retrieves all transfers as JSON (async version).
@@ -143,7 +212,8 @@ Future<TxsResponse> getAllTransfers() async {
 /// Each transfer represents a transaction involving the wallet, including both incoming and outgoing transfers.
 ///
 /// Returns a [Future] that completes with the JSON string, containing all transfers.
-Future<String> getAllTransfersAsJson() => compute(_getAllTransfersAsJsonSync, {});
+Future<String> getAllTransfersAsJson() =>
+    compute(_getAllTransfersAsJsonSync, {});
 
 String _getAllTransfersAsJsonSync(Map args) {
   return getAllTransfersAsJsonSync();
@@ -157,7 +227,8 @@ String _getAllTransfersAsJsonSync(Map args) {
 /// Returns a JSON string containing all transfers.
 String getAllTransfersAsJsonSync() {
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
-  final resultPointer = monero_flutter.bindings.get_all_transactions_json(errorBoxPointer);
+  final resultPointer =
+      monero_flutter.bindings.get_all_transactions_json(errorBoxPointer);
   final result = resultPointer.cast<Utf8>().toDartString();
 
   calloc.free(resultPointer);
@@ -179,7 +250,7 @@ String getAllTransfersAsJsonSync() {
 ///
 /// Returns:
 ///   A [Future] that completes with the response containing the unspent transaction outputs.
-Future<List<Utxo>> getOutputs() async {
+Future<List<Utxo>> getUtxos() async {
   final jsonResponse = await getUtxosAsJson();
   final jsonMapResponse = jsonDecode(jsonResponse);
 
@@ -190,7 +261,8 @@ Future<List<Utxo>> getOutputs() async {
   for (final b in outputs.blocks) {
     for (final t in b.txs) {
       for (final o in t.outputs) {
-        utxos.add(Utxo(blockHeight: b.height,
+        utxos.add(Utxo(
+            blockHeight: b.height,
             transactionHash: t.hash,
             amount: o.amount,
             index: o.index,
@@ -302,7 +374,8 @@ void freezeSync(String keyImage) {
 /// which contains information about the created transaction.
 ///
 /// To send a transaction to the network, use the [relayTransaction] function.
-Future<CreateTransactionResponse> createExtendedTransaction(CreateTransactionRequest createTransactionRequest) async {
+Future<CreateTransactionResponse> createExtendedTransaction(
+    CreateTransactionRequest createTransactionRequest) async {
   final txConfigJson = jsonEncode(createTransactionRequest.toJson());
   final jsonResponse = await createExtendedTransactionAsJson(txConfigJson);
   final jsonMapResponse = jsonDecode(jsonResponse);
@@ -313,8 +386,8 @@ Future<CreateTransactionResponse> createExtendedTransaction(CreateTransactionReq
 /// Creates a new transaction in JSON-format, specifying the extended info (async version).
 ///
 /// To send a transaction to the network, use the [relayTransaction] function.
-Future<String> createExtendedTransactionAsJson(String txConfigJson) =>
-    compute(_createExtendedTransactionAsJsonSync, {'txConfigJson': txConfigJson});
+Future<String> createExtendedTransactionAsJson(String txConfigJson) => compute(
+    _createExtendedTransactionAsJsonSync, {'txConfigJson': txConfigJson});
 
 String _createExtendedTransactionAsJsonSync(Map args) {
   final txConfigJson = args['txConfigJson'] as String;
@@ -324,12 +397,12 @@ String _createExtendedTransactionAsJsonSync(Map args) {
 /// Creates a new transaction in JSON-format, specifying the extended info (sync version).
 ///
 /// To send a transaction to the network, use the [relayTransactionSync] function.
-String createExtendedTransactionAsJsonSync(String txConfigJson)
-{
+String createExtendedTransactionAsJsonSync(String txConfigJson) {
   final txConfigJsonPointer = txConfigJson.toNativeUtf8().cast<Char>();
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
 
-  final resultPointer = monero_flutter.bindings.create_transaction(txConfigJsonPointer, errorBoxPointer);
+  final resultPointer = monero_flutter.bindings
+      .create_transaction(txConfigJsonPointer, errorBoxPointer);
 
   calloc.free(txConfigJsonPointer);
 
@@ -374,7 +447,8 @@ String _describeTxSetAsJsonSync(Map args) {
 String describeTxSetAsJsonSync(String jsonRequest) {
   final jsonRequestPointer = jsonRequest.toNativeUtf8().cast<Char>();
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
-  final resultPointer = monero_flutter.bindings.describe_tx_set(jsonRequestPointer, errorBoxPointer);
+  final resultPointer = monero_flutter.bindings
+      .describe_tx_set(jsonRequestPointer, errorBoxPointer);
 
   final result = monero_flutter.extractString(resultPointer);
 

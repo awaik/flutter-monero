@@ -33,7 +33,7 @@ class TxResponseBlock {
 class TxResponseTransaction {
   int fee;
   int numConfirmations;
-  int unlockHeight;
+  int unlockTime;
   String hash;
   bool isMinerTx;
   bool relay;
@@ -45,12 +45,13 @@ class TxResponseTransaction {
   bool isIncoming;
   bool isOutgoing;
   bool isLocked;
-  List<TxResponseIncomingTransfer> incomingTransfers;
+  List<TxResponseIncomingTransfer>? incomingTransfers;
+  TxResponseOutgoingTransfer? outgoingTransfer;
 
   TxResponseTransaction({
     required this.fee,
     required this.numConfirmations,
-    required this.unlockHeight,
+    required this.unlockTime,
     required this.hash,
     required this.isMinerTx,
     required this.relay,
@@ -62,7 +63,8 @@ class TxResponseTransaction {
     required this.isIncoming,
     required this.isOutgoing,
     required this.isLocked,
-    required this.incomingTransfers,
+    this.incomingTransfers,
+    this.outgoingTransfer
   });
 
   factory TxResponseTransaction.fromJson(Map<String, dynamic> json) => _$TxResponseTransactionFromJson(json);
@@ -87,4 +89,22 @@ class TxResponseIncomingTransfer {
 
   factory TxResponseIncomingTransfer.fromJson(Map<String, dynamic> json) => _$TxResponseIncomingTransferFromJson(json);
   Map<String, dynamic> toJson() => _$TxResponseIncomingTransferToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class TxResponseOutgoingTransfer {
+  final int amount;
+  final int accountIndex;
+  final List<int> subaddressIndices;
+  final List<String> addresses;
+
+  TxResponseOutgoingTransfer({
+    required this.amount,
+    required this.accountIndex,
+    required this.subaddressIndices,
+    required this.addresses,
+  });
+
+  factory TxResponseOutgoingTransfer.fromJson(Map<String, dynamic> json) => _$TxResponseOutgoingTransferFromJson(json);
+  Map<String, dynamic> toJson() => _$TxResponseOutgoingTransferToJson(this);
 }

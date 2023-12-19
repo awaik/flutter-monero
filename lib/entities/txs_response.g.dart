@@ -38,7 +38,7 @@ TxResponseTransaction _$TxResponseTransactionFromJson(
     TxResponseTransaction(
       fee: json['fee'] as int,
       numConfirmations: json['numConfirmations'] as int,
-      unlockHeight: json['unlockHeight'] as int,
+      unlockTime: json['unlockTime'] as int,
       hash: json['hash'] as String,
       isMinerTx: json['isMinerTx'] as bool,
       relay: json['relay'] as bool,
@@ -50,10 +50,14 @@ TxResponseTransaction _$TxResponseTransactionFromJson(
       isIncoming: json['isIncoming'] as bool,
       isOutgoing: json['isOutgoing'] as bool,
       isLocked: json['isLocked'] as bool,
-      incomingTransfers: (json['incomingTransfers'] as List<dynamic>)
-          .map((e) =>
+      incomingTransfers: (json['incomingTransfers'] as List<dynamic>?)
+          ?.map((e) =>
               TxResponseIncomingTransfer.fromJson(e as Map<String, dynamic>))
           .toList(),
+      outgoingTransfer: json['outgoingTransfer'] == null
+          ? null
+          : TxResponseOutgoingTransfer.fromJson(
+              json['outgoingTransfer'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$TxResponseTransactionToJson(
@@ -61,7 +65,7 @@ Map<String, dynamic> _$TxResponseTransactionToJson(
     <String, dynamic>{
       'fee': instance.fee,
       'numConfirmations': instance.numConfirmations,
-      'unlockHeight': instance.unlockHeight,
+      'unlockTime': instance.unlockTime,
       'hash': instance.hash,
       'isMinerTx': instance.isMinerTx,
       'relay': instance.relay,
@@ -74,7 +78,8 @@ Map<String, dynamic> _$TxResponseTransactionToJson(
       'isOutgoing': instance.isOutgoing,
       'isLocked': instance.isLocked,
       'incomingTransfers':
-          instance.incomingTransfers.map((e) => e.toJson()).toList(),
+          instance.incomingTransfers?.map((e) => e.toJson()).toList(),
+      'outgoingTransfer': instance.outgoingTransfer?.toJson(),
     };
 
 TxResponseIncomingTransfer _$TxResponseIncomingTransferFromJson(
@@ -95,4 +100,25 @@ Map<String, dynamic> _$TxResponseIncomingTransferToJson(
       'subaddressIndex': instance.subaddressIndex,
       'numSuggestedConfirmations': instance.numSuggestedConfirmations,
       'address': instance.address,
+    };
+
+TxResponseOutgoingTransfer _$TxResponseOutgoingTransferFromJson(
+        Map<String, dynamic> json) =>
+    TxResponseOutgoingTransfer(
+      amount: json['amount'] as int,
+      accountIndex: json['accountIndex'] as int,
+      subaddressIndices: (json['subaddressIndices'] as List<dynamic>)
+          .map((e) => e as int)
+          .toList(),
+      addresses:
+          (json['addresses'] as List<dynamic>).map((e) => e as String).toList(),
+    );
+
+Map<String, dynamic> _$TxResponseOutgoingTransferToJson(
+        TxResponseOutgoingTransfer instance) =>
+    <String, dynamic>{
+      'amount': instance.amount,
+      'accountIndex': instance.accountIndex,
+      'subaddressIndices': instance.subaddressIndices,
+      'addresses': instance.addresses,
     };
