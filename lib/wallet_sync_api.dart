@@ -21,24 +21,16 @@ import 'package:monero_flutter/monero_flutter.dart' as monero_flutter;
 /// Returns:
 ///   A [Future] that completes with the boolean value, indicating if the setup was successful.
 Future<bool> setupNode(
-        {required String address,
-        String? login,
-        String? password}) =>
-    compute(_setupNodeSync, {
-      'address': address,
-      'login': login,
-      'password': password
-    });
+        {required String address, String? login, String? password}) =>
+    compute(_setupNodeSync,
+        {'address': address, 'login': login, 'password': password});
 
 bool _setupNodeSync(Map<String, Object?> args) {
   final address = args['address'] as String;
   final login = (args['login'] ?? '') as String;
   final password = (args['password'] ?? '') as String;
 
-  return setupNodeSync(
-      address: address,
-      login: login,
-      password: password);
+  return setupNodeSync(address: address, login: login, password: password);
 }
 
 /// Sets up the connection to a Monero node for wallet synchronization synchronously (sync version).
@@ -53,10 +45,7 @@ bool _setupNodeSync(Map<String, Object?> args) {
 ///
 /// Returns:
 ///   A boolean value indicating if the setup was successful.
-bool setupNodeSync(
-    {required String address,
-    String? login,
-    String? password}) {
+bool setupNodeSync({required String address, String? login, String? password}) {
   final addressPointer = address.toNativeUtf8().cast<Char>();
   Pointer<Char> loginPointer = (login != null)
       ? login.toNativeUtf8().cast<Char>()
@@ -89,6 +78,52 @@ bool setupNodeSync(
 }
 
 // *****************************************************************************
+// set_restore_height
+// *****************************************************************************
+
+/// Sets the restore height for a Monero wallet (async version).
+///
+/// This method sets the block height from which the wallet will start
+/// scanning the blockchain. By specifying the [restoreHeight], it's possible
+/// to avoid scanning earlier blocks, which can significantly speed up the
+/// restoration process of the wallet.
+///
+/// The [restoreHeight] should be the block height at or before the first
+/// transaction of the wallet was made. If the exact height is unknown, a
+/// safe estimate should be used.
+///
+/// [restoreHeight] - The block height from which to start scanning.
+Future setRestoreHeight(int restoreHeight) =>
+    compute(_setRestoreHeightSync, {'restoreHeight': restoreHeight});
+
+/// Sets the restore height for a Monero wallet (sync version).
+///
+/// This method sets the block height from which the wallet will start
+/// scanning the blockchain. By specifying the [restoreHeight], it's possible
+/// to avoid scanning earlier blocks, which can significantly speed up the
+/// restoration process of the wallet.
+///
+/// The [restoreHeight] should be the block height at or before the first
+/// transaction of the wallet was made. If the exact height is unknown, a
+/// safe estimate should be used.
+///
+/// [restoreHeight] - The block height from which to start scanning.
+void _setRestoreHeightSync(Map args) {
+  final restoreHeight = args['restoreHeight'] as int;
+  setRestoreHeightSync(restoreHeight);
+}
+
+void setRestoreHeightSync(int restoreHeight) {
+  final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
+  monero_flutter.bindings.set_restore_height(restoreHeight, errorBoxPointer);
+  final errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
+
+  if (0 != errorInfo.code) {
+    throw Exception(errorInfo.getErrorMessage());
+  }
+}
+
+// *****************************************************************************
 // start_refresh
 // *****************************************************************************
 
@@ -111,6 +146,39 @@ void _startRefreshSync(Map args) {
 void startRefreshSync() {
   final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
   monero_flutter.bindings.start_refresh(errorBoxPointer);
+
+  final errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
+
+  if (0 != errorInfo.code) {
+    throw Exception(errorInfo.getErrorMessage());
+  }
+}
+
+// *****************************************************************************
+// stop_syncing
+// *****************************************************************************
+
+/// Stops the syncing process of the Monero wallet (async version).
+///
+/// This method is used to halt the ongoing synchronization of the wallet
+/// with the Monero blockchain. It's particularly useful in scenarios where
+/// the synchronization process needs to be interrupted due to changing
+/// network conditions, user intervention, or when shutting down the wallet
+/// application gracefully
+Future stopSyncing() => compute(_stopSyncingSync, {});
+
+void _stopSyncingSync(Map args) => getStartHeightSync();
+
+/// Stops the syncing process of the Monero wallet (sync version).
+///
+/// This method is used to halt the ongoing synchronization of the wallet
+/// with the Monero blockchain. It's particularly useful in scenarios where
+/// the synchronization process needs to be interrupted due to changing
+/// network conditions, user intervention, or when shutting down the wallet
+/// application gracefully
+void stopSyncingSync() {
+  final errorBoxPointer = monero_flutter.buildErrorBoxPointer();
+  monero_flutter.bindings.stop_syncing(errorBoxPointer);
 
   final errorInfo = monero_flutter.extractErrorInfo(errorBoxPointer);
 

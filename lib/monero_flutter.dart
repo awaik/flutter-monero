@@ -25,7 +25,7 @@ final DynamicLibrary _dylib = () {
 }();
 
 /// The bindings to the native functions in [_dylib].
-final MoneroFlutterBindings bindings = MoneroFlutterBindings(_dylib);
+final MoneroApiBindings bindings = MoneroApiBindings(_dylib);
 
 Pointer<ErrorBox> buildErrorBoxPointer() {
   Pointer<ErrorBox> pointerToErrorBox = calloc.call();
